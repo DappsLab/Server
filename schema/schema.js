@@ -1,6 +1,5 @@
 const graphql = require('graphql');
-const Book = require('../models/book');
-const Author = require('../models/Author');
+const User = require('../models/user');
 const _ = require('lodash');
 
 const {
@@ -10,66 +9,67 @@ const {
     GraphQLID,
     GraphQLInt,
     GraphQLList,
-    GraphQLNonNull
+    GraphQLNonNull,
+    GraphQLBoolean
 } = graphql;
 
-const BookType = new GraphQLObjectType({
-    name: 'Book',
+const UserType = new GraphQLObjectType({
+    name: 'User',
     fields: ( ) => ({
         id: { type: GraphQLID },
-        name: { type: GraphQLString },
-        genre: { type: GraphQLString },
-        author: {
-            type: AuthorType,
-            resolve(parent, args){
-                return Author.findById(parent.authorId);
-            }
+        fullName: { type: GraphQLString },
+        userName: { type: GraphQLString },
+        email: { type: GraphQLString },
+        password: { type: GraphQLString },
+        avatar: { type: GraphQLString },
+        address: { type: GraphQLString },
+        balance: { type: GraphQLString },
+        location: { type: GraphQLString },
+        kyc: { type: KYCType },
+        testAddress: {
+            type: new GraphQLList(TestAddressType)
         }
     })
 });
 
-const AuthorType = new GraphQLObjectType({
-    name: 'Author',
+const KYCType = new GraphQLObjectType({
+    name: 'KYC',
     fields: ( ) => ({
-        id: { type: GraphQLID },
-        name: { type: GraphQLString },
-        age: { type: GraphQLInt },
-        books: {
-            type: new GraphQLList(BookType),
-            resolve(parent, args){
-                return Book.find({ authorId: parent.id });
-            }
-        }
+        mobile: { type: GraphQLString },
+        birthDate: { type: GraphQLString },
+        nationality: { type: GraphQLString },
+        country: { type: GraphQLString },
+        postalCode: { type: GraphQLString },
+        city: { type: GraphQLString },
+        streetName: { type: GraphQLString },
+        streetNumber: { type: GraphQLString },
+        kycVerified: { type: GraphQLBoolean }
+    })
+});
+
+const TestAddressType = new GraphQLObjectType({
+    name: 'TestAddress',
+    fields: ( ) => ({
+        address: { type: GraphQLString },
+        balance: { type: GraphQLString },
+        password: { type: GraphQLString }
     })
 });
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        book: {
-            type: BookType,
+        user: {
+            type: UserType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args){
-                return Book.findById(args.id);
+                return User.findById(args.id);
             }
         },
-        author: {
-            type: AuthorType,
-            args: { id: { type: GraphQLID } },
+        users: {
+            type: new GraphQLList(UserType),
             resolve(parent, args){
-                return Author.findById(args.id);
-            }
-        },
-        books: {
-            type: new GraphQLList(BookType),
-            resolve(parent, args){
-                return Book.find({});
-            }
-        },
-        authors: {
-            type: new GraphQLList(AuthorType),
-            resolve(parent, args){
-                return Author.find({});
+                return User.find({});
             }
         }
     }
@@ -78,26 +78,17 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
-        addAuthor: {
-            type: AuthorType,
+        addUser: {
+            type: UserType,
             args: {
-                name: { type: GraphQLString },
-                age: { type: GraphQLInt }
-            },
-            resolve(parent, args){
-                let author = new Author({
-                    name: args.name,
-                    age: args.age
-                });
-                return author.save();
-            }
-        },
-        addBook: {
-            type: BookType,
-            args: {
-                name: { type: new GraphQLNonNull(GraphQLString) },
-                genre: { type: new GraphQLNonNull(GraphQLString) },
-                authorId: { type: new GraphQLNonNull(GraphQLID) }
+                fullName: { type:  new GraphQLNonNull(GraphQLString) },
+                userName: { type:  new GraphQLNonNull(GraphQLString) },
+                email: { type:  new GraphQLNonNull(GraphQLString) },
+                password: { type:  new GraphQLNonNull(GraphQLString) },
+                avatar: { type:  new GraphQLNonNull(GraphQLString) },
+                address: { type:  new GraphQLNonNull(GraphQLString) },
+                balance: { type:  new GraphQLNonNull(GraphQLString) },
+                location: { type:  new GraphQLNonNull(GraphQLString) }
             },
             resolve(parent, args){
                 let book = new Book({
