@@ -1,14 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const adminSchema = new Schema({
     fullName: String,
     userName: String,
     email: String,
     password: String,
     avatar: String,
-    address: String,
-    balance: String,
     location: String,
     //! var kyc = new Schema({ name: String });
     kyc: {
@@ -25,4 +23,4 @@ const userSchema = new Schema({
     testAddress:[{address:String,balance:String,password:String}]
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Admin', adminSchema);
