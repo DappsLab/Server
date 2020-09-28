@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const compiledContractSchema = new Schema({
-    contractId: mongoose.ObjectId,
+    smartContractId: mongoose.ObjectId,
     compiledOn:String,
+    userId: mongoose.ObjectId,
     ownerAddress: String,
     abi: String,
     binary: String

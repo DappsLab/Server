@@ -10,19 +10,21 @@ const userSchema = new Schema({
     address: String,
     balance: String,
     location: String,
-    //! var kyc = new Schema({ name: String });
     kyc: {
         mobile: String,
         birthDate: String,
-        national: String,
+        nationality: String,
         country: String,
         postalCode: String,
         city: String,
         streetName: String,
         streetNumber: String,
-        kycVerified: String
+        kycStatus:String
     },
     testAddress:[{address:String,balance:String,password:String}]
 });
 
+
+userSchema.set('toObject', { virtuals: true });
 module.exports = mongoose.model('User', userSchema);
+

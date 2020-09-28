@@ -4,8 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
-const graphqlHTTP = require('express-graphql');
-const schema = require('./schema/schema')
+const { ApolloServer, gql } = require('apollo-server-express');
+const typeDefs = require('./schema/schema')
+const resolvers = require('./schema/resolver.js')
 const mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
@@ -14,16 +15,14 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 // connect to DB mongo
-// mongoose.connect();
+const uri = "mongodb+srv://qasim:qasim1234@abdulla.eftvp.mongodb.net/dappsLabDB?retryWrites=true&w=majority";
+mongoose.connect(uri);
+mongoose.Promise = global.Promise;
 mongoose.connection.once('open', ()=>{
-  console.log('connected to mongoDB mLab');
+  console.log(' 🍃 connected to mongoDB mLab');
 })
 
-// bind express with graphql
-app.use('/graphql', graphqlHTTP({
-  graphiql:true,
-  schema
-}));
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -44,6 +43,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  introspection: true,
+  playground: true
+});
+server.applyMiddleware({ app });
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -60,8 +68,9 @@ app.use(function(err, req, res, next) {
 });
 
 
+
 app.listen(4000, () => {
-  console.log('now listening for requests on port 4000');
+  console.log('🚀 now listening for requests on port 4000');
 });
 
 module.exports = app;

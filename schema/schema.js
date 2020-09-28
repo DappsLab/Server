@@ -1,108 +1,117 @@
-const graphql = require('graphql');
+const {gql} = require('apollo-server-express');
 const User = require('../models/user');
+const Kyc = require('../models/kyc');
 const _ = require('lodash');
 
-const {
-    GraphQLObjectType,
-    GraphQLString,
-    GraphQLSchema,
-    GraphQLID,
-    GraphQLInt,
-    GraphQLList,
-    GraphQLNonNull,
-    GraphQLBoolean
-} = graphql;
-
-const UserType = new GraphQLObjectType({
-    name: 'User',
-    fields: ( ) => ({
-        id: { type: GraphQLID },
-        fullName: { type: GraphQLString },
-        userName: { type: GraphQLString },
-        email: { type: GraphQLString },
-        password: { type: GraphQLString },
-        avatar: { type: GraphQLString },
-        address: { type: GraphQLString },
-        balance: { type: GraphQLString },
-        location: { type: GraphQLString },
-        kyc: { type: KYCType },
-        testAddress: {
-            type: new GraphQLList(TestAddressType)
-        }
-    })
-});
-
-const KYCType = new GraphQLObjectType({
-    name: 'KYC',
-    fields: ( ) => ({
-        mobile: { type: GraphQLString },
-        birthDate: { type: GraphQLString },
-        nationality: { type: GraphQLString },
-        country: { type: GraphQLString },
-        postalCode: { type: GraphQLString },
-        city: { type: GraphQLString },
-        streetName: { type: GraphQLString },
-        streetNumber: { type: GraphQLString },
-        kycVerified: { type: GraphQLBoolean }
-    })
-});
-
-const TestAddressType = new GraphQLObjectType({
-    name: 'TestAddress',
-    fields: ( ) => ({
-        address: { type: GraphQLString },
-        balance: { type: GraphQLString },
-        password: { type: GraphQLString }
-    })
-});
-
-const RootQuery = new GraphQLObjectType({
-    name: 'RootQueryType',
-    fields: {
-        user: {
-            type: UserType,
-            args: { id: { type: GraphQLID } },
-            resolve(parent, args){
-                return User.findById(args.id);
-            }
-        },
-        users: {
-            type: new GraphQLList(UserType),
-            resolve(parent, args){
-                return User.find({});
-            }
-        }
+const typeDefs = gql`
+    type Query {
+        users: [User]
+        me:User
+    },
+    
+    type Mutation {
+        addUser(
+            fullName: String,
+            userName:String,
+            email:String,
+            password:String,
+            avatar:String,
+            address:String,
+            balance:String,
+            location:String
+        ): User,
+        editUser(
+            id: String!,
+            fullName: String,
+            userName:String,
+            email:String,
+            password:String,
+            avatar:String,
+            address:String,
+            balance:String,
+            location:String
+        ):User,
+        deleteUser(
+            id: String!,
+        ):User,
+        addKyc(
+            id:String!,
+            mobile:String,
+            birthDate:String,
+            nationality:String,
+            country:String,
+            postalCode:String,
+            city:String,
+            streetName:String,
+            streetNumber:String,
+            kycStatus:Status #hello
+        ):User,
+        editKyc(
+            id:String!,
+            mobile:String,
+            birthDate:String,
+            nationality:String,
+            country:String,
+            postalCode:String,
+            city:String,
+            streetName:String,
+            streetNumber:String,
+            kycStatus:Status #hello
+        ):User,
+        addTestAddress(
+            id:String!,
+            address:String!,
+            balance: String!,
+            password: String!
+        ):User,
+        editTestAddress(
+            id:String!,
+            address:String!,
+            balance: String!,
+            password: String!
+        ):User,
+    },
+    
+    type User {
+        id: ID!,
+        fullName: String!,
+        userName: String!,
+        email: String!,
+        password: String!,
+        avatar: String!,
+        address: String,
+        balance: String!,
+        location: String,
+        kyc: Kyc,
+        testAddress:[TestAddress]
     }
-});
-
-const Mutation = new GraphQLObjectType({
-    name: 'Mutation',
-    fields: {
-        addUser: {
-            type: UserType,
-            args: {
-                fullName: { type:  new GraphQLNonNull(GraphQLString) },
-                userName: { type:  new GraphQLNonNull(GraphQLString) },
-                email: { type:  new GraphQLNonNull(GraphQLString) },
-                password: { type:  new GraphQLNonNull(GraphQLString) },
-                avatar: { type:  new GraphQLNonNull(GraphQLString) },
-                address: { type:  new GraphQLNonNull(GraphQLString) },
-                balance: { type:  new GraphQLNonNull(GraphQLString) },
-                location: { type:  new GraphQLNonNull(GraphQLString) }
-            },
-            resolve(parent, args){
-                let book = new Book({
-                    name: args.name,
-                    genre: args.genre,
-                    authorId: args.authorId
-                });
-                return book.save();
-            }
-        }
+    
+    type Kyc {
+        mobile: String,
+        birthDate: String,
+        nationality: String,
+        country: String,
+        postalCode: String,
+        city: String,
+        streetName: String,
+        streetNumber: String,
+        kycStatus(status: Status): String!
     }
-});
 
-module.exports = new GraphQLSchema({
-    query: RootQuery,
-    mutation: Mutation
-});
+    enum Status {
+        NOT_VERIFIED
+        PENDING
+        VERIFIED
+    }
+    
+    type TestAddress{
+        address: String,
+        balance: String,
+        password: String
+    }
+    
+`;
+
+
+
+module.exports = typeDefs;
