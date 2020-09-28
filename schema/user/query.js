@@ -1,9 +1,10 @@
 const {gql} = require('apollo-server-express');
-const User = require('../models/user');
-const Kyc = require('../models/kyc');
+const {userTypeDefs} = require('./type.js')
+const User = require('../../models/user.js');
+const Kyc = require('../../models/kyc');
 const _ = require('lodash');
 
-const typeDefs = gql`
+const userQuery = gql`
     type Query {
         users: [User]
         me:User
@@ -69,49 +70,11 @@ const typeDefs = gql`
             address:String!,
             balance: String!,
             password: String!
-        ):User,
-    },
-    
-    type User {
-        id: ID!,
-        fullName: String!,
-        userName: String!,
-        email: String!,
-        password: String!,
-        avatar: String!,
-        address: String,
-        balance: String!,
-        location: String,
-        kyc: Kyc,
-        testAddress:[TestAddress]
-    }
-    
-    type Kyc {
-        mobile: String,
-        birthDate: String,
-        nationality: String,
-        country: String,
-        postalCode: String,
-        city: String,
-        streetName: String,
-        streetNumber: String,
-        kycStatus(status: Status): String!
-    }
-
-    enum Status {
-        NOT_VERIFIED
-        PENDING
-        VERIFIED
-    }
-    
-    type TestAddress{
-        address: String,
-        balance: String,
-        password: String
+        ):User
     }
     
 `;
 
 
 
-module.exports = typeDefs;
+module.exports = userQuery;

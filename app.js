@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
 const { ApolloServer, gql } = require('apollo-server-express');
-const typeDefs = require('./schema/schema')
+const typeDefs = require('./schema/typeDefs.js')
 const resolvers = require('./schema/resolver.js')
 const mongoose = require('mongoose');
 
