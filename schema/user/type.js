@@ -3,17 +3,31 @@ const User = require('../../models/user');
 const Kyc = require('../../models/kyc');
 const _ = require('lodash');
 
-const userTypeDefs = gql`    
+const userTypeDefs = gql`
+
+    input UserInput {
+        fullName: String!,
+        userName: String!,
+        email: String!,
+        password: String!,
+#        avatar: String,
+#        address: String!,
+#        balance: String!,
+#        location: String,
+    }
+    
     type User {
         id: ID!,
         fullName: String!,
         userName: String!,
         email: String!,
         password: String!,
-        avatar: String!,
-        address: String,
+        avatar: String,
+        address: String!,
         balance: String!,
         location: String,
+        createdAt: String
+        updatedAt: String
         kyc: Kyc,
         testAddress:[TestAddress]
     }
@@ -40,6 +54,11 @@ const userTypeDefs = gql`
         address: String,
         balance: String,
         password: String
+    }
+
+    type AuthUser {
+        user: User!
+        token:String!
     }
 
 `;

@@ -1,9 +1,10 @@
 const { mergeResolvers } = require('@graphql-tools/merge');
-const clientResolver = require('./user/resolver.js');
-// const productResolver = require('./productResolver');
+const userResolver = require('./user/resolver.js');
+const smartContractResolver = require('./smartContract/resolver.js');
 
 const resolvers = [
-    clientResolver,
+    userResolver,
+    smartContractResolver,
 ];
 
 module.exports = mergeResolvers(resolvers);

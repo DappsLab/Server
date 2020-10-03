@@ -1,25 +1,21 @@
 const {gql} = require('apollo-server-express');
-const {userTypeDefs} = require('./type.js')
-const User = require('../../models/user.js');
-const Kyc = require('../../models/kyc');
-const _ = require('lodash');
 
 const userQuery = gql`
-    type Query {
-        users: [User]
-        me:User
+    extend type Query {
+        authUser: User! @isAuth
+        loginUser(userName: String!, password: String!):AuthUser!
+        users: [User],
+        me:User,
+        userById(id:ID!):User,
     },
     
-    type Mutation {
+    extend type Mutation {
+        registerUser(newUser: UserInput!): AuthUser!,
         addUser(
             fullName: String,
             userName:String,
             email:String,
             password:String,
-            avatar:String,
-            address:String,
-            balance:String,
-            location:String
         ): User,
         editUser(
             id: String!,
