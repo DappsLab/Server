@@ -1,3 +1,5 @@
+import {Master} from "./models";
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -17,7 +19,6 @@ var app = express();
 
 
 console.log("walletObject",walletObject);
-
 
 
 // connect to DB mongo
@@ -90,5 +91,21 @@ app.use(function (err, req, res, next) {
 app.listen(4000, () => {
     console.log('🚀 now listening for requests on port 4000');
 });
+
+
+(async () => {
+    try {
+        let master = {
+            mnemonic:MNEMONIC,
+            hdwallet:walletObject,
+            walletCount:"1",
+        }
+        console.log("master",master)
+        const response = await Master.findByIdAndUpdate("5f7ad7f29b4681fbe7a9bc09",master,{new:true});
+        console.log("response", response)
+    }catch(e) {
+        console.log('error:',e);
+    }
+})()
 
 module.exports = app;

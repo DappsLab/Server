@@ -1,6 +1,7 @@
 const {MNEMONIC,PATH} =require('../config');
 let {hdkey} = require('ethereumjs-wallet');
 let bip39 = require("bip39");
+let Master = require('../models/master.js')
 
 
 console.log("MNEMONIC:",MNEMONIC)
@@ -10,13 +11,21 @@ let masterPrivateKey=hdwallet._hdkey._privateKey.toString('hex'); //! MASTER PRI
 console.log("Master Private Key:",masterPrivateKey)
 
 
+
 let walletObject={
     hdwallet:hdwallet,
     masterPrivateKey:masterPrivateKey,
 }
-let wallet = hdwallet.derivePath(PATH + '1').getWallet();
-let address = wallet.getAddressString();
-console.log("address:",address);
+
+// for (let i = 0; i < 5; i++) {
+    let wallet = hdwallet.derivePath(PATH + 0).getWallet();
+    let address = wallet.getAddressString('hex');
+    console.log("public key:",wallet.privateKey.toString('hex'));
+    console.log("wallet2:",wallet);
+    console.log('address-' + 0 + ': ' + address);
+// }
+
+
 
 
 module.exports ={walletObject}

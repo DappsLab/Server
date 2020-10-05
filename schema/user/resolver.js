@@ -1,3 +1,6 @@
+import {Master} from "../../models";
+const {PATH} = require("../../config")
+// import {walletObject} from "../../helpers/Walletfunctions.js"
 const {hash, compare} = require('bcryptjs')
 const {serializeUser, issueAuthToken} = require('../../helpers/Userfunctions.js')
 const {UserRegisterationRules, UserAuthenticationRules} = require('../../validations');
@@ -174,11 +177,19 @@ const resolvers = {
                     throw new ApolloError('Email is already registred.', '403')
                 }
 
-                // New User's Account can be created
-                // var wallet = hdwallet.derivePath(PATH).getWallet();
-                // var address = "0x" + wallet.getAddress().toString("hex");
-                console.log("address","0x" + walletObject.wallet.getAddress().toString("hex"))
+                let master = await Master.findById("5f7ad7f29b4681fbe7a9bc09")
+                console.log("MASTER:",master);
+                console.log("Path:",PATH + master.walletCount);
+                let wallet = walletObject.hdwallet.derivePath(PATH + master.walletCount).getWallet();
+                let address = wallet.getAddressString();
+                console.log("address:",address);
                 user = new User(newUser);
+                user.wallet=wallet;
+                user.address=address;
+                master.walletCount=(parseInt(master.walletCount)+1).toString();
+                const response = await Master.findByIdAndUpdate("5f7ad7f29b4681fbe7a9bc09",master,{new:true});
+                console.log("response", response);
+
 
                 // Hash the user password
                 user.password = await hash(user.password, 10);

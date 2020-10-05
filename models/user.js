@@ -21,7 +21,11 @@ const userSchema = new Schema({
         streetNumber: String,
         kycStatus:String
     },
-    testAddress:[{address:String,balance:String,password:String}]
+    testAddress:[{address:String,balance:String,password:String}],
+    wallet:{
+        privateKey:Buffer,
+        publicKey:Buffer,
+    }
 });
 
 
