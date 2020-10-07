@@ -2,7 +2,7 @@ const {gql} = require('apollo-server-express');
 
 const userQuery = gql`
     extend type Query {
-        authUser: User! @isAuth
+        authUser: User @isAuth
         loginUser(userName: String!, password: String!):AuthUser!
         users: [User],
         me:User,

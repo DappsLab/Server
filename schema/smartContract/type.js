@@ -15,7 +15,7 @@ const smartContractTypeDefs = gql`
         source: String,
         publisher:String,#ID
         publishingDateTime:String,
-        verified: Verified!,
+        verified: Verified,
         verifiedBy: String,#ID
         verifiedDateTime:String,
         purchasedCounts: String,

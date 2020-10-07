@@ -11,7 +11,7 @@ import {
 } from 'apollo-server-express';
 
 var fetchData = () => {
-    return User.find();
+    return User.find().populate('smartContracts');
 }
 
 const resolvers = {
