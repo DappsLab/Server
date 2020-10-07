@@ -10,10 +10,6 @@ const userTypeDefs = gql`
         userName: String!,
         email: String!,
         password: String!,
-#        avatar: String,
-#        address: String!,
-#        balance: String!,
-#        location: String,
     }
     
     type User {
@@ -26,12 +22,20 @@ const userTypeDefs = gql`
         address: String!,
         balance: String!,
         location: String,
+        type(type:Type): String,
         createdAt: String
         updatedAt: String
         kyc: Kyc,
-        testAddress:[TestAddress]
+        testAddress:[TestAddress],
+        wallet:Wallet,
+        smartContracts:[SmartContract],
     }
 
+    type Wallet{
+        privateKey:String,
+        publicKey:String,
+    },
+    
     type Kyc {
         mobile: String,
         birthDate: String,
@@ -48,6 +52,11 @@ const userTypeDefs = gql`
         NOT_VERIFIED
         PENDING
         VERIFIED
+    }
+
+    enum Type {
+        ADIMN
+        USER
     }
 
     type TestAddress{

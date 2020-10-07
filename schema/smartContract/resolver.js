@@ -12,6 +12,7 @@ const resolvers = {
         },
         smartContractById: async (_,args)=>{
             let smartContract= await SmartContract.findById(args.id).populate('publisher');
+            // console.log("SmartContract:",smartContract);
             return smartContract;
         }
     },

@@ -10,6 +10,7 @@ const userSchema = new Schema({
     address: String,
     balance: String,
     location: String,
+    type:String,
     kyc: {
         mobile: String,
         birthDate: String,
@@ -23,9 +24,13 @@ const userSchema = new Schema({
     },
     testAddress:[{address:String,balance:String,password:String}],
     wallet:{
-        privateKey:Buffer,
-        publicKey:Buffer,
-    }
+        privateKey:String,
+        publicKey:String,
+    },
+    smartContracts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'smartcontracts',
+    }],
 });
 
 

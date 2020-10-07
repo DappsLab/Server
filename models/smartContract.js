@@ -10,16 +10,26 @@ const smartContractSchema = new Schema({
     singleLicensePrice: String,
     unlimitedLicensePrice: String,
     source: String,
-    publisher: mongoose.ObjectId,
+    // publisher: mongoose.ObjectId,
     publishingDateTime:String,
     verified: String,
-    verifiedBy: mongoose.ObjectId,
+    // verifiedBy: mongoose.ObjectId,
     verifiedDateTime:String,
-    purchasedCounts: Number,
-    compiledCounts: Number,
-    testedCounts: Number,
-    deployedCounts: Number
+    purchasedCounts: String,
+    compiledCounts: String,
+    testedCounts: String,
+    deployedCounts: String,
+    createdAt: String,
+    updatedAt: String,
+    publisher: {
+        ref: 'users',
+        type: Schema.Types.ObjectId
+    },
+    verifiedBy: {
+        ref: 'users',
+        type: Schema.Types.ObjectId
+    },
 
 });
 
-module.exports = mongoose.model('SmartContract', smartContractSchema);
+module.exports = mongoose.model('smartcontracts', smartContractSchema);

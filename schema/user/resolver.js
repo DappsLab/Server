@@ -1,6 +1,5 @@
 import {Master} from "../../models";
 const {PATH} = require("../../config")
-// import {walletObject} from "../../helpers/Walletfunctions.js"
 const {hash, compare} = require('bcryptjs')
 const {serializeUser, issueAuthToken} = require('../../helpers/Userfunctions.js')
 const {UserRegisterationRules, UserAuthenticationRules} = require('../../validations');
@@ -12,7 +11,7 @@ import {
 } from 'apollo-server-express';
 
 var fetchData = () => {
-    return User.find()
+    return User.find();
 }
 
 const resolvers = {
@@ -21,7 +20,9 @@ const resolvers = {
             return fetchData()
         },
         userById: async (_, args) => {
-            return await User.findById(args.id);
+            let response = await User.findById(args.id).populate('smartContracts');
+            console.log("response:",response)
+            return response;
         },
         loginUser: async (_, {userName, password}, {User}) => {
             // Validate Incoming User Credentials
@@ -118,7 +119,7 @@ const resolvers = {
                 return e.message
             }
         },
-        addTestAddress: async (_, args) => {
+        addTestAddress: async (_, args) => { // TODO "ADD TEST ADDRESSES"
             try {
                 const testAddress = args;
                 console.log("request", testAddress);
@@ -130,7 +131,7 @@ const resolvers = {
                 return e.message;
             }
         },
-        editTestAddress: async (_, args) => {
+        editTestAddress: async (_, args) => { // TODO "ADD TEST ADDRESSES"
 
             try {
                 // console.log(args)
@@ -183,9 +184,12 @@ const resolvers = {
                 let wallet = walletObject.hdwallet.derivePath(PATH + master.walletCount).getWallet();
                 let address = wallet.getAddressString();
                 console.log("address:",address);
+
                 user = new User(newUser);
-                user.wallet=wallet;
+                user.wallet.privateKey=wallet.getPrivateKeyString()
+                user.wallet.publicKey=wallet.getPublicKeyString()
                 user.address=address;
+                user.type="USER";
                 master.walletCount=(parseInt(master.walletCount)+1).toString();
                 const response = await Master.findByIdAndUpdate("5f7ad7f29b4681fbe7a9bc09",master,{new:true});
                 console.log("response", response);

@@ -26,7 +26,8 @@ const userQuery = gql`
             avatar:String,
             address:String,
             balance:String,
-            location:String
+            location:String,
+            type:Type,
         ):User,
         deleteUser(
             id: String!,
@@ -57,15 +58,15 @@ const userQuery = gql`
         ):User,
         addTestAddress(
             id:String!,
-            address:String!,
-            balance: String!,
-            password: String!
+            address:String,
+            balance: String,
+            password: String
         ):User,
         editTestAddress(
             id:String!,
-            address:String!,
-            balance: String!,
-            password: String!
+            address:String,
+            balance: String,
+            password: String
         ):User
     }
     

@@ -16,6 +16,7 @@ const serializeUser = user => pick(user, [
     'email',
     'userName',
     'fullName',
+    'type'
 ]);
 
 module.exports = {issueAuthToken,serializeUser};
