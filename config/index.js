@@ -9,7 +9,9 @@ const {
 export const {
     PROD,
     SECRET,
+    PORT,
     IN_PROD = PROD === 'prod',
     MNEMONIC,
-    PATH
+    PATH,
+    BASE_URL = `http://localhost:${PORT}`,
 } = parsed;

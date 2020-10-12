@@ -14,7 +14,9 @@ import * as AppModels from './models';
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const {MNEMONIC,PATH} =require('./config');
-const {walletObject}= require('./helpers/Walletfunctions.js')
+const {walletObject}= require('./helpers/Walletfunctions.js');
+import AuthMiddleware from './middleware/auth.js';
+import {join} from "path";
 var app = express();
 
 
@@ -32,6 +34,7 @@ const uri = "mongodb+srv://qasim:qasim1234@abdulla.eftvp.mongodb.net/dappsLabDB?
 
 
 // view engine setup
+app.use(express.static(join(__dirname, './uploads')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -46,7 +49,7 @@ app.use(sassMiddleware({
     sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(AuthMiddleware)
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

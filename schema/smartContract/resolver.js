@@ -1,4 +1,4 @@
-const SmartContract = require('../../models/smartContract.js');
+const SmartContract = require('../../models');
 
 
 var  fetchData = ()=>{
@@ -20,19 +20,30 @@ const resolvers = {
         createSmartContract:async (_,{newSmartContract},{SmartContract,user})=>{
             console.log("newSmartContract:",newSmartContract)
             console.log("user:",user);
-            const smartContract = new SmartContract({
-                ...newSmartContract,
-                // publisher: user.id
-            });
+
+            const {
+                contractName,
+                shortDescription
+            } = newSmartContract;
+
+            let smartContract;
+            try {
+                smartContract =  SmartContract({
+                    ...newSmartContract,
+                    publisher: user.id
+                });
+            }catch(e){
+                console.log("error:",e)
+            }
             //
             console.log("smartContract:",smartContract);
 
             // Save the post
             let result = await smartContract.save();
-            // result = {
-            //     ...result.toObject(),
-            //     id: result._id.toString()
-            // }
+            result = {
+                ...result.toObject(),
+                id: result._id.toString()
+            }
             return result;
         }
     }

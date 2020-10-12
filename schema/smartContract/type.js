@@ -1,5 +1,5 @@
 const {gql} = require('apollo-server-express');
-const User = require('../../models/smartContract.js');
+const User = require('../../models');
 const _ = require('lodash');
 
 const smartContractTypeDefs = gql`

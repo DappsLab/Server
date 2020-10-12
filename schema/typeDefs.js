@@ -7,6 +7,7 @@ const userTypeDefs =require('./user/type')
 const baseTypeDefs =require('./baseDefs.js')
 const smartContractTypeDefs =require('./smartContract/type.js')
 const smartContractQuery = require('./smartContract/query.js')
+const imageQuery = require('./image/query.js')
 
 const typeDefs = [
     baseTypeDefs,
@@ -14,6 +15,7 @@ const typeDefs = [
     userQuery,
     smartContractTypeDefs,
     smartContractQuery,
+    imageQuery,
 ];
 
 module.exports = mergeTypeDefs(typeDefs);
