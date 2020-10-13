@@ -7,7 +7,6 @@ const imageQuery = gql `
     }
      
     extend type Mutation {
-        singleUpload(file: Upload!): File!
         imageUploader(file: Upload!): String!
     }
 

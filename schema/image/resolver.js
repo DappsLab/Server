@@ -6,7 +6,6 @@ import {
 import {
     mkdirSync,
     existsSync,
-    createReadStream,
     createWriteStream
 } from 'fs';
 
@@ -15,16 +14,8 @@ import {
 } from '../../config';
 
 import {
-    ApolloError, gql
+    ApolloError
 } from 'apollo-server-express';
-const storeUpload = ({ stream, filename }) => {
-    new Promise((resolve, reject) =>
-        stream
-            .pipe(createWriteStream(join(__dirname, `../../uploads/`, filename)))
-            .on("finish", () => resolve())
-            .on("error", reject)
-    );
-};
 
 const resolvers = {
     Query: {
@@ -32,15 +23,6 @@ const resolvers = {
         uploads: () => "hello i am image!",
     },
     Mutation: {
-        singleUpload: async (parent, args) => {
-            const {stream, filename} = await args.file;
-
-            await storeUpload({stream, filename});
-            return args.file.then(file => {
-                console.log(file);
-                return file;
-            });
-        },
 
 
 

@@ -1,4 +1,5 @@
-const SmartContract = require('../../models');
+const {SmartContract,User} = require('../../models');
+
 
 
 var  fetchData = ()=>{
@@ -18,8 +19,8 @@ const resolvers = {
     },
     Mutation:{
         createSmartContract:async (_,{newSmartContract},{SmartContract,user})=>{
-            console.log("newSmartContract:",newSmartContract)
-            console.log("user:",user);
+            // console.log("newSmartContract:",newSmartContract)
+            // console.log("user:",user);
 
             const {
                 contractName,
@@ -36,10 +37,24 @@ const resolvers = {
                 console.log("error:",e)
             }
             //
-            console.log("smartContract:",smartContract);
+            // console.log("smartContract:",smartContract);
 
             // Save the post
             let result = await smartContract.save();
+
+
+            try{
+                // let newUser = User;
+                // newUser.
+                // console.log("UserID:",user.id)
+                let response = await User.findById(user.id);
+                response.smartContracts.push(result._id);
+                response.save();
+                // console.log("hello to response:",response);
+            }catch(e){
+                console.log("error:",e)
+            }
+
             result = {
                 ...result.toObject(),
                 id: result._id.toString()
