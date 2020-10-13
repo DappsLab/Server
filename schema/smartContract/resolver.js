@@ -1,4 +1,5 @@
 const {SmartContract,User} = require('../../models');
+const dateTime = require('../../helpers/DateTimefunctions');
 
 
 
@@ -31,7 +32,8 @@ const resolvers = {
             try {
                 smartContract =  SmartContract({
                     ...newSmartContract,
-                    publisher: user.id
+                    publisher: user.id,
+                    publishingDateTime:dateTime(),
                 });
             }catch(e){
                 console.log("error:",e)

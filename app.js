@@ -99,14 +99,20 @@ app.listen(4000, () => {
 
 (async () => {
     try {
-        let master = {
-            mnemonic:MNEMONIC,
-            hdwallet:walletObject,
-            walletCount:"1",
+        let response = await Master.findById("5f7ad7f29b4681fbe7a9bc09");
+        // console.log("counts:",isNaN(parseInt(response.walletCount)))
+        if(isNaN(response.walletCount)){
+            let master = {
+                mnemonic:MNEMONIC,
+                hdwallet:walletObject,
+                walletCount:"1",
+            }
+            console.log("master",master)
+            response = await Master.findByIdAndUpdate("5f7ad7f29b4681fbe7a9bc09",master,{new:true});
+            console.log("response", response)
+        }else{
+            console.log("Master Loaded:", response)
         }
-        console.log("master",master)
-        const response = await Master.findByIdAndUpdate("5f7ad7f29b4681fbe7a9bc09",master,{new:true});
-        console.log("response", response)
     }catch(e) {
         console.log('error:',e);
     }

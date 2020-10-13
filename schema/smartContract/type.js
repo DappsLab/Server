@@ -22,6 +22,7 @@ const smartContractTypeDefs = gql`
         compiledCounts: String,
         testedCounts: String,
         deployedCounts: String,
+        
     },
     
     type SmartContract {

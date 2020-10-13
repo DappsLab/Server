@@ -12,15 +12,16 @@ const smartContractSchema = new Schema({
     source: String,
     // publisher: mongoose.ObjectId,
     publishingDateTime:String,
-    verified: String,
+    verified: {
+        type: String,
+        default:"NOT_VERIFIED"
+    },
     // verifiedBy: mongoose.ObjectId,
     verifiedDateTime:String,
     purchasedCounts: String,
     compiledCounts: String,
     testedCounts: String,
     deployedCounts: String,
-    createdAt: String,
-    updatedAt: String,
     publisher: {
         ref: 'users',
         type: Schema.Types.ObjectId
@@ -30,6 +31,8 @@ const smartContractSchema = new Schema({
         type: Schema.Types.ObjectId
     },
 
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model('smartcontracts', smartContractSchema);

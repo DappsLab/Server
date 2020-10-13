@@ -6,15 +6,15 @@ import * as yup from 'yup';
 
 const userName = yup
     .string()
-    .required('userName is required.')
-    .min(5, 'userName should have atleast 5 characters.')
-    .max(20, 'userName should have atmost 10 characters.')
+    .required('UserName is required.')
+    .min(5, 'UserName should have atleast 5 characters.')
+    .max(20, 'UserName should have atmost 10 characters.')
     .matches(/^\w+$/, 'Should be alphanumeric.');
 
 const fullName = yup
     .string()
-    .required('fullName is required.')
-    .min(3, 'fullName should have atleast 3 characters.');
+    .required('FullName is required.')
+    .min(3, 'FullName should have atleast 3 characters.');
 
 
 const email = yup
@@ -26,7 +26,7 @@ const password = yup
     .string()
     .required("Password is required.")
     .min(5, 'Password should have atleast 5 characters.')
-    .max(10, 'Password should have atmost 10 characters.');
+    .max(12, 'Password should have atmost 12 characters.');
 
 // User Registeration Validation Schema
 export const UserRegisterationRules = yup.object().shape({

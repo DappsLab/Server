@@ -6,11 +6,17 @@ const userSchema = new Schema({
     userName: String,
     email: String,
     password: String,
-    avatar: String,
+    avatar: {
+        type:String,
+        default:"http://localhost:4000/user.png"
+    },
     address: String,
     balance: String,
     location: String,
-    type:String,
+    type:{
+        type:String,
+        default:"USER",
+    },
     kyc: {
         mobile: String,
         birthDate: String,
@@ -20,7 +26,10 @@ const userSchema = new Schema({
         city: String,
         streetName: String,
         streetNumber: String,
-        kycStatus:String
+        kycStatus:{
+            type: String,
+            default:"NOT_VERIFIED"
+        }
     },
     testAddress:[{address:String,balance:String,password:String}],
     wallet:{
@@ -31,6 +40,8 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'smartcontracts',
     }],
+}, {
+    timestamps: true
 });
 
 
