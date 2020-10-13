@@ -1,14 +1,14 @@
-import {
-    gql
-} from "apollo-server-express";
-
+const {gql} = require('apollo-server-express');
 
 const imageQuery = gql `
+    
     extend type Query {
-        hello: String!
-    },
+        uploads: [File]
+    }
+     
     extend type Mutation {
-        imageUploader(file: Upload!): String! @isAuth
+        singleUpload(file: Upload!): File!
+        imageUploader(file: Upload!): String!
     }
 
 `

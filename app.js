@@ -17,6 +17,7 @@ const {MNEMONIC,PATH} =require('./config');
 const {walletObject}= require('./helpers/Walletfunctions.js');
 import AuthMiddleware from './middleware/auth.js';
 import {join} from "path";
+
 var app = express();
 
 
