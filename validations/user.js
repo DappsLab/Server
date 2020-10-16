@@ -26,7 +26,7 @@ const password = yup
     .string()
     .required("Password is required.")
     .min(5, 'Password should have atleast 5 characters.')
-    .max(12, 'Password should have atmost 12 characters.');
+    .max(15, 'Password should have atmost 15 characters.');
 
 // User Registeration Validation Schema
 export const UserRegisterationRules = yup.object().shape({

@@ -11,24 +11,25 @@ const userQuery = gql`
     
     extend type Mutation {
         registerUser(newUser: UserInput!): AuthUser!,
+        editUser(newUser: UserInput!): User @isAuth,
         addUser(
             fullName: String,
             userName:String,
             email:String,
             password:String,
         ): User,
-        editUser(
-            id: String!,
-            fullName: String,
-            userName:String,
-            email:String,
-            password:String,
-            avatar:String,
-            address:String,
-            balance:String,
-            location:String,
-            type:Type,
-        ):User,
+#        editUser(
+#            id: String!,
+#            fullName: String,
+#            userName:String,
+#            email:String,
+#            password:String,
+#            avatar:String,
+#            address:String,
+#            balance:String,
+#            location:String,
+#            type:Type,
+#        ):User,
         deleteUser(
             id: String!,
         ):User,

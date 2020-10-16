@@ -11,7 +11,7 @@ import {
 } from 'apollo-server-express';
 
 var fetchData = () => {
-    return User.find().populate('smartContracts');
+    return User.find().populate('smartContracts').execPopulate();
 }
 
 const resolvers = {
@@ -36,11 +36,14 @@ const resolvers = {
                 throw new ApolloError("Username not found", '404');
             }
             // If user is found then compare the password
-            let isMatch = compare(password, user.password);
+            let isMatch = await compare(password, user.password);
             // If Password don't match
+            console.log("isMatch:",isMatch);
             if (!isMatch) {
                 throw new ApolloError("Username not found", '403');
             }
+            // If Password don't match
+            //
             user = await serializeUser(user);
             // Issue Token
             let token = await issueAuthToken(user);
@@ -69,13 +72,40 @@ const resolvers = {
                 return e.message;
             }
         },
-        editUser: async (_, args) => {
-            try {
-                let response = await User.findByIdAndUpdate(args.id, args, {new: true});
-                console.log(response);
-                return response;
-            } catch (e) {
-                return e.message;
+        // editUser: async (_, args) => {
+        //     try {
+        //         let response = await User.findByIdAndUpdate(args.id, args, {new: true});
+        //         console.log(response);
+        //         return response;
+        //     } catch (e) {
+        //         return e.message;
+        //     }
+        // },
+        editUser:async (_,{newUser}, {User,user}) => {
+            try{
+
+                let {
+                    password,
+                    userName
+                } = newUser;
+
+                await UserAuthenticationRules.validate({ userName, password }, { abortEarly: false });
+
+
+                newUser.password = await hash(newUser.password, 10);
+                delete newUser.userName
+                delete newUser.email
+
+                // Save the user to the database
+                let response = await User.findOneAndUpdate({_id: user.id},newUser, {new: true}).populate('smartContracts');
+                if (!response) {
+                    throw new Error("Unathorized Access");
+                }
+
+                return response
+
+            } catch (err) {
+                throw new ApolloError(err.message);
             }
         },
         deleteUser: async (_, args) => {

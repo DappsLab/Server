@@ -10,6 +10,10 @@ const userTypeDefs = gql`
         userName: String!,
         email: String!,
         password: String!,
+        avatar: String,
+        balance: String,
+        location: String,
+        type:Type,
     }
     
     type User {
