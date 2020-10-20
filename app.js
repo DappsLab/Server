@@ -17,12 +17,14 @@ const {MNEMONIC,PATH} =require('./config');
 const {walletObject}= require('./helpers/Walletfunctions.js');
 import AuthMiddleware from './middleware/auth.js';
 import {join} from "path";
-var cors=require('cors');
+let cors=require('cors');
 
 var app = express();
 
 
 console.log("walletObject",walletObject);
+app.use(cors());
+
 
 
 // connect to DB mongo
@@ -50,7 +52,6 @@ app.use(sassMiddleware({
     indentedSyntax: true, // true = .sass and false = .scss
     sourceMap: true
 }));
-app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(AuthMiddleware)
 app.use('/', indexRouter);
