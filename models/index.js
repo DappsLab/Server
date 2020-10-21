@@ -1,4 +1,10 @@
 export {default as User} from './user';
 export {default as Master} from './master';
 export {default as SmartContract} from './smartContract';
-
+export {default as CompiledContract} from './compiledContract';
+export {default as DeployedContract} from './deployedContract';
+export {default as Order} from './order';
+export {default as PurchasedContract} from './purchasedContract';
+export {default as TestedContract} from './testedContract';
+export {default as TestDeployedContract} from './testDeployedContract';
+export {default as TestCompiledContract} from './testCompiledContract';

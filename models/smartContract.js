@@ -35,4 +35,4 @@ const smartContractSchema = new Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('smartcontracts', smartContractSchema);
+module.exports = mongoose.model('SmartContract', smartContractSchema);

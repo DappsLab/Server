@@ -27,4 +27,4 @@ const purchasedContractSchema = new Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('purchasedcontracts', purchasedContractSchema);
+module.exports = mongoose.model('PurchasedContract', purchasedContractSchema);

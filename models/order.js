@@ -14,4 +14,4 @@ const orderSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('CompiledContract', orderSchema);
+module.exports = mongoose.model('Order', orderSchema);
