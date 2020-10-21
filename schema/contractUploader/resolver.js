@@ -18,15 +18,8 @@ import {
 } from 'apollo-server-express';
 
 const resolvers = {
-    Query: {
-        // hello: () => "I am Image Upload Resolver.",
-        uploads: () => "hello i am image!",
-    },
-    Mutation: {
-
-
-
-        imageUploader: async (_, {
+    Mutation:{
+        contractUploader: async (_, {
             file
         }) => {
             try {
@@ -45,7 +38,7 @@ const resolvers = {
                 name = name.replace(/([^a-z0-9 ]+)/gi, '-').replace(' ', '_');
 
                 let serverFile = join(
-                    __dirname, `../../uploads/${name}-${Date.now()}${ext}`
+                    __dirname, `../../contracts/${name}-${Date.now()}${ext}`
                 );
 
                 serverFile = serverFile.replace(' ', '_');
@@ -54,7 +47,7 @@ const resolvers = {
 
                 await stream.pipe(writeStream);
 
-                serverFile = `${BASE_URL}${serverFile.split('uploads')[1]}`;
+                serverFile = `${BASE_URL}${serverFile.split('contracts')[1]}`;
 
                 return serverFile;
             } catch (err) {

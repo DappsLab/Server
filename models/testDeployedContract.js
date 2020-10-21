@@ -9,7 +9,7 @@ const deployedContractSchema = new Schema({
         type: Schema.Types.ObjectId
     },
     compiledContract: {
-        ref: 'compiledcontracts',
+        ref: 'testcompiledcontracts',
         type: Schema.Types.ObjectId
     },
     contractAddress: String,

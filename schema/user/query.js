@@ -5,7 +5,7 @@ const userQuery = gql`
         authUser: User @isAuth
         loginUser(userName: String!, password: String!):AuthUser!
         users: [User],
-        me:User,
+        me:User @isAuth
         userById(id:ID!):User,
     },
     

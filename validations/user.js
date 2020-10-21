@@ -7,7 +7,7 @@ import * as yup from 'yup';
 const userName = yup
     .string()
     .required('UserName is required.')
-    .min(5, 'UserName should have atleast 5 characters.')
+    .min(3, 'UserName should have atleast 5 characters.')
     .max(20, 'UserName should have atmost 10 characters.')
     .matches(/^\w+$/, 'Should be alphanumeric.');
 

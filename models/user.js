@@ -28,7 +28,7 @@ const userSchema = new Schema({
         streetNumber: String,
         kycStatus:{
             type: String,
-            default:"NOT_VERIFIED"
+            default:"NOT_SUBMITTED"
         }
     },
     testAddress:[{address:String,balance:String,password:String}],
@@ -39,6 +39,18 @@ const userSchema = new Schema({
     smartContracts: [{
         type: Schema.Types.ObjectId,
         ref: 'smartcontracts',
+    }],
+    purchasedContracts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'purchasedcontracts',
+    }],
+    testedContracts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'testedcontracts',
+    }],
+    orders: [{
+        type: Schema.Types.ObjectId,
+        ref: 'orders',
     }],
 }, {
     timestamps: true
