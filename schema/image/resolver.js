@@ -29,11 +29,13 @@ const resolvers = {
         imageUploader: async (_, {
             file
         }) => {
+            console.log("file:",file);
             try {
                 const {
                     filename,
                     createReadStream
                 } = await file;
+                console.log("readstresm():",file.createReadStream);
 
                 let stream = createReadStream();
 
@@ -41,6 +43,7 @@ const resolvers = {
                     ext,
                     name
                 } = parse(filename);
+
 
                 name = name.replace(/([^a-z0-9 ]+)/gi, '-').replace(' ', '_');
 
@@ -51,7 +54,7 @@ const resolvers = {
                 serverFile = serverFile.replace(' ', '_');
 
                 let writeStream = await createWriteStream(serverFile);
-
+                console.log("Stream:",writeStream);
                 await stream.pipe(writeStream);
 
                 serverFile = `${BASE_URL}${serverFile.split('uploads')[1]}`;
