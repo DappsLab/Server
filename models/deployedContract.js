@@ -20,4 +20,5 @@ const deployedContractSchema = new Schema({
     createdAtBalance: String
 });
 
-module.exports = mongoose.model('DeployedContract', deployedContractSchema);
+const DeployedContract = mongoose.model('deployedcontracts', deployedContractSchema);
+export default DeployedContract;

@@ -19,4 +19,6 @@ const testedContractSchema = new Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('TestedContract', testedContractSchema);
+const TestedContract = mongoose.model('testedcontracts', testedContractSchema);
+
+export default TestedContract;

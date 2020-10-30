@@ -14,4 +14,8 @@ var kycSchema = new Schema({
     kycStatus: String
 });
 
-module.exports = mongoose.model('Kyc', kycSchema);
+// ! DON'T UNCOMMENT
+// module.exports = mongoose.model('Kyc', kycSchema);
+
+const Kyc = mongoose.model('kyc', kycSchema);
+export default Kyc;

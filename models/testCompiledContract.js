@@ -20,4 +20,7 @@ const testCompiledContractSchema = new Schema({
     }],
 });
 
-module.exports = mongoose.model('TestCompiledContract', testCompiledContractSchema);
+
+const TestCompiledContract = mongoose.model('testcompiledcontracts', testCompiledContractSchema);
+
+export default TestCompiledContract;

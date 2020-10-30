@@ -8,9 +8,11 @@ const masterSchema = new Schema({
     walletCount: String,
 });
 
+// ! DON'T UNCOMMENT
+// masterSchema.set('toObject', { virtuals: true });
+// const Master = mongoose.model('master', masterSchema);
+// module.exports = mongoose.model('Master', masterSchema);
 
-masterSchema.set('toObject', { virtuals: true });
-const Master = mongoose.model('master', masterSchema);
+const Master = mongoose.model('masters', masterSchema);
 
-module.exports = mongoose.model('Master', masterSchema);
-
+export default Master;
