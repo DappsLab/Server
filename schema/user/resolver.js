@@ -1,9 +1,8 @@
-import {Master} from "../../models";
+import {Master,User} from "../../models";
 const {PATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
 const {serializeUser, issueAuthToken,serializeEmail} = require('../../helpers/Userfunctions.js')
 const {UserRegisterationRules, UserAuthenticationRules} = require('../../validations');
-const User = require('../../models/user');
 const {walletObject} = require('../../helpers/Walletfunctions.js');
 const {verify} = require('jsonwebtoken');
 import {ApolloError} from 'apollo-server-express';
