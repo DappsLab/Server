@@ -5,11 +5,15 @@ const _ = require('lodash');
 
 const userTypeDefs = gql`
 
-    input UserInput {
+    input UserRegisterInput  {
         fullName: String!,
         userName: String!,
         email: String!,
         password: String!,
+    }
+
+    input UserInput {
+        fullName: String,
         avatar: String,
         balance: String,
         location: String,
@@ -22,6 +26,9 @@ const userTypeDefs = gql`
         userName: String!,
         email: String!,
         password: String!,
+        confirmed: Boolean!,
+        resetPasswordToken: String,
+        emailConfirmToken: String,
         avatar: String,
         address: String!,
         balance: String!,

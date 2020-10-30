@@ -1,14 +1,14 @@
 import {Master} from "../../models";
-const {PATH} = require("../../config")
+const {PATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
-const {serializeUser, issueAuthToken} = require('../../helpers/Userfunctions.js')
+const {serializeUser, issueAuthToken,serializeEmail} = require('../../helpers/Userfunctions.js')
 const {UserRegisterationRules, UserAuthenticationRules} = require('../../validations');
 const User = require('../../models/user');
 const {walletObject} = require('../../helpers/Walletfunctions.js');
-
-import {
-    ApolloError
-} from 'apollo-server-express';
+const {verify} = require('jsonwebtoken');
+import {ApolloError} from 'apollo-server-express';
+import {sendEmail} from "../../utils/sendEmail";
+import {emailConfirmationUrl} from "../../utils/emailConfirmationUrl";
 
 var fetchData = () => {
     return User.find().populate('smartContracts');
@@ -40,7 +40,11 @@ const resolvers = {
             // If Password don't match
             console.log("isMatch:",isMatch);
             if (!isMatch) {
-                throw new ApolloError("Username not found", '403');
+                throw new ApolloError("Username or Password is invalid", '403');
+            }
+
+            if (!user.confirmed) {
+                throw new ApolloError("Email not confirmed", '403');
             }
             // If Password don't match
             //
@@ -64,6 +68,38 @@ const resolvers = {
         }) => user,
     },
     Mutation: {
+        confirmEmail:async (_,{token}, {User}) =>{
+            console.log("token",token)
+            if (!token || token === ""||token == "") {
+                return "token not found"
+            }
+
+            // Verify the extracted token
+            let decodedToken;
+            try {
+                decodedToken = verify(token, SECRET);
+            } catch (err) {
+                return "token not found"
+            }
+
+            // If decoded token is null then set authentication of the request false
+            if (!decodedToken) {
+                return "token not found"
+            }
+
+            // If the user has valid token then Find the user by decoded token's id
+            let authUser = await User.findById(decodedToken.id);
+            let user;
+            if (!authUser) {
+                return "invalid token"
+            }else{
+                if(authUser.emailConfirmToken===token){
+                   user = await User.findByIdAndUpdate(authUser.id,{$set:{confirmed:true,emailConfirmToken:""}},{new: true});
+                }
+            }
+            console.log("authUser:",user);
+            return user
+        },
         addUser: async (_, args) => {
             try {
                 let response = await User.create(args);
@@ -81,27 +117,14 @@ const resolvers = {
         //         return e.message;
         //     }
         // },
-        editUser:async (_,{newUser}, {User,user}) => {
+        editUser:async (_,{newUser},{User,user}) => {
+            console.log("user:",user);
+            console.log("User:",User);
             try{
-
-                let {
-                    password,
-                    userName
-                } = newUser;
-
-                await UserAuthenticationRules.validate({ userName, password }, { abortEarly: false });
-
-
-                newUser.password = await hash(newUser.password, 10);
-                delete newUser.userName
-                delete newUser.email
-
-                // Save the user to the database
                 let response = await User.findOneAndUpdate({_id: user.id},newUser, {new: true}).populate('smartContracts');
                 if (!response) {
                     throw new Error("Unathorized Access");
                 }
-
                 return response
 
             } catch (err) {
@@ -230,7 +253,19 @@ const resolvers = {
 
                 // Save the user to the database
                 let result = await user.save();
+                let emailstr={
+                    id:user.id,
+                    email:user.email
+                }
+                console.log("emailstr:",emailstr)
+                let userEmail=await serializeEmail(emailstr);
+                console.log("userEmail:",userEmail)
+                let emailLink = await emailConfirmationUrl(userEmail);
+                console.log("emailLink:",emailLink);
+                await sendEmail(result.email,emailLink);
                 result = await serializeUser(result);
+
+
                 // Issue Token
                 let token = await issueAuthToken(result);
                 return {

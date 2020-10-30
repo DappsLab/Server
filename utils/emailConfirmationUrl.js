@@ -1,6 +1,11 @@
-export const createConfirmationUrl=async(userId)=>{
-    let token = await sign(jwtPayload, SECRET, {
-        expiresIn: 3600*24
-    });
-    return `Bearer ${token}`;
+import {issueConfirmEmailToken} from "../helpers/Userfunctions";
+const User = require('../models/user');
+
+const emailConfirmationUrl=async(user)=>{
+    const token = await issueConfirmEmailToken(user);
+    await User.findByIdAndUpdate(user.id,{$set:{emailConfirmToken:token}},{new: true});
+    return `http://localhost:3000/user/confirm/${token}`;
 }
+
+
+module.exports={emailConfirmationUrl}

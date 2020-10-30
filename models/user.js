@@ -3,19 +3,28 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     fullName: String,
-    userName: String,
+    userName: {
+        type:String,
+        unique: true
+    },
     email: String,
     password: String,
+    confirmed: {
+        type: Boolean,
+        default:false
+    },
+    resetPasswordToken: String,
+    emailConfirmToken: String,
     avatar: {
-        type:String,
-        default:"http://localhost:4000/user.png"
+        type: String,
+        default: "http://localhost:4000/user.png"
     },
     address: String,
     balance: String,
     location: String,
-    type:{
-        type:String,
-        default:"USER",
+    type: {
+        type: String,
+        default: "USER",
     },
     kyc: {
         mobile: String,
@@ -26,15 +35,15 @@ const userSchema = new Schema({
         city: String,
         streetName: String,
         streetNumber: String,
-        kycStatus:{
+        kycStatus: {
             type: String,
-            default:"NOT_SUBMITTED"
+            default: "NOT_SUBMITTED"
         }
     },
-    testAddress:[{address:String,balance:String,password:String}],
-    wallet:{
-        privateKey:String,
-        publicKey:String,
+    testAddress: [{address: String, balance: String, password: String}],
+    wallet: {
+        privateKey: String,
+        publicKey: String,
     },
     smartContracts: [{
         type: Schema.Types.ObjectId,
@@ -57,7 +66,7 @@ const userSchema = new Schema({
 });
 
 
-userSchema.set('toObject', { virtuals: true });
+userSchema.set('toObject', {virtuals: true});
 // const User = mongoose.model('users', userSchema);
 
 module.exports = mongoose.model('User', userSchema);

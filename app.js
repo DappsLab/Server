@@ -17,6 +17,8 @@ const {MNEMONIC,PATH} =require('./config');
 const {walletObject}= require('./helpers/Walletfunctions.js');
 import AuthMiddleware from './middleware/auth.js';
 import {join} from "path";
+import {sendEmail} from "./utils/sendEmail";
+
 let cors=require('cors');
 
 var app = express();
@@ -34,7 +36,6 @@ const uri = "mongodb+srv://qasim:qasim1234@abdulla.eftvp.mongodb.net/dappsLabDB?
     mongoose.connection.once('open', () => {
     console.log(' 🍃 connected to mongoDB mLab');
 })
-
 
 
 // view engine setup
@@ -119,6 +120,7 @@ app.listen(4000, () => {
     }catch(e) {
         console.log('error:',e);
     }
+
 })()
 
 module.exports = app;
