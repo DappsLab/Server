@@ -72,8 +72,8 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-.env.test
+#.env
+#.env.test
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -121,3 +121,10 @@ node_modules/@apollo/protobufjs/cli/node_modules/
 public/images/
 public/javascripts/
 resolvers/
+schema/compiledContract/
+schema/deployedContract/
+schema/order/
+schema/purchasedContract/
+schema/testCompiledContract/
+schema/testDeployedContract/
+schema/testedContract/
