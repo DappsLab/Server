@@ -3,7 +3,7 @@ import {Master, User} from "../../models";
 const {PATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
 const {serializeUser, issueAuthToken, serializeEmail} = require('../../helpers/Userfunctions.js')
-const {UserRegisterationRules, UserAuthenticationRules} = require('../../validations');
+const {UserRegisterationRules, UserAuthenticationRules, EmailRules} = require('../../validations');
 const {walletObject} = require('../../helpers/Walletfunctions.js');
 const {verify} = require('jsonwebtoken');
 import {ApolloError} from 'apollo-server-express';
@@ -80,12 +80,13 @@ const resolvers = {
     },
     Mutation: {
         forgetPassword: async (_, email) => {
-            await UserAuthenticationRules.validate({email}, {abortEarly: false});
+            await EmailRules.validate({email}, {abortEarly: false});
 
             const user = await User.findOne({email});
             if(!user){
                 console.log("Email not Registered!")
-                return false;
+                throw new ApolloError("Email not registered", '404');
+
             }else{
                 let emailData = {
                     id: user.id,
@@ -95,6 +96,7 @@ const resolvers = {
                 let emailLink = await forgetPasswordUrl(userEmail);
                 return await sendEmail(result.email, emailLink);
             }
+
         },
         resetPassword: async (_, {token,password}) => {
             console.log("token", token)

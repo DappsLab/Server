@@ -41,3 +41,7 @@ export const UserAuthenticationRules = yup.object().shape({
     userName,
     password
 });
+
+export const EmailRules= yup.object().shape({
+    email
+})
