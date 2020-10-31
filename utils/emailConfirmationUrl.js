@@ -1,5 +1,5 @@
 import {issueConfirmEmailToken} from "../helpers/Userfunctions";
-const User = require('../models/user');
+const {User} = require('../models');
 
 const emailConfirmationUrl=async(user)=>{
     const token = await issueConfirmEmailToken(user);
