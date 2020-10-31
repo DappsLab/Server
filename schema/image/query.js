@@ -1,5 +1,6 @@
 const {gql} = require('apollo-server-express');
 
+// todo add auth
 const imageQuery = gql `
     
     extend type Query {

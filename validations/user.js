@@ -44,4 +44,4 @@ export const UserAuthenticationRules = yup.object().shape({
 
 export const EmailRules= yup.object().shape({
     email
-})
+});

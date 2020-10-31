@@ -27,15 +27,35 @@ export async function sendEmail(email,link) {
         html: `<b>confirm your account:</br><a href="${link}">click here</a></b>`,
     }
     // send mail with defined transport object
-    await transporter.sendMail(mailOptions,(err,data)=>{
-        if(err){
-            console.log("error:",err);
-            return false;
-        }else{
-            console.log("email sent successfully");
-            console.log("Message sent: %s", data.messageId);
-            return true;
-        }
-    });
 
+
+
+    try{
+        const info = await transporter.sendMail(mailOptions);
+        return true;
+    }catch (err){
+        console.log("Sending mail Error:",err)
+        return false
+    }
+
+    // return new Promise(async (resolve, reject) => {
+    //     try {
+    //         const send = await new Promise((resolve, reject) => {
+    //             transporter.sendMail(mailOptions,(err,data)=>{
+    //                 if(err){
+    //                     console.log("error:",err);
+    //                     reject(err)
+    //                 }else{
+    //                     resolve(data);
+    //                 }
+    //             });
+    //         })
+    //         // resolve(send)
+    //         return true
+    //     }
+    //     catch (e) {
+    //         reject(e)
+    //         // return false
+    //     }
+    // })
 }

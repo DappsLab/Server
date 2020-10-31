@@ -44,7 +44,7 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await emailConfirmationUrl(userEmail);
-                console.log("email message:", await sendEmail(user.email, emailLink))
+                let resp = await sendEmail(user.email, emailLink)
                 throw new ApolloError("Email not confirmed", '403');
             }else{
 
@@ -79,10 +79,11 @@ const resolvers = {
         }) => user,
     },
     Mutation: {
-        forgetPassword: async (_, email) => {
+        forgetPassword: async (_, {email}) => {
             await EmailRules.validate({email}, {abortEarly: false});
 
-            const user = await User.findOne({email});
+            const user = await User.findOne({email: email});
+            console.log("User", user)
             if(!user){
                 console.log("Email not Registered!")
                 throw new ApolloError("Email not registered", '404');
@@ -94,7 +95,9 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await forgetPasswordUrl(userEmail);
-                return await sendEmail(result.email, emailLink);
+                const success = await sendEmail(email, emailLink);
+                console.log("success",success);
+                return success
             }
 
         },
@@ -286,7 +289,7 @@ const resolvers = {
 
                 let {
                     email,
-                    userName
+                    userName,
                 } = newUser;
                 // console.log("UserName:",userName);
                 // Validate Incoming New User Arguments
