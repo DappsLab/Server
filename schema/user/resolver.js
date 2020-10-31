@@ -44,9 +44,8 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await emailConfirmationUrl(userEmail);
-                console.log("email message:", await sendEmail(result.email, emailLink))
-                return ("Email not confirmed")
-                // throw new ApolloError("Email not confirmed", '403');
+                console.log("email message:", await sendEmail(user.email, emailLink))
+                throw new ApolloError("Email not confirmed", '403');
             }else{
 
             }
