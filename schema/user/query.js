@@ -12,7 +12,7 @@ const userQuery = gql`
     extend type Mutation {
         registerUser(newUser: UserRegisterInput!): AuthUser!,
         editUser(newUser: UserInput!): User @isAuth,
-        confirmEmail(token: String!): User,
+        confirmEmail(token: String!): Boolean!,
         forgetPassword(email: String!): Boolean,
         resetPassword(token: String!, password:String!): User,
         changePassword(token: String!):User,

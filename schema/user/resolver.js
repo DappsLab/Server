@@ -36,16 +36,19 @@ const resolvers = {
             if (!user) {
                 throw new ApolloError("Username not found", '404');
             }else if(!user.confirmed){
-
+                console.log("sending email")
+                console.log("User",user)
                 let emailData = {
                     id: user.id,
                     email: user.email
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await emailConfirmationUrl(userEmail);
-                await sendEmail(result.email, emailLink);
+                console.log("email message:", await sendEmail(result.email, emailLink))
+                return ("Email not confirmed")
+                // throw new ApolloError("Email not confirmed", '403');
+            }else{
 
-                throw new ApolloError("Email not confirmed", '403');
             }
             // If user is found then compare the password
             let isMatch = await compare(password, user.password);
@@ -134,7 +137,7 @@ const resolvers = {
             console.log("authUser:", user);
             return user
         },
-        confirmEmail: async (_, {token}, {User}) => {
+        confirmEmail: async (_, {token}) => {
             console.log("token", token)
             if (!token || token === "" || token == "") {
                 return "token not found"
@@ -158,6 +161,7 @@ const resolvers = {
             let user;
             if (!authUser) {
                 return "invalid token"
+                return false
             } else {
                 if (authUser.emailConfirmToken === token) {
                     user = await User.findByIdAndUpdate(authUser.id, {
@@ -166,10 +170,11 @@ const resolvers = {
                             emailConfirmToken: ""
                         }
                     }, {new: true});
+                    return true
                 }
             }
             console.log("authUser:", user);
-            return user
+            return false
         },
         addUser: async (_, args) => {
             try {
