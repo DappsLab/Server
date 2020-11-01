@@ -3,7 +3,7 @@ import {Master, User} from "../../models";
 const {PATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
 const {serializeUser, issueAuthToken, serializeEmail} = require('../../helpers/Userfunctions.js')
-const {UserRegisterationRules, UserAuthenticationRules, EmailRules} = require('../../validations');
+const {UserRegisterationRules, UserAuthenticationRules, EmailRules, PasswordRules} = require('../../validations');
 const {walletObject} = require('../../helpers/Walletfunctions.js');
 const {verify} = require('jsonwebtoken');
 import {ApolloError} from 'apollo-server-express';
@@ -95,16 +95,16 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await forgetPasswordUrl(userEmail);
-                const success = await sendEmail(email, emailLink);
-                console.log("success",success);
-                return success
+                return await sendEmail(email, emailLink);
             }
 
         },
         resetPassword: async (_, {token,password}) => {
-            console.log("token", token)
+
+            console.log("token",token)
+            console.log("Psaaword:",password)
             if (!token || token === "" || token == "") {
-                return "token not found"
+                throw new ApolloError("token not found", '404');
             }
 
             // Verify the extracted token
@@ -112,22 +112,23 @@ const resolvers = {
             try {
                 decodedToken = verify(token, SECRET);
             } catch (err) {
-                return "token not found"
+                throw new ApolloError("token not found", '404');
             }
 
             // If decoded token is null then set authentication of the request false
             if (!decodedToken) {
-                return "token not found"
+                throw new ApolloError("token not found", '404');
             }
 
             // If the user has valid token then Find the user by decoded token's id
             let authUser = await User.findById(decodedToken.id);
             let user;
             if (!authUser) {
-                return "invalid token"
+                throw new ApolloError("invalid token", '404');
+
             } else {
 
-                await UserRegisterationRules.validate(password, {abortEarly: false});
+                await PasswordRules.validate({password}, {abortEarly: false});
                 const passwordHash = await hash(password, 10);
                 if (authUser.resetPasswordToken === token) {
                     user = await User.findByIdAndUpdate(authUser.id, {
@@ -136,10 +137,10 @@ const resolvers = {
                             resetPasswordToken: ""
                         }
                     }, {new: true});
+                    return true
                 }
             }
-            console.log("authUser:", user);
-            return user
+            return false
         },
         confirmEmail: async (_, {token}) => {
             console.log("token", token)

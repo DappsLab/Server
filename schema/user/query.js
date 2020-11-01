@@ -14,7 +14,7 @@ const userQuery = gql`
         editUser(newUser: UserInput!): User @isAuth,
         confirmEmail(token: String!): Boolean!,
         forgetPassword(email: String!): Boolean!,
-        resetPassword(token: String!, password:String!): User,
+        resetPassword(token: String!, password:String!): Boolean!,
         changePassword(token: String!):User,
         addUser(
             fullName: String,
