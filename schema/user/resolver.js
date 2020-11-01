@@ -137,6 +137,7 @@ const resolvers = {
                             resetPasswordToken: ""
                         }
                     }, {new: true});
+                    // console.log("User", user)
                     return true
                 }
             }
