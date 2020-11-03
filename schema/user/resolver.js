@@ -21,8 +21,6 @@ const resolvers = {
             return fetchData()
         },
         me:async (_,__,{user})=>{
-            console.log("user",user);
-            console.log("User",User);
             return User.findById(user.id).populate('smartContracts');
         },
         userById: async (_, args) => {
