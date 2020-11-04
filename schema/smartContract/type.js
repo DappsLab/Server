@@ -12,17 +12,10 @@ const smartContractTypeDefs = gql`
         singleLicensePrice: String!,
         unlimitedLicensePrice: String!,
         source: String!,
-        publisher:String,#ID
-        publishingDateTime:String,
-        verified: Verified,
-        verifiedBy: String,#ID
-        verifiedDateTime:String,
-        purchasedCounts: String,
-        compiledCounts: String,
-        testedCounts: String,
-        deployedCounts: String,
-        
     },
+    input SmartContractVerify{
+        verified:Verified!,
+    }
     
     type SmartContract {
         id: ID!,

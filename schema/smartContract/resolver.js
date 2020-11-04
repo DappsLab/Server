@@ -84,7 +84,36 @@ const resolvers = {
             } catch (err) {
                 throw new ApolloError(err.message);
             }
+        },
+        verifySmartContract:async (_,{newSmartContract,id},{SmartContract,user})=>{
+            if(user.type ==="ADMIN"){
+                let smartContract;
+                try {
+                    smartContract = {
+                        ...newSmartContract,
+                        verifiedBy: user.id,
+                        verifiedDateTime:dateTime(),
+                    };
+                }catch(e){
+                    console.log("error:",e)
+                }
+                try {
+                    console.log("smartContract:",smartContract)
+                    let response = await SmartContract.findByIdAndUpdate(id,smartContract,{new:true}).populate('publisher').populate('verifiedBy');
+                    console.log("response",response)
+                    if (!response) {
+                    }
+                    return response
+
+                } catch (err) {
+                    throw new ApolloError("Update Failed");
+                    // throw new ApolloError(err.message);
+                }
+            }else{
+                throw new ApolloError("UnAuthorized User",403);
+            }
         }
+
     }
 }
 
