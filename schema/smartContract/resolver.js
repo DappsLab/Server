@@ -1,9 +1,11 @@
+import {ApolloError} from "apollo-server-express";
+
 const {SmartContract,User} = require('../../models');
 const dateTime = require('../../helpers/DateTimefunctions');
 
 
 
-var  fetchData = ()=>{
+let fetchData = ()=>{
     return SmartContract.find().populate('publisher').populate('verifiedBy');
 }
 
@@ -14,19 +16,12 @@ const resolvers = {
         },
         smartContractById: async (_,args)=>{
             let smartContract= await SmartContract.findById(args.id).populate('publisher').populate('verifiedBy');
-            // console.log("SmartContract:",smartContract);
+            console.log("SmartContract:",smartContract);
             return smartContract;
         }
     },
     Mutation:{
         createSmartContract:async (_,{newSmartContract},{SmartContract,user})=>{
-            // console.log("newSmartContract:",newSmartContract)
-            // console.log("user:",user);
-
-            const {
-                contractName,
-                shortDescription
-            } = newSmartContract;
 
             let smartContract;
             try {
@@ -43,12 +38,9 @@ const resolvers = {
 
             // Save the post
             let result = await smartContract.save();
-
+            console.log("Smart Contract:",result)
 
             try{
-                // let newUser = User;
-                // newUser.
-                // console.log("UserID:",user.id)
                 let response = await User.findById(user.id);
                 response.smartContracts.push(result._id);
                 response.save();
@@ -62,6 +54,36 @@ const resolvers = {
                 id: result._id.toString()
             }
             return result;
+        },
+        updateSmartContract:async (_,{newSmartContract,id},{SmartContract,user})=>{
+
+            try {
+                let response = await SmartContract.findByIdAndUpdate(id,newSmartContract,{new:true}).populate('publisher').populate('verifiedBy');
+                console.log("response",response)
+                if (!response) {
+                    throw new ApolloError("UPDATE failed");
+                }
+                return response
+
+            } catch (err) {
+                throw new ApolloError(err.message);
+            }
+        },
+        deleteSmartContract:async (_,{id})=>{
+            try {
+                let response = await SmartContract.findByIdAndDelete(id);
+                console.log("response",response)
+                if (!response) {
+                    throw new ApolloError("delete failed");
+                }
+                return {
+                    success: true,
+                    message: "SmartContract Deleted Successfully."
+                }
+
+            } catch (err) {
+                throw new ApolloError(err.message);
+            }
         }
     }
 }

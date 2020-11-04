@@ -1,7 +1,5 @@
 const {gql} = require('apollo-server-express');
-const User = require('../../models/user');
-const Kyc = require('../../models/kyc');
-const _ = require('lodash');
+
 
 const userTypeDefs = gql`
 

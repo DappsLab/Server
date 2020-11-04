@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const smartContractSchema = new Schema({
     contractName: String,
-    contractCategory: String,
+    contractCategory:[String],
     image: String,
     shortDescription: String,
     description: String,

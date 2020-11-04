@@ -203,8 +203,8 @@ const resolvers = {
         //     }
         // },
         editUser: async (_, {newUser}, {User, user}) => {
-            console.log("user:", user);
-            console.log("User:", User);
+            // console.log("user:", user);
+            // console.log("User:", User);
             try {
                 let response = await User.findOneAndUpdate({_id: user.id}, newUser, {new: true}).populate('smartContracts');
                 if (!response) {

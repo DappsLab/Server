@@ -1,18 +1,17 @@
 const {gql} = require('apollo-server-express');
-const User = require('../../models');
-const _ = require('lodash');
+
 
 const smartContractTypeDefs = gql`
     
     input SmartContractInput{
         contractName: String!,
-        contractCategory:[Category],
-        image: String,
-        shortDescription: String,
-        description: String,
-        singleLicensePrice: String,
-        unlimitedLicensePrice: String,
-        source: String,
+        contractCategory:[Category!]!,
+        image: String!,
+        shortDescription: String!,
+        description: String!,
+        singleLicensePrice: String!,
+        unlimitedLicensePrice: String!,
+        source: String!,
         publisher:String,#ID
         publishingDateTime:String,
         verified: Verified,
@@ -28,7 +27,8 @@ const smartContractTypeDefs = gql`
     type SmartContract {
         id: ID!,
         contractName: String,
-        contractCategory:[Category],
+#        kycStatus(status: Status): String!
+        contractCategory(category:Category):[String],
         image: String,
         shortDescription: String,
         description: String,
