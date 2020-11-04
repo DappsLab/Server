@@ -4,6 +4,7 @@ const userQuery = gql`
     extend type Query {
         authUser: User @isAuth,
         loginUser(userName: String!, password: String!):AuthUser!,
+        verify2FA(token: String!):Boolean! @isAuth,
         users: [User],
         me:User @isAuth,
         userById(id:ID!):User,
@@ -16,6 +17,7 @@ const userQuery = gql`
         forgetPassword(email: String!): Boolean!,
         resetPassword(token: String!, password:String!): Boolean!,
         changePassword(token: String!):User,
+        enable2FA:User @isAuth,
         addUser(
             fullName: String,
             userName:String,

@@ -10,6 +10,8 @@ import {ApolloError} from 'apollo-server-express';
 import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl} from "../../utils/emailConfirmationUrl";
 import {forgetPasswordUrl} from "../../utils/forgetPasswordUrl";
+import speakeasy from "speakeasy";
+import qrcode from "qrcode";
 
 var fetchData = () => {
     return User.find().populate('smartContracts');
@@ -80,8 +82,46 @@ const resolvers = {
                 user
             }
         }) => user,
+
+        verify2FA:async (_,{token},{user})=>{
+            try {
+                return await speakeasy.totp.verify({
+                    secret:user.twoFactorSecret,
+                    encoding:'base32',
+                    token:token
+                })
+            }catch(err){
+                throw new ApolloError(err)
+            }
+        },
+
+
     },
     Mutation: {
+        enable2FA:async (_,__ ,{User,user})=>{
+
+            console.log("User:",user);
+            try{
+                let secret = speakeasy.generateSecret({
+                    name:"DappsLab"
+                })
+
+                const data = await qrcode.toDataURL(secret.otpauth_url);
+                console.log("data:",data)
+
+                let response = await User.findByIdAndUpdate(user.id, {
+                    $set: {
+                        twoFactorEnabled:true,
+                        twoFactorSecret:secret.base32,
+                        twoFactorCode:data
+                    }}, {new: true});
+                // return true
+                console.log("Response:",response)
+                return response;
+            }catch(err){
+                throw new ApolloError(err);
+            }
+        },
         forgetPassword: async (_, {email}) => {
             await EmailRules.validate({email}, {abortEarly: false});
 

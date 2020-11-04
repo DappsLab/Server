@@ -22,6 +22,12 @@ const userSchema = new Schema({
     address: String,
     balance: String,
     location: String,
+    twoFactorEnabled: {
+        type: Boolean,
+        default:false
+    },
+    twoFactorSecret:String,
+    twoFactorCode: String,
     type: {
         type: String,
         default: "USER",
