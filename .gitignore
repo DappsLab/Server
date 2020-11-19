@@ -123,7 +123,6 @@ public/javascripts/
 resolvers/
 schema/compiledContract/
 schema/deployedContract/
-schema/order/
 schema/purchasedContract/
 schema/testCompiledContract/
 schema/testDeployedContract/

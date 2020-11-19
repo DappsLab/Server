@@ -1,4 +1,4 @@
-const {MNEMONIC,PATH} =require('../config');
+const {MNEMONIC,USERSPATH} =require('../config');
 let {hdkey} = require('ethereumjs-wallet');
 let bip39 = require("bip39");
 let Master = require('../models/master.js')
@@ -18,7 +18,7 @@ let walletObject={
 }
 
 // for (let i = 0; i < 5; i++) {
-    let wallet = hdwallet.derivePath(PATH + 0).getWallet();
+    let wallet = hdwallet.derivePath(USERSPATH + 0).getWallet();
     let address = wallet.getAddressString('hex');
     console.log("public key:",wallet.privateKey.toString('hex'));
     console.log("wallet2:",wallet);

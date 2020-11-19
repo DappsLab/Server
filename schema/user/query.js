@@ -18,6 +18,7 @@ const userQuery = gql`
         resetPassword(token: String!, password:String!): Boolean!,
         changePassword(token: String!):User,
         enable2FA:User @isAuth,
+        disable2FA:Boolean! @isAuth,
         addUser(
             fullName: String,
             userName:String,

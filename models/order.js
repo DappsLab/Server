@@ -7,11 +7,24 @@ const orderSchema = new Schema({
         type: Schema.Types.ObjectId
     },
     price:String,
+    licenseType:String,
     dateTime:String,
+    productType:String,
     smartContract:{
-        type: Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
         ref: 'smartcontracts'
-    }
+    },
+    address:String,
+    wallet: {
+        privateKey: String,
+        publicKey: String,
+    },
+    // dapp:{
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'dapps'
+    // }
+}, {
+    timestamps: true
 });
 
 

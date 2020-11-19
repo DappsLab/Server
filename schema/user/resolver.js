@@ -1,6 +1,6 @@
 import {Master, User} from "../../models";
 
-const {PATH, SECRET} = require("../../config")
+const {USERSPATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
 const {serializeUser, issueAuthToken, serializeEmail} = require('../../helpers/Userfunctions.js')
 const {UserRegisterationRules, UserAuthenticationRules, EmailRules, PasswordRules} = require('../../validations');
@@ -98,6 +98,20 @@ const resolvers = {
 
     },
     Mutation: {
+        disable2FA:async (_,__,{User,user})=>{
+            try{
+                let response = await User.findByIdAndUpdate(user.id, {
+                    $set: {
+                        twoFactorEnabled:false,
+                        twoFactorSecret:"",
+                        twoFactorCode:""
+                    }}, {new: true});
+                // return true
+                return true;
+            }catch(err){
+                return false;
+            }
+        },
         enable2FA:async (_,__ ,{User,user})=>{
 
             console.log("User:",user);
@@ -328,8 +342,8 @@ const resolvers = {
 
         },
         registerUser: async (_, {newUser}, {User}) => {
-            console.log("newUser:", newUser);
-            console.log("User:", User);
+            // console.log("newUser:", newUser);
+            // console.log("User:", User);
             try {
 
                 let {
@@ -356,10 +370,11 @@ const resolvers = {
                     throw new ApolloError('Email is already registred.', '403')
                 }
 
-                let master = await Master.findById("5f7ad7f29b4681fbe7a9bc09")
+                // * changed from findbyid to findone
+                let master = await Master.findOne({})
                 console.log("MASTER:", master);
-                console.log("Path:", PATH + master.walletCount);
-                let wallet = walletObject.hdwallet.derivePath(PATH + master.walletCount).getWallet();
+                console.log("Path:", USERSPATH + master.walletCount);
+                let wallet = walletObject.hdwallet.derivePath(USERSPATH + master.walletCount).getWallet();
                 let address = wallet.getAddressString();
                 console.log("address:", address);
 
@@ -369,7 +384,8 @@ const resolvers = {
                 user.address = address;
                 user.type = "USER";
                 master.walletCount = (parseInt(master.walletCount) + 1).toString();
-                const response = await Master.findByIdAndUpdate("5f7ad7f29b4681fbe7a9bc09", master, {new: true});
+                // * changed from id top master.id
+                const response = await Master.findByIdAndUpdate(master.id, master, {new: true});
                 console.log("response", response);
 
 

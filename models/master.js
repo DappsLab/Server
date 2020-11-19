@@ -6,6 +6,9 @@ const masterSchema = new Schema({
     hdwallet: Object,
     masterPrivateKey:String,
     walletCount: String,
+    orderCount:String,
+    testCount:String,
+    testOrderCount:String,
 });
 
 // ! DON'T UNCOMMENT

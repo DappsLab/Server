@@ -13,12 +13,11 @@ const mongoose = require('mongoose');
 import * as AppModels from './models';
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-const {MNEMONIC,PATH} =require('./config');
+const {MNEMONIC} =require('./config');
 const {walletObject}= require('./helpers/Walletfunctions.js');
 import AuthMiddleware from './middleware/auth.js';
 import {join} from "path";
-import {sendEmail} from "./utils/sendEmail";
-
+import './helpers/Web3Wrapper'
 let cors=require('cors');
 
 var app = express();
@@ -36,6 +35,7 @@ const uri = "mongodb+srv://qasim:qasim1234@abdulla.eftvp.mongodb.net/dappsLabDB?
     mongoose.connection.once('open', () => {
     console.log(' 🍃 connected to mongoDB mLab');
 })
+
 
 
 // view engine setup
@@ -101,18 +101,33 @@ app.listen(4000, () => {
 });
 
 
-(async () => {
+ (async () => {
     try {
-        let response = await Master.findById("5f7ad7f29b4681fbe7a9bc09");
-        // console.log("counts:",isNaN(parseInt(response.walletCount)))
-        if(isNaN(response.walletCount)){
+        let response = await Master.findOne({});
+        if(response===null){
+            let master = Master({
+                mnemonic:MNEMONIC,
+                hdwallet:walletObject,
+                walletCount:"1",
+                orderCount:"1",
+                testCount:"1",
+                testOrderCount:"1"
+            });
+            console.log("master",master)
+            response = await master.save();
+            // console.log("response", response)
+        }else if(isNaN(response.walletCount)||response.walletCount===null){
+            console.log("counts:",isNaN(parseInt(response.walletCount)))
             let master = {
                 mnemonic:MNEMONIC,
                 hdwallet:walletObject,
                 walletCount:"1",
+                orderCount:"1",
+                testCount:"1",
+                testOrderCount:"1"
             }
             console.log("master",master)
-            response = await Master.findByIdAndUpdate("5f7ad7f29b4681fbe7a9bc09",master,{new:true});
+            response = await Master.findByIdAndUpdate(response.id,master,{new:true});
             console.log("response", response)
         }else{
             console.log("Master Loaded:", response)
