@@ -48,8 +48,8 @@ const userQuery = gql`
             country:String,
             postalCode:String,
             city:String,
-            streetName:String,
-            streetNumber:String,
+            stree:String,
+            building:String,
             kycStatus:Status #hello
         ):User,
         editKyc(
@@ -60,8 +60,8 @@ const userQuery = gql`
             country:String,
             postalCode:String,
             city:String,
-            streetName:String,
-            streetNumber:String,
+            stree:String,
+            building:String,
             kycStatus:Status #hello
         ):User,
         addTestAddress(

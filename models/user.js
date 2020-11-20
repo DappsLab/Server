@@ -39,8 +39,8 @@ const userSchema = new Schema({
         country: String,
         postalCode: String,
         city: String,
-        streetName: String,
-        streetNumber: String,
+        street: String,
+        building:String,
         kycStatus: {
             type: String,
             default: "NOT_SUBMITTED"

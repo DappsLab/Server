@@ -9,8 +9,8 @@ var kycSchema = new Schema({
     country: String,
     postalCode: String,
     city: String,
-    streetName: String,
-    streetNumber: String,
+    street: String,
+    building:String,
     kycStatus: String
 });
 
