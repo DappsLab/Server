@@ -34,12 +34,12 @@ const userSchema = new Schema({
     },
     kyc: {
         mobile: String,
-        birthDate: String,
+        birthDate: String,// !
         nationality: String,
         country: String,
         postalCode: String,
         city: String,
-        street: String,
+        street: String,// !
         building:String,
         kycStatus: {
             type: String,

@@ -55,8 +55,8 @@ const userTypeDefs = gql`
         country: String,
         postalCode: String,
         city: String,
-        streetName: String,
-        streetNumber: String,
+        street: String,
+        building: String,
         kycStatus(status: Status): String!
     }
 

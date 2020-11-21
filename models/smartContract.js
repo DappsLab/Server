@@ -5,6 +5,7 @@ const smartContractSchema = new Schema({
     contractName: String,
     contractCategory:[String],
     image: String,
+    tags:[String],
     shortDescription: String,
     description: String,
     singleLicensePrice: String,

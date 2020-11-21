@@ -7,6 +7,7 @@ const smartContractTypeDefs = gql`
         contractName: String!,
         contractCategory:[Category!]!,
         image: String!,
+        tags:[String!]
         shortDescription: String!,
         description: String!,
         singleLicensePrice: String!,
@@ -15,6 +16,21 @@ const smartContractTypeDefs = gql`
     },
     input SmartContractVerify{
         verified:Verified!,
+    }
+    input SearchSmartContract{
+        contractName:String!,
+        contractCategory:[Category],
+        maxPrice:String!,
+        minPrice:String!,
+        tags:[String],
+        sortBy:Sort,
+    }
+
+    enum Sort{
+        NEWEST
+        LOW_TO_HIGH
+        HIGH_TO_LOW
+        TOP_SOLD
     }
     
     type SmartContract {
@@ -25,6 +41,7 @@ const smartContractTypeDefs = gql`
         image: String,
         shortDescription: String,
         description: String,
+        tags:[String],
         singleLicensePrice: String,
         unlimitedLicensePrice: String,
         source: String,

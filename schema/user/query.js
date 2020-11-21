@@ -60,7 +60,7 @@ const userQuery = gql`
             country:String,
             postalCode:String,
             city:String,
-            stree:String,
+            street:String,
             building:String,
             kycStatus:Status #hello
         ):User,

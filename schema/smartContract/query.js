@@ -12,6 +12,7 @@ const smartContractQuery = gql`
         updateSmartContract(newSmartContract: SmartContractInput, id: ID!): SmartContract! @isAuth,
         deleteSmartContract(id: ID!): SmartContractMessageResponse! @isAuth,
         verifySmartContract(newSmartContract: SmartContractVerify, id: ID!): SmartContract! @isAuth,
+        searchSmartContract(searchSmartContract: SearchSmartContract): [SmartContract]!,
         
     }
 

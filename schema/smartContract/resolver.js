@@ -21,6 +21,24 @@ const resolvers = {
         }
     },
     Mutation:{
+        searchSmartContract: async (_,{searchSmartContract})=>{
+            if(searchSmartContract.contractCategory!==[]){
+
+            }
+            let filter={
+                contractName:{ "$regex": searchSmartContract.contractName, "$options": "i" },
+                singleLicensePrice:{'$gt' : searchSmartContract.maxPrice , '$lt' : searchSmartContract.minPrice },
+
+                contractCategory
+            }
+            try{
+
+                let response = await SmartContract.find({})
+            }catch(err){
+                console.log(err);
+            }
+
+        },
         createSmartContract:async (_,{newSmartContract},{SmartContract,user})=>{
 
             let smartContract;
