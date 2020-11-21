@@ -3,7 +3,7 @@ import dateTime from "../../helpers/DateTimefunctions";
 import {getBalance, signAndSendTransaction, toEth} from "../../helpers/Web3Wrapper";
 import {Master} from "../../models";
 
-const {SmartContract,User} = require('../../models');
+const {SmartContract,User,Order} = require('../../models');
 
 
 
@@ -60,9 +60,6 @@ const resolvers = {
                 }else{
                     //todo return low balance error
                 }
-
-
-
 
             }
         }
