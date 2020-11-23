@@ -18,10 +18,10 @@ const smartContractTypeDefs = gql`
         verified:Verified!,
     }
     input SearchSmartContract{
-        contractName:String!,
+        contractName:String,
         contractCategory:[Category],
-        maxPrice:String!,
-        minPrice:String!,
+        maxPrice:String,
+        minPrice:String,
         tags:[String],
         sortBy:Sort,
     }

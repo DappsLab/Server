@@ -10,6 +10,7 @@ const orderSchema = new Schema({
     licenseType:String,
     dateTime:String,
     productType:String,
+    transactionHash:String,
     smartContract:{
             type: Schema.Types.ObjectId,
         ref: 'smartcontracts'

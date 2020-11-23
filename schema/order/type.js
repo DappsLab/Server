@@ -10,6 +10,7 @@ const smartContractTypeDefs = gql`
         price:String!,
         fee:String!,
         dateTime:String!,
+        transactionHash:String!,
         productType(productType:ProductType):String!,
         smartContract:SmartContract,
     }

@@ -22,6 +22,13 @@ let cors=require('cors');
 
 var app = express();
 
+const uri = "mongodb+srv://qasim:qasim1234@abdulla.eftvp.mongodb.net/dappsLabDB?retryWrites=true&w=majority";
+mongoose.connect(uri);
+mongoose.Promise = global.Promise;
+mongoose.connection.once('open', () => {
+    console.log(' 🍃 connected to mongoDB mLab');
+})
+
 
 console.log("walletObject",walletObject);
 app.use(cors());
@@ -29,12 +36,6 @@ app.use(cors());
 
 
 // connect to DB mongo
-const uri = "mongodb+srv://qasim:qasim1234@abdulla.eftvp.mongodb.net/dappsLabDB?retryWrites=true&w=majority";
-    mongoose.connect(uri);
-    mongoose.Promise = global.Promise;
-    mongoose.connection.once('open', () => {
-    console.log(' 🍃 connected to mongoDB mLab');
-})
 
 
 

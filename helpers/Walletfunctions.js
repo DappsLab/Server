@@ -18,11 +18,11 @@ let walletObject={
 }
 
 // for (let i = 0; i < 5; i++) {
-    let wallet = hdwallet.derivePath(USERSPATH + 0).getWallet();
-    let address = wallet.getAddressString('hex');
-    console.log("public key:",wallet.privateKey.toString('hex'));
-    console.log("wallet2:",wallet);
-    console.log('address-' + 0 + ': ' + address);
+//     let wallet = hdwallet.derivePath(USERSPATH + 0).getWallet();
+//     let address = wallet.getAddressString('hex');
+//     console.log("public key:",wallet.privateKey.toString('hex'));
+//     console.log("wallet2:",wallet);
+//     console.log('address-' + 0 + ': ' + address);
 // }
 
 
