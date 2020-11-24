@@ -12,6 +12,7 @@ import {emailConfirmationUrl} from "../../utils/emailConfirmationUrl";
 import {forgetPasswordUrl} from "../../utils/forgetPasswordUrl";
 import speakeasy from "speakeasy";
 import qrcode from "qrcode";
+import {toEth, getBalance} from "../../helpers/Web3Wrapper";
 
 var fetchData = () => {
     return User.find().populate('smartContracts');
@@ -94,6 +95,14 @@ const resolvers = {
                 throw new ApolloError(err)
             }
         },
+        getBalance:async (_,{},{user})=>{
+            console.log("user",user)
+            try{
+                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
+            }catch(err){
+                console.log("error",err)
+            }
+        }
 
 
     },

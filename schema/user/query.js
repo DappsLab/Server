@@ -7,6 +7,7 @@ const userQuery = gql`
         verify2FA(token: String!):Boolean! @isAuth,
         users: [User],
         me:User @isAuth,
+        getBalance:User! @isAuth,
         userById(id:ID!):User,
     },
     
