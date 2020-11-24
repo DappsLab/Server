@@ -64,7 +64,7 @@ const resolvers = {
             try{
                 console.log("filter:",filter);
                 console.log("sortBy:",SortBy);
-                let response = await SmartContract.find(filter).sort(SortBy)
+                let response = await SmartContract.find(filter).sort(SortBy).populate('publisher').populate('verifiedBy')
                 console.log("response:",response)
                 let {
                     minPrice,
@@ -99,7 +99,7 @@ const resolvers = {
 
             try{
                 console.log("filter:",filter)
-                let response = await SmartContract.find(filter)
+                let response = await SmartContract.find(filter).populate('publisher').populate('verifiedBy')
                 console.log("response:",response)
                 return response;
             }catch(err){
