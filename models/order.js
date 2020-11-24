@@ -11,6 +11,7 @@ const orderSchema = new Schema({
     dateTime:String,
     productType:String,
     transactionHash:String,
+    fee:String,
     smartContract:{
             type: Schema.Types.ObjectId,
         ref: 'smartcontracts'

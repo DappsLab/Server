@@ -1,6 +1,6 @@
 import {ApolloError} from "apollo-server-express";
 import dateTime from "../../helpers/DateTimefunctions";
-import {getBalance, signAndSendTransaction, toEth} from "../../helpers/Web3Wrapper";
+import {getBalance, signAndSendTransaction, toEth, toWei} from "../../helpers/Web3Wrapper";
 import {Master} from "../../models";
 import {walletObject} from "../../helpers/Walletfunctions";
 import {ORDERSPATH} from "../../config";
@@ -29,7 +29,8 @@ const resolvers = {
                 }
                 //todo verify user account
                 let balance = await getBalance(user.address)
-                if (toEth(balance) >= (price + toEth(newOrder.fee))) {
+                console.log("total Price:",(parseFloat(price) + parseFloat(newOrder.fee)))
+                if (toEth(balance) >= (parseFloat(price) + parseFloat(newOrder.fee))) {
                     // todo create address
                     let master = await Master.findOne({})
                     let wallet = walletObject.hdwallet.derivePath(ORDERSPATH + master.orderCount).getWallet();
@@ -39,12 +40,13 @@ const resolvers = {
                     const response = await Master.findByIdAndUpdate(master.id, master, {new: true});
 
                     try {
-                        let tx = await signAndSendTransaction(address, price, newOrder.fee, user.wallet.privateKey)
+                        let tx = await signAndSendTransaction(address, price, toWei(newOrder.fee), user.wallet.privateKey)
                         console.log("transactions",tx)
                         let order = Order({
                             ...newOrder,
                             user: user.id,
                             price: price,
+                            fee:newOrder.fee.toString(),
                             dateTime: dateTime(),
                             address: address,
                             transactionHash:tx.receipt.transactionHash,
