@@ -22,7 +22,7 @@ const resolvers = {
         filterSmartContract: async (_,{searchSmartContract})=>{
             console.log("searchSmartContract:",searchSmartContract)
             let filterCategory;
-            if(searchSmartContract.contractCategory!==[]&&searchSmartContract.contractCategory!==undefined&&searchSmartContract.contractCategory!==""){
+            if(searchSmartContract.contractCategory!==[]&&searchSmartContract.contractCategory!==undefined&&searchSmartContract.contractCategory!==""&&searchSmartContract.contractCategory[0]!==''&&searchSmartContract.contractCategory[0]!==undefined){
                 filterCategory = {
                     '$in':searchSmartContract.contractCategory
                 }
@@ -31,8 +31,8 @@ const resolvers = {
             }
 
             let filterTags;
-            console.log("tag:",searchSmartContract.tags);
-            if(searchSmartContract.tags!==[]&&searchSmartContract.tags!==undefined&&searchSmartContract.tags!==""&&searchSmartContract.tags[0]!==''){
+            console.log("tag:",searchSmartContract.contractCategory[0]);
+            if(searchSmartContract.tags!==[]&&searchSmartContract.tags!==undefined&&searchSmartContract.tags!==""&&searchSmartContract.tags[0]!==''&&searchSmartContract.tags[0]!==undefined){
                 filterTags = {
                     '$in':searchSmartContract.tags
                 }
