@@ -31,7 +31,8 @@ const resolvers = {
             }
 
             let filterTags;
-            if(searchSmartContract.tags!==[]&&searchSmartContract.tags!==undefined&&searchSmartContract.tags!==""){
+            console.log("tag:",searchSmartContract.tags);
+            if(searchSmartContract.tags!==[]&&searchSmartContract.tags!==undefined&&searchSmartContract.tags!==""&&searchSmartContract.tags[0]!==''){
                 filterTags = {
                     '$in':searchSmartContract.tags
                 }
