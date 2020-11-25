@@ -70,6 +70,11 @@ const resolvers = {
                     minPrice,
                     maxPrice
                 } = searchSmartContract
+                console.log("minPrice",minPrice)
+                if(minPrice===undefined&&maxPrice===undefined){
+                    minPrice=0;
+                    maxPrice=999999999;
+                }
                 let filteredResponse = lodash.remove(response, (n)=> {
                     console.log("n.singleLicensePrice >= searchSmartContract.minPrice:",n.singleLicensePrice , maxPrice)
                     if((parseFloat(n.singleLicensePrice) <= parseFloat(maxPrice)) && (parseFloat(n.singleLicensePrice) >= parseFloat(minPrice))){

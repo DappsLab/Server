@@ -13,6 +13,8 @@ const smartContractTypeDefs = gql`
         transactionHash:String!,
         productType(productType:ProductType):String!,
         smartContract:SmartContract,
+        createdAt: String!,
+        updatedAt: String!,
     }
     
     input OrderInput{
