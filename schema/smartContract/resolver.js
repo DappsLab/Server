@@ -20,7 +20,7 @@ const resolvers = {
             return smartContract;
         },
         filterSmartContract: async (_,{searchSmartContract})=>{
-            console.log("searchSmartContract:",searchSmartContract)
+            // console.log("searchSmartContract:",searchSmartContract.contractName)
             let filterCategory;
             if(searchSmartContract.contractCategory!==[]&&searchSmartContract.contractCategory!==undefined&&searchSmartContract.contractCategory!==""&&searchSmartContract.contractCategory[0]!==''&&searchSmartContract.contractCategory[0]!==undefined){
                 filterCategory = {
@@ -31,7 +31,7 @@ const resolvers = {
             }
 
             let filterTags;
-            console.log("tag:",searchSmartContract.contractCategory[0]);
+            // console.log("tag:",searchSmartContract.contractCategory[0]);
             if(searchSmartContract.tags!==[]&&searchSmartContract.tags!==undefined&&searchSmartContract.tags!==""&&searchSmartContract.tags[0]!==''&&searchSmartContract.tags[0]!==undefined){
                 filterTags = {
                     '$in':searchSmartContract.tags
