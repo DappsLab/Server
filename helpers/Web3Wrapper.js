@@ -25,6 +25,11 @@ export const getTransactionCount = async(address)=>{
 
 }
 
+export const getTransaction = async(transactionHash)=>{
+    return await web3.eth.getTransaction(transactionHash)
+
+}
+
 export const toEth= (wei)=>{
     return wei/1000000000000000000;
 }
@@ -34,9 +39,10 @@ export const toWei=  (eth)=>{
 export const signAndSendTransaction= async (to,amount,gas,privateKey)=>{
    const Signed = await signTransaction(to,amount,gas,privateKey);
    const receipt = await sendSignedTransaction(Signed.rawTransaction);
-   return {signed:Signed,receipt:receipt}
+   const transaction = await getTransaction(receipt.transactionHash);
+   return {signed:Signed,receipt:receipt,transaction:transaction}
 }
-let rawTx;
+
 export const signTransaction = async (to,amount,gas,privateKey)=>{
     // return await web3.eth.sendTransaction({from: fromAccount, to: toAmount, value:amount});
     return await web3.eth.accounts.signTransaction({
@@ -65,6 +71,7 @@ export const getTransactionReceipt= async (transactionHash)=>{
     console.log("Balance",await getBalance("0x144eb72270820c35c3e4c400beb4a94acbaa9fbe"));
     // // console.log("test results:",await signTransaction("0xb19484680E1b8B0A85Ce713A85161e514Ef5fC7C","1000000000","1000","ab0a28843ec54420f179d029ec150e48ac7f2b3296c58a7db313fd35686e111a"))
     // const  data = await signAndSendTransaction("0x144eb72270820c35c3e4c400beb4a94acbaa9fbe", toWei(5).toString(), "21000", "469e3bf658daf03f5f661db7ae7ecee8f50b9966d588a1c784b602fabea8659d")
+    // console.log("transaction:",data)
     // console.log("recovered",await web3.eth.getTransactionReceipt(data.receipt.transactionHash));
 
     // console.log("test results:",await sendTransaction("0xb19484680E1b8B0A85Ce713A85161e514Ef5fC7C","0x32d31e8060f7a1255226988b1f522da0112ac59f","1000"))

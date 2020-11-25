@@ -22,7 +22,7 @@ const resolvers = {
         filterSmartContract: async (_,{searchSmartContract})=>{
             console.log("searchSmartContract:",searchSmartContract)
             let filterCategory;
-            if(searchSmartContract.contractCategory!==[]&&searchSmartContract.contractCategory!==undefined){
+            if(searchSmartContract.contractCategory!==[]&&searchSmartContract.contractCategory!==undefined&&searchSmartContract.contractCategory!==""){
                 filterCategory = {
                     '$in':searchSmartContract.contractCategory
                 }
@@ -31,7 +31,7 @@ const resolvers = {
             }
 
             let filterTags;
-            if(searchSmartContract.tags!==[]&&searchSmartContract.tags!==undefined){
+            if(searchSmartContract.tags!==[]&&searchSmartContract.tags!==undefined&&searchSmartContract.tags!==""){
                 filterTags = {
                     '$in':searchSmartContract.tags
                 }
@@ -39,8 +39,15 @@ const resolvers = {
                 filterTags={$ne:null}
             }
 
+            let filterName;
+            if(searchSmartContract.contractName!==[]&&searchSmartContract.contractName!==undefined&&searchSmartContract.contractName!==""){
+                filterName = { "$regex": searchSmartContract.contractName, "$options": "i" }
+            }else{
+                filterName={$ne:null}
+            }
+
             let filter = {
-                contractName:{ "$regex": searchSmartContract.contractName, "$options": "i" },
+                contractName:filterName,
                 contractCategory:filterCategory,
                 tags: filterTags,
             };
