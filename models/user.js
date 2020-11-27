@@ -29,8 +29,14 @@ const userSchema = new Schema({
         type: Boolean,
         default:false
     },
-    twoFactorSecret:String,
-    twoFactorCode: String,
+    twoFactorSecret:{
+        type:String,
+        default:""
+    },
+    twoFactorCode: {
+        type:String,
+        default:""
+    },
     type: {
         type: String,
         default: "USER",

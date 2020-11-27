@@ -1,4 +1,4 @@
-import {Master, User} from "../../models";
+import {Master, User,Order,SmartContract} from "../../models";
 
 const {USERSPATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
@@ -14,11 +14,20 @@ import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 import {toEth, getBalance} from "../../helpers/Web3Wrapper";
 
-var fetchData = () => {
-    return User.find().populate('smartContracts');
+
+let fetchData = () => {
+    return User.find();
 }
 
 const resolvers = {
+    User:{
+        orders:async (parent)=>{
+            return await Order.find({"user":parent.id});
+        },
+        smartContracts:async(parent)=>{
+            return await SmartContract.find({"publisher":parent.id})
+        }
+    },
     Query: {
         users: () => {
             return fetchData()
@@ -26,13 +35,13 @@ const resolvers = {
         me:async (_,__,{user})=>{
             console.log("user",user)
             try{
-                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true}).populate('orders').populate('smartContracts')
+                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
             }catch(err){
                 console.log("error",err)
             }
         },
         userById: async (_, args) => {
-            let response = await User.findById(args.id).populate('smartContracts').populate('orders');
+            let response = await User.findById(args.id);
             console.log("response:", response)
             return response;
         },
@@ -266,7 +275,7 @@ const resolvers = {
             // console.log("user:", user);
             // console.log("User:", User);
             try {
-                let response = await User.findOneAndUpdate({_id: user.id}, newUser, {new: true}).populate('smartContracts');
+                let response = await User.findOneAndUpdate({_id: user.id}, newUser, {new: true});
                 if (!response) {
                     throw new Error("Unathorized Access");
                 }

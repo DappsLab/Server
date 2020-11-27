@@ -1,6 +1,6 @@
 import {ApolloError} from "apollo-server-express";
 import dateTime from "../../helpers/DateTimefunctions";
-import {getBalance, getTransactionReceipt, signAndSendTransaction, toEth, toWei} from "../../helpers/Web3Wrapper";
+import {getBalance, getTransactionReceipt, signAndSendTransaction, toEth} from "../../helpers/Web3Wrapper";
 import {Master} from "../../models";
 import {walletObject} from "../../helpers/Walletfunctions";
 import {ORDERSPATH} from "../../config";
@@ -9,11 +9,22 @@ const {SmartContract, User, Order} = require('../../models');
 
 
 let fetchData = () => {
-    return SmartContract.find().populate('publisher').populate('verifiedBy');
+    return SmartContract.find();
 }
 
 const resolvers = {
+    Order:{
+        user:async (parent)=>{
+            return await User.findOne({"_id":parent.user})
+        },
+        smartContract:async(parent)=>{
+            return await SmartContract.findOne({"_id": parent.smartContract})
+        },
+    },
     Query: {
+        orders:async(_)=>{
+           return fetchData();
+        },
         verifyOrder: async (_, {id}) => {
             let order = await Order.findById(id);
             let receipt = await getTransactionReceipt(order.transactionHash);

@@ -6,16 +6,24 @@ const {walletObject}= require('../../helpers/Walletfunctions');
 
 
 let fetchData = ()=>{
-    return SmartContract.find().populate('publisher').populate('verifiedBy');
+    return SmartContract.find()
 }
 
 const resolvers = {
+    SmartContract:{
+        publisher:async (parent)=>{
+            return await User.findOne({"_id":parent.publisher})
+        },
+        verifiedBy: async (parent)=>{
+            return await User.findOne({"_id":parent.verifiedBy})
+        }
+    },
     Query: {
         smartContracts: () => {
             return fetchData()
         },
         smartContractById: async (_,args)=>{
-            let smartContract= await SmartContract.findById(args.id).populate('publisher').populate('verifiedBy');
+            let smartContract= await SmartContract.findById(args.id);
             console.log("SmartContract:",smartContract);
             return smartContract;
         },
@@ -72,7 +80,7 @@ const resolvers = {
             try{
                 console.log("filter:",filter);
                 console.log("sortBy:",SortBy);
-                let response = await SmartContract.find(filter).sort(SortBy).populate('publisher').populate('verifiedBy')
+                let response = await SmartContract.find(filter).sort(SortBy)
                 console.log("response:",response)
                 let {
                     minPrice,
@@ -112,7 +120,7 @@ const resolvers = {
 
             try{
                 console.log("filter:",filter)
-                let response = await SmartContract.find(filter).populate('publisher').populate('verifiedBy')
+                let response = await SmartContract.find(filter)
                 console.log("response:",response)
                 return response;
             }catch(err){
@@ -159,7 +167,7 @@ const resolvers = {
         updateSmartContract:async (_,{newSmartContract,id},{SmartContract,user})=>{
 
             try {
-                let response = await SmartContract.findByIdAndUpdate(id,newSmartContract,{new:true}).populate('publisher').populate('verifiedBy');
+                let response = await SmartContract.findByIdAndUpdate(id,newSmartContract,{new:true})
                 console.log("response",response)
                 if (!response) {
                     throw new ApolloError("UPDATE failed");
@@ -200,7 +208,7 @@ const resolvers = {
                 }
                 try {
                     console.log("smartContract:",smartContract)
-                    let response = await SmartContract.findByIdAndUpdate(id,smartContract,{new:true}).populate('publisher').populate('verifiedBy');
+                    let response = await SmartContract.findByIdAndUpdate(id,smartContract,{new:true})
                     console.log("response",response)
                     if (!response) {
                     }
