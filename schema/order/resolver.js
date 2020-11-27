@@ -59,6 +59,7 @@ const resolvers = {
                             ...newOrder,
                             user: user.id,
                             price: price,
+                            status:tx.receipt.status,
                             fee: newOrder.fee.toString(),
                             dateTime: dateTime(),
                             address: address,
