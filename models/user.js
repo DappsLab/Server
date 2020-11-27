@@ -20,7 +20,10 @@ const userSchema = new Schema({
         default: "http://localhost:4000/user.png"
     },
     address: String,
-    balance: String,
+    balance:{
+        type:String,
+        default:""
+    },
     location: String,
     twoFactorEnabled: {
         type: Boolean,
@@ -33,14 +36,38 @@ const userSchema = new Schema({
         default: "USER",
     },
     kyc: {
-        mobile: String,
-        birthDate: String,// !
-        nationality: String,
-        country: String,
-        postalCode: String,
-        city: String,
-        street: String,// !
-        building:String,
+        mobile:{
+            type:String,
+            default:""
+        },
+        birthDate: {
+            type:String,
+            default:""
+        },// !
+        nationality: {
+            type:String,
+            default:""
+        },
+        country: {
+            type:String,
+            default:""
+        },
+        postalCode: {
+            type:String,
+            default:""
+        },
+        city: {
+            type:String,
+            default:""
+        },
+        street: {
+            type:String,
+            default:""
+        },// !
+        building:{
+            type:String,
+            default:""
+        },
         kycStatus: {
             type: String,
             default: "NOT_SUBMITTED"
