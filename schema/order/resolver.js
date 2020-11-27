@@ -13,7 +13,16 @@ let fetchData = () => {
 }
 
 const resolvers = {
-    Query: {},
+    Query: {
+        verifyOrder: async (_, {id}) => {
+            let order = await Order.findById(id);
+            let receipt = await getTransactionReceipt(order.transactionHash);
+
+            return !!receipt.status;
+
+        },
+
+    },
     Mutation: {
         placeOrder: async (_, {newOrder}, {Order, user}) => {
             if (newOrder.productType === "SMARTCONTRACT") {
@@ -75,13 +84,7 @@ const resolvers = {
             }
 
         },
-        verifyOrder: async (_, {id}) => {
-            let order = await Order.findById(id);
-            let receipt = await getTransactionReceipt(order.transactionHash);
 
-            return !!receipt.status;
-
-        }
     }
 }
 
