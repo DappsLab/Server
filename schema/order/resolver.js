@@ -1,6 +1,6 @@
 import {ApolloError} from "apollo-server-express";
 import dateTime from "../../helpers/DateTimefunctions";
-import {getBalance, signAndSendTransaction, toEth, toWei} from "../../helpers/Web3Wrapper";
+import {getBalance, getTransactionReceipt, signAndSendTransaction, toEth, toWei} from "../../helpers/Web3Wrapper";
 import {Master} from "../../models";
 import {walletObject} from "../../helpers/Walletfunctions";
 import {ORDERSPATH} from "../../config";
@@ -29,8 +29,8 @@ const resolvers = {
                 }
                 //todo verify user account
                 let balance = await getBalance(user.address)
-                console.log("total Price:",(parseFloat(price) + parseFloat(newOrder.fee)))
-                if (toEth(balance) >= (parseFloat(price) + parseFloat(newOrder.fee))) {
+                console.log("total Price:", (parseFloat(price) + parseFloat(toEth(newOrder.fee))))
+                if (toEth(balance) >= (parseFloat(price) + parseFloat(toEth(newOrder.fee)))) {
                     // todo create address
                     let master = await Master.findOne({})
                     let wallet = walletObject.hdwallet.derivePath(ORDERSPATH + master.orderCount).getWallet();
@@ -40,26 +40,31 @@ const resolvers = {
                     const response = await Master.findByIdAndUpdate(master.id, master, {new: true});
 
                     try {
-                        let tx = await signAndSendTransaction(address, price, toWei(newOrder.fee), user.wallet.privateKey)
-                        console.log("transactions",tx)
+                        let tx
+                        console.log("towei:", toEth(newOrder.fee))
+
+                        tx = await signAndSendTransaction(address, price, newOrder.fee, user.wallet.privateKey)
+                        console.log("transactions", tx)
+
                         let order = Order({
                             ...newOrder,
                             user: user.id,
                             price: price,
-                            fee:newOrder.fee.toString(),
+                            fee: newOrder.fee.toString(),
                             dateTime: dateTime(),
                             address: address,
-                            transactionHash:tx.receipt.transactionHash,
+                            transactionHash: tx.receipt.transactionHash,
                             wallet: {
                                 privateKey: wallet.getPrivateKeyString(),
                                 publicKey: wallet.getPublicKeyString(),
                             }
                         });
                         let orderResponse = await order.save();
-                        console.log("order:",order);
+                        console.log("order:", order);
                         return orderResponse
                     } catch (err) {
                         console.log(err)
+                        console.log("error", err)
                         throw new ApolloError(err.message);
                     }
                 } else {
@@ -70,7 +75,11 @@ const resolvers = {
             }
 
         },
-        verifyOrder:async(_,{id})=>{
+        verifyOrder: async (_, {id}) => {
+            let order = await Order.findById(id);
+            let receipt = await getTransactionReceipt(order.transactionHash);
+
+            return !!receipt.status;
 
         }
     }
