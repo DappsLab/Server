@@ -69,6 +69,16 @@ const resolvers = {
                             }
                         });
                         let orderResponse = await order.save();
+
+                        try{
+                            let response = await User.findById(user.id);
+                            response.orders.push(orderResponse._id);
+                            response.save();
+                            // console.log("hello to response:",response);
+                        }catch(e){
+                            console.log("error:",e)
+                        }
+
                         console.log("order:", order);
                         return orderResponse
                     } catch (err) {

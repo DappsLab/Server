@@ -26,13 +26,13 @@ const resolvers = {
         me:async (_,__,{user})=>{
             console.log("user",user)
             try{
-                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
+                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true}).populate('orders').populate('smartContracts')
             }catch(err){
                 console.log("error",err)
             }
         },
         userById: async (_, args) => {
-            let response = await User.findById(args.id).populate('smartContracts');
+            let response = await User.findById(args.id).populate('smartContracts').populate('orders');
             console.log("response:", response)
             return response;
         },
