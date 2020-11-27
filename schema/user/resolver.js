@@ -24,7 +24,12 @@ const resolvers = {
             return fetchData()
         },
         me:async (_,__,{user})=>{
-            return User.findById(user.id).populate('smartContracts');
+            console.log("user",user)
+            try{
+                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
+            }catch(err){
+                console.log("error",err)
+            }
         },
         userById: async (_, args) => {
             let response = await User.findById(args.id).populate('smartContracts');
@@ -95,14 +100,6 @@ const resolvers = {
                 throw new ApolloError(err)
             }
         },
-        getBalance:async (_,{},{user})=>{
-            console.log("user",user)
-            try{
-                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
-            }catch(err){
-                console.log("error",err)
-            }
-        }
 
 
     },

@@ -10,6 +10,7 @@ const orderSchema = new Schema({
     licenseType:String,
     dateTime:String,
     productType:String,
+    status:String,
     transactionHash:String,
     fee:String,
     smartContract:{

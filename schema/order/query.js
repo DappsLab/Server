@@ -5,6 +5,7 @@ const orderQuery = gql`
     
     extend type Mutation {
         placeOrder(newOrder: OrderInput!):Order @isAuth,
+        verifyOrder(id:ID):Boolean @isAuth,
     }
 
 `;
