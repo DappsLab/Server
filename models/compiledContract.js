@@ -6,7 +6,6 @@ const compiledContractSchema = new Schema({
         ref: 'smartcontracts',
         type: Schema.Types.ObjectId
     },
-    compiledOn:String,
     user: {
         ref: 'users',
         type: Schema.Types.ObjectId

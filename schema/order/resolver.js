@@ -9,7 +9,7 @@ const {SmartContract, User, Order} = require('../../models');
 
 
 let fetchData = () => {
-    return SmartContract.find();
+    return Order.find();
 }
 
 const resolvers = {

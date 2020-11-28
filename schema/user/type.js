@@ -42,6 +42,7 @@ const userTypeDefs = gql`
         wallet:Wallet,
         smartContracts:[SmartContract],
         orders:[Order],
+        purchasedContracts:[PurchasedContract],
     }
 
     type Wallet{

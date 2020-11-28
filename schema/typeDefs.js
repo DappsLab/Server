@@ -11,10 +11,14 @@ const imageTypeDefs = require('./image/type.js')
 const imageQuery = require('./image/query.js')
 const orderTypeDefs = require('./order/type.js')
 const orderQuery = require('./order/query.js')
+const purchasedContractTypeDefs = require('./purchasedContract/type.js')
+const purchasedContractQuery = require('./purchasedContract/query.js')
 const contractUploaderQuery = require('./contractUploader/query.js')
+const compiledContractTypeDefs = require('./compiledContract/type')
 
 const typeDefs = [
     baseTypeDefs,
+    contractUploaderQuery,
     userTypeDefs,
     userQuery,
     smartContractTypeDefs,
@@ -23,7 +27,9 @@ const typeDefs = [
     imageQuery,
     orderTypeDefs,
     orderQuery,
-    contractUploaderQuery
+    purchasedContractTypeDefs,
+    purchasedContractQuery,
+    compiledContractTypeDefs,
 ];
 
 module.exports = mergeTypeDefs(typeDefs);

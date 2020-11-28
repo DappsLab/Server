@@ -27,6 +27,10 @@ const smartContractSchema = new Schema({
         ref: 'users',
         type: Schema.Types.ObjectId
     },
+    preCompiled: {
+        ref: 'compiledcontracts',
+        type: Schema.Types.ObjectId
+    },
     verifiedBy: {
         ref: 'users',
         type: Schema.Types.ObjectId

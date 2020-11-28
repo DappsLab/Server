@@ -49,6 +49,7 @@ const smartContractTypeDefs = gql`
         publishingDateTime:String,
         verified(verified:Verified): String!,
         verifiedBy: User,#ID
+        preCompiled:CompiledContract,
         verifiedDateTime:String,
         purchasedCounts: String,
         compiledCounts: String,
