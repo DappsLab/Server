@@ -10,7 +10,13 @@ const compiledContractSchema = new Schema({
         ref: 'users',
         type: Schema.Types.ObjectId
     },
-    ownerAddress: String,
+    purchasedContract:{
+        ref:'purchasedcontracts',
+        type: Schema.Types.ObjectId,
+    },
+    license:{
+        type: Schema.Types.ObjectId,
+    },
     abi: String,
     binary: String,
     deployments:[{
