@@ -38,8 +38,8 @@ const resolvers = {
         me:async (_,{},{user})=>{
             console.log("user",user)
             try{
-                // return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
-                return await User.findById(user.id);
+                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
+                // return await User.findById(user.id);
             }catch(err){
                 console.log("error",err)
             }

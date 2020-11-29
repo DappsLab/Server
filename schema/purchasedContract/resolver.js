@@ -64,11 +64,10 @@ const resolvers = {
                         let response = await User.findById(user.id);
                         response.purchasedContracts.push(data._id);
                         response.save();
-                        await Order.findByIdAndUpdate(order.id,{"orderUsed":true});
-                        // console.log("hello to response:",response);
                     }catch(e){
                         console.log("error:",e)
                     }
+                    await Order.findByIdAndUpdate(order.id,{$set: {"orderUsed":true}},{new: true})
                     return data;
                 }else{
                     console.log('old found')
@@ -94,7 +93,7 @@ const resolvers = {
                     newPurchase.licenses.push(license)
                     console.log("oldPurchase update",oldPurchase)
                     let response = await PurchasedContract.findByIdAndUpdate(oldPurchase.id,newPurchase,{new: true});
-                    console.log("response:",response)
+                    await Order.findByIdAndUpdate(order.id,{$set: {"orderUsed":true}},{new: true})
                     return response;
                 }
             }else{
