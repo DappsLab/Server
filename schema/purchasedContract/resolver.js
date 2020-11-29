@@ -38,7 +38,7 @@ const resolvers = {
     Mutation: {
         purchaseContract: async (_, {newPurchase}, {PurchasedContract, user}) => {
             let order = await Order.findOne({"_id":newPurchase.orderId})
-            if(order.status==="true"&&(order.user.toString()===user.id.toString())){
+            if(order.status==="true"&&(order.user.toString()===user.id.toString())&&!order.orderUsed){
                 let oldPurchase = await PurchasedContract.findOne({"user":user.id,"smartContract":newPurchase.smartContractId})
                 console.log("oldPurchase =",oldPurchase)
                 if(!oldPurchase){
