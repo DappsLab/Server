@@ -17,8 +17,10 @@ const compiledContractSchema = new Schema({
     license:{
         type: Schema.Types.ObjectId,
     },
-    abi: String,
-    binary: String,
+    compiledFile:{
+        type:String,
+        default:"",
+    },
     deployments:[{
         ref: 'deployedcontracts',
         type: Schema.Types.ObjectId

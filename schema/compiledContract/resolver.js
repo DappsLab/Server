@@ -57,12 +57,23 @@ const resolvers = {
                 }catch(err){
                     console.log ("error file not exist")
                 }
+                let purchasedContractID="";
+                let licenseID="";
+                if(purchasedContract){
+                    purchasedContractID=newCompile.purchasedContract;
+                    licenseID=newCompile.license;
+                }
                 let compiledContract=CompiledContract({
                     user:user.id,
                     smartContract:smartContract.id,
-
+                    compiledFile:compiledFile,
+                    purchasedContract:purchasedContractID,
+                    license:licenseID,
                 })
+                return await compiledContract.save();
 
+
+                
             }
         }
     }
