@@ -14,8 +14,8 @@ const orderSchema = new Schema({
     transactionHash:String,
     fee:String,
     smartContract:{
-            type: Schema.Types.ObjectId,
-        ref: 'smartcontracts'
+        ref: 'smartcontracts',
+        type: Schema.Types.ObjectId,
     },
     address:String,
     wallet: {

@@ -11,6 +11,7 @@ const smartContractSchema = new Schema({
     singleLicensePrice: String,
     unlimitedLicensePrice: String,
     source: String,
+    sourceContractName: String,
     // publisher: mongoose.ObjectId,
     publishingDateTime:String,
     verified: {

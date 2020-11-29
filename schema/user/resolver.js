@@ -32,10 +32,11 @@ const resolvers = {
         users: () => {
             return fetchData()
         },
-        me:async (_,__,{user})=>{
+        me:async (_,{},{user})=>{
             console.log("user",user)
             try{
-                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
+                // return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
+                return await User.findById(user.id);
             }catch(err){
                 console.log("error",err)
             }

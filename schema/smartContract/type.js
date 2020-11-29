@@ -13,6 +13,7 @@ const smartContractTypeDefs = gql`
         singleLicensePrice: String!,
         unlimitedLicensePrice: String!,
         source: String!,
+        sourceContractName: String!,
     },
     input SmartContractVerify{
         verified:Verified!,
@@ -45,6 +46,7 @@ const smartContractTypeDefs = gql`
         singleLicensePrice: String,
         unlimitedLicensePrice: String,
         source: String,
+        sourceContractName: String,
         publisher:User!,#ID
         publishingDateTime:String,
         verified(verified:Verified): String!,

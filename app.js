@@ -27,6 +27,9 @@ mongoose.connect(uri);
 mongoose.Promise = global.Promise;
 mongoose.connection.once('open', () => {
     console.log(' 🍃 connected to mongoDB mLab');
+    app.listen(4000, () => {
+        console.log('🚀 now listening for requests on port 4000');
+    });
 })
 
 
@@ -97,9 +100,7 @@ app.use(function (err, req, res, next) {
 });
 
 
-app.listen(4000, () => {
-    console.log('🚀 now listening for requests on port 4000');
-});
+
 
 
  (async () => {
