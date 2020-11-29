@@ -118,12 +118,5 @@ dist
 .pnp.*
 
 node_modules/@apollo/protobufjs/cli/node_modules/
-public/images/
-public/javascripts/
-resolvers/
-schema/compiledContract/
-schema/deployedContract/
-schema/purchasedContract/
-schema/testCompiledContract/
-schema/testDeployedContract/
-schema/testedContract/
+
+

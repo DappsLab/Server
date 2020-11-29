@@ -38,12 +38,17 @@ const resolvers = {
                 console.log ("filename:",filename)
                 const sourceFile=path.resolve ( './' ,'contracts',filename+'.sol');
                 console.log ("sourceFile:",sourceFile);
+
+                let sourceCode;
+                let compiledData
+                let compiledFile;
+
                 try{
-                    let sourceCode = await fs.readFileSync (sourceFile,'utf8');
+                    sourceCode = await fs.readFileSync (sourceFile,'utf8');
                     console.log ("sourceCode:",sourceCode);
-                    let compiledData = await sol.compile(sourceCode,1).contracts[':'+smartContract.sourceContractName];
+                    compiledData = await sol.compile(sourceCode,1).contracts[':'+smartContract.sourceContractName];
                     console.log ("Compiled Data:",compiledData)
-                        let compiledFile = `${filename}-${Date.now()}.json}`
+                    compiledFile = `${filename}-${Date.now()}.json`
                     fs.writeFile( "./contracts/compiledContracts/"+compiledFile, JSON.stringify(compiledData), function(err) {
                         if (err) {
                             console.log(err);
@@ -52,6 +57,12 @@ const resolvers = {
                 }catch(err){
                     console.log ("error file not exist")
                 }
+                let compiledContract=CompiledContract({
+                    user:user.id,
+                    smartContract:smartContract.id,
+
+                })
+
             }
         }
     }
