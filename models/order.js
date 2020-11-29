@@ -13,7 +13,7 @@ const orderSchema = new Schema({
     status:String,
     transactionHash:String,
     fee:String,
-    orderUser:{
+    orderUsed:{
         type:Boolean,
         default:false
     },
