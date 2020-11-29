@@ -13,6 +13,10 @@ const orderSchema = new Schema({
     status:String,
     transactionHash:String,
     fee:String,
+    orderUser:{
+        type:Boolean,
+        default:false
+    },
     smartContract:{
         ref: 'smartcontracts',
         type: Schema.Types.ObjectId,

@@ -8,6 +8,7 @@ const smartContractTypeDefs = gql`
         user:User!,
         licenseType(licenseType:LicenseType):String!,
         price:String!,
+        orderUsed:Boolean!,
         fee:String!,
         dateTime:String!,
         transactionHash:String!,

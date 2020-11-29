@@ -64,6 +64,7 @@ const resolvers = {
                         let response = await User.findById(user.id);
                         response.purchasedContracts.push(data._id);
                         response.save();
+                        await Order.findByIdAndUpdate(order.id,{"orderUsed":true});
                         // console.log("hello to response:",response);
                     }catch(e){
                         console.log("error:",e)
