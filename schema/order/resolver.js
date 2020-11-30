@@ -32,6 +32,9 @@ const resolvers = {
             return !!receipt.status;
 
         },
+        orderById: async(_,{id})=>{
+          return await Order.findById(id);
+        },
 
     },
     Mutation: {

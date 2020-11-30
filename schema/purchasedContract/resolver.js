@@ -17,6 +17,7 @@ const resolvers = {
         smartContract:async(parent)=>{
             return await SmartContract.findOne({"_id": parent.smartContract})
         },
+
     },
     License:{
         compilations:async(parent)=>{
