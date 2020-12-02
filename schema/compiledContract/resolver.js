@@ -16,10 +16,10 @@ const resolvers = {
             return await SmartContract.findOne({"_id": parent.smartContract})
         },
         purchasedContract:async()=>{
-            return await PurchasedContract.findOne({"_id":parent.purchasedContract})
+            return await PurchasedContract.findOne({"_id": parent.purchasedContract})
         },
         license:async()=>{
-            return await License.findOne({"_id":parent.license})
+            return await License.findOne({"_id": parent.license})
         },
     },
     Query: {
@@ -35,7 +35,10 @@ const resolvers = {
             let smartContract = await SmartContract.findById(newCompile.smartContract)
             let purchasedContract=null;
             if(newCompile.purchasedContract!==undefined&&newCompile.purchasedContract!==""){
-                purchasedContract = await PurchasedContract.findOne({"_id":newCompile.purchasedContract,licenses:{'$in':{"_id":newCompile.license}}})
+                let license = await License.findById(newCompile.license)
+                if((license.PurchasedContract.toString())===newCompile.purchasedContract.toString()){
+                    purchasedContract = await PurchasedContract.findById(newCompile.purchasedContract);
+                }
             }
             console.log("PurchasedContract:",purchasedContract)
             if(!smartContract.preCompiled){
