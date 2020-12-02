@@ -5,6 +5,7 @@ const compiledContractTypeDefs = gql`
     
     type CompiledContract {
         id: ID!,
+        compilationName:String!,
         user:User!,
         smartContract:SmartContract!,
         compiledFile:String!
@@ -16,6 +17,7 @@ const compiledContractTypeDefs = gql`
     }
     
     input CompiledContractInput{
+        compilationName:String!,
         smartContract:ID!,
         purchasedContract:ID,
         license:ID,

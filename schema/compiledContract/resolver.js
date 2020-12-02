@@ -15,6 +15,12 @@ const resolvers = {
         smartContract:async(parent)=>{
             return await SmartContract.findOne({"_id": parent.smartContract})
         },
+        purchasedContract:async()=>{
+            return await PurchasedContract.findOne({"_id":parent.purchasedContract})
+        },
+        license:async()=>{
+            return await License.findOne({"_id":parent.license})
+        },
     },
     Query: {
         compiledContracts:async (_)=>{
@@ -64,6 +70,7 @@ const resolvers = {
                     licenseID=newCompile.license;
                 }
                 let compiledContract=CompiledContract({
+                    compilationName:newCompile.compilationName,
                     user:user.id,
                     smartContract:smartContract.id,
                     compiledFile:compiledFile,

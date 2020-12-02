@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const compiledContractSchema = new Schema({
+    compilationName: String,
     smartContract: {
         ref: 'smartcontracts',
         type: Schema.Types.ObjectId
@@ -15,6 +16,7 @@ const compiledContractSchema = new Schema({
         type: Schema.Types.ObjectId,
     },
     license:{
+        ref: 'licenses',
         type: Schema.Types.ObjectId,
     },
     compiledFile:{

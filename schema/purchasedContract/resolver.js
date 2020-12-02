@@ -48,11 +48,11 @@ const resolvers = {
                         unlimitedCustomization=true;
                     }
 
-                    let license= License({
+                    let license= {
                         order:order.id,
                         purchaseDateTime:dateTime(),
-                    })
-
+                    }
+                    license=await License.create(license);
                     let purchase={
                         user:user.id,
                         smartContract:newPurchase.smartContractId,
@@ -62,8 +62,7 @@ const resolvers = {
                     }
 
                     let data = await PurchasedContract.create(purchase);
-                    license.purchasedContract=data.id;
-                    await License.save();
+                    await License.findByIdAndUpdate(license.id,{$set:{"purchasedContract":data.id}})
 
                     try{
                         let response = await User.findById(user.id);
@@ -98,8 +97,7 @@ const resolvers = {
                     newPurchase.licenses.push(license.id)
                     console.log("oldPurchase update",oldPurchase)
                     let response = await PurchasedContract.findByIdAndUpdate(oldPurchase.id,newPurchase,{new: true});
-                    license.purchasedContract=response.id;
-                    await license.save();
+                    await License.findByIdAndUpdate(license.id,{$set:{"purchasedContract":response.id}})
                     await Order.findByIdAndUpdate(order.id,{$set: {"orderUsed":true}},{new: true})
                     return response;
                 }
