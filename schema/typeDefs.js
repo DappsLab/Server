@@ -16,6 +16,8 @@ const purchasedContractQuery = require('./purchasedContract/query.js')
 const contractUploaderQuery = require('./contractUploader/query.js')
 const compiledContractTypeDefs = require('./compiledContract/type')
 const compiledContractQuery = require('./compiledContract/query')
+const licenseTypeDefs = require('./license/type')
+const licenseQuery = require('./license/query')
 
 
 const typeDefs = [
@@ -33,6 +35,9 @@ const typeDefs = [
     purchasedContractQuery,
     compiledContractTypeDefs,
     compiledContractQuery,
+    licenseTypeDefs,
+    licenseQuery,
+
 ];
 
 module.exports = mergeTypeDefs(typeDefs);

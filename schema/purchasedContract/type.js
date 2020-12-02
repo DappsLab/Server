@@ -18,11 +18,7 @@ const purchasedContractTypeDefs = gql`
         smartContractId: String!,
         orderId:String!,
     }
-    type License{
-        order:Order!,
-        purchaseDateTime:String!,
-        compilations:[CompiledContract],
-    }
+    
 `;
 
 

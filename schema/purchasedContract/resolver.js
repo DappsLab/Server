@@ -2,7 +2,7 @@ import {ApolloError} from "apollo-server-express";
 import dateTime from "../../helpers/DateTimefunctions";
 
 
-const {SmartContract, User, Order, PurchasedContract, CompiledContract} = require('../../models');
+const {SmartContract, User, Order, PurchasedContract, CompiledContract,License} = require('../../models');
 
 
 let fetchData = () => {
@@ -47,19 +47,23 @@ const resolvers = {
                     if(order.licenseType==="UNLIMITEDLICENSE"){
                         unlimitedCustomization=true;
                     }
-                    let license={
+
+                    let license= License({
                         order:order.id,
                         purchaseDateTime:dateTime(),
-                    }
+                    })
+
                     let purchase={
                         user:user.id,
                         smartContract:newPurchase.smartContractId,
                         unlimitedCustomization:unlimitedCustomization,
                         customizationsLeft:1,
-                        licenses:[license],
+                        licenses:[license.id],
                     }
 
                     let data = await PurchasedContract.create(purchase);
+                    license.purchasedContract=data.id;
+                    await License.save();
 
                     try{
                         let response = await User.findById(user.id);
@@ -87,13 +91,15 @@ const resolvers = {
                         customizationsLeft:oldPurchase.customizationsLeft+1,
                         licenses:oldPurchase.licenses,
                     }
-                    let license={
+                    let license= License({
                         order:order.id,
                         purchaseDateTime:dateTime(),
-                    }
-                    newPurchase.licenses.push(license)
+                    })
+                    newPurchase.licenses.push(license.id)
                     console.log("oldPurchase update",oldPurchase)
                     let response = await PurchasedContract.findByIdAndUpdate(oldPurchase.id,newPurchase,{new: true});
+                    license.purchasedContract=response.id;
+                    await license.save();
                     await Order.findByIdAndUpdate(order.id,{$set: {"orderUsed":true}},{new: true})
                     return response;
                 }

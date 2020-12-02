@@ -6,6 +6,7 @@ const contractUploaderResolver = require('./contractUploader/resolver.js');
 const orderResolver = require('./order/resolver.js');
 const purchasedContractResolver = require('./purchasedContract/resolver.js');
 const compiledContractResolver = require('./compiledContract/resolver.js')
+const licenseResolver = require('./license/resolver.js')
 
 const resolvers = [
     userResolver,
@@ -15,6 +16,7 @@ const resolvers = [
     orderResolver,
     purchasedContractResolver,
     compiledContractResolver,
+    licenseResolver,
 ];
 
 module.exports = mergeResolvers(resolvers);
