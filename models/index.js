@@ -8,3 +8,4 @@ export {default as PurchasedContract} from './purchasedContract';
 export {default as TestedContract} from './testedContract';
 export {default as TestDeployedContract} from './testDeployedContract';
 export {default as TestCompiledContract} from './testCompiledContract';
+export {default as License} from './license';

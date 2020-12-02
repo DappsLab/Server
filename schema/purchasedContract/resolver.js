@@ -2,7 +2,7 @@ import {ApolloError} from "apollo-server-express";
 import dateTime from "../../helpers/DateTimefunctions";
 
 
-const {SmartContract, User, Order, PurchasedContract, CompiledContract,License} = require('../../models');
+const {SmartContract, User, Order, PurchasedContract, CompiledContract, License} = require('../../models');
 
 
 let fetchData = () => {
@@ -62,8 +62,10 @@ const resolvers = {
                         customizationsLeft:1,
                         licenses:[license.id],
                     }
+                    console.log("Purchase:",purchase);
 
                     let data = await PurchasedContract.create(purchase);
+                    console.log("response:",data);
                     await License.findByIdAndUpdate(license.id,{$set:{"purchasedContract":data.id}})
 
                     try{
@@ -85,6 +87,11 @@ const resolvers = {
                     }else{
                         unlimitedCustomization=oldPurchase.unlimitedCustomization;
                     }
+                    let license= {
+                        order:order.id,
+                        purchaseDateTime:dateTime(),
+                    }
+                    license= await License.create(license)
                     let newPurchase={
                         user:user.id,
                         smartContract:oldPurchase.smartContract,
@@ -92,11 +99,6 @@ const resolvers = {
                         customizationsLeft:oldPurchase.customizationsLeft+1,
                         licenses:oldPurchase.licenses,
                     }
-                    let license= {
-                        order:order.id,
-                        purchaseDateTime:dateTime(),
-                    }
-                    license= await License.create(license)
                     newPurchase.licenses.push(license.id)
                     console.log("oldPurchase update",oldPurchase)
                     let response = await PurchasedContract.findByIdAndUpdate(oldPurchase.id,newPurchase,{new: true});
