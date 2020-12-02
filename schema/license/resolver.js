@@ -18,7 +18,7 @@ const resolvers = {
             return await Order.findOne({"_id": parent.order})
         },
         purchasedContract:async(parent)=>{
-            return await purchasedContract.findOne({"_id": parent.purchasedContract})
+            return await PurchasedContract.findOne({"_id": parent.purchasedContract})
         }
     },
     Query: {
