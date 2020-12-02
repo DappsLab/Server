@@ -34,8 +34,9 @@ const resolvers = {
         compileContract:async (_,{newCompile},{user,CompiledContract})=>{
             let smartContract = await SmartContract.findById(newCompile.smartContract)
             let purchasedContract=null;
+            let license;
             if(newCompile.purchasedContract!==undefined&&newCompile.purchasedContract!==""){
-                let license = await License.findById(newCompile.license)
+                license = await License.findById(newCompile.license)
                 console.log("License:",license)
                 if(license.purchasedContract.toString()===newCompile.purchasedContract.toString()){
                     console.log("fetching...")
@@ -82,6 +83,10 @@ const resolvers = {
                     purchasedContract:purchasedContractID,
                     license:licenseID,
                 })
+                if(purchasedContract!=null){
+                    await License.findByIdAndUpdate(license._id,{$set:{used:true}});
+                    await License.findByIdAndUpdate(license._id,{$push:{compilations:compiledContract.id}});
+                }
                 return await compiledContract.save();
 
 
