@@ -51,9 +51,9 @@ const resolvers = {
 
                 try{
                     sourceCode = await fs.readFileSync (sourceFile,'utf8');
-                    console.log ("sourceCode:",sourceCode);
+                    // console.log ("sourceCode:",sourceCode);
                     compiledData = await sol.compile(sourceCode,1).contracts[':'+smartContract.sourceContractName];
-                    console.log ("Compiled Data:",compiledData)
+                    // console.log ("Compiled Data:",compiledData)
                     compiledFile = `${filename}-${Date.now()}.json`
                     fs.writeFile( "./contracts/compiledContracts/"+compiledFile, JSON.stringify(compiledData), function(err) {
                         if (err) {

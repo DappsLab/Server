@@ -8,9 +8,9 @@ const compiledContractTypeDefs = gql`
         compilationName:String!,
         user:User!,
         smartContract:SmartContract!,
-        compiledFile:String!
-        purchasedContract:ID,
-        license:ID,
+        compiledFile:String!,
+        purchasedContract:PurchasedContract,
+        license:License,
 #       deplopments:[DeployedContract],
         createdAt: String!,
         updatedAt: String!,
