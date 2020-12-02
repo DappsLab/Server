@@ -52,7 +52,9 @@ const resolvers = {
                         order:order.id,
                         purchaseDateTime:dateTime(),
                     }
-                    license=await License.create(license);
+                    console.log("License",license)
+                    license = await License.create(license);
+                    console.log("License Response",license)
                     let purchase={
                         user:user.id,
                         smartContract:newPurchase.smartContractId,
@@ -90,10 +92,11 @@ const resolvers = {
                         customizationsLeft:oldPurchase.customizationsLeft+1,
                         licenses:oldPurchase.licenses,
                     }
-                    let license= License({
+                    let license= {
                         order:order.id,
                         purchaseDateTime:dateTime(),
-                    })
+                    }
+                    license= await License.create(license)
                     newPurchase.licenses.push(license.id)
                     console.log("oldPurchase update",oldPurchase)
                     let response = await PurchasedContract.findByIdAndUpdate(oldPurchase.id,newPurchase,{new: true});
