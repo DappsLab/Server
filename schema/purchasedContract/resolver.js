@@ -17,16 +17,12 @@ const resolvers = {
         smartContract:async(parent)=>{
             return await SmartContract.findOne({"_id": parent.smartContract})
         },
+        licenses:async(parent)=>{
+            return await License.findOne({"_id": parent.license})
+        },
 
     },
-    License:{
-        compilations:async(parent)=>{
-            return await CompiledContract.find({"id":parent.compilations})
-        },
-        order:async(parent)=>{
-            return await Order.findOne({"_id": parent.order})
-        }
-    },
+
     Query: {
         purchasedContracts:async(_)=>{
             return fetchData();
