@@ -18,17 +18,10 @@ const purchasedContractSchema = new Schema({
         type:Number,
         default:0,
     },
-    licenses: [{
-        order:{
-            ref: 'orders',
-            type: Schema.Types.ObjectId
-        },
-        purchaseDateTime:String,
-        compilations:[{
-            ref: 'compiledcontracts',
-            type: Schema.Types.ObjectId
-        }],
-    }],
+    licenses: {
+    ref: 'licenses',
+        type: Schema.Types.ObjectId
+    },
 
 }, {
     timestamps: true
