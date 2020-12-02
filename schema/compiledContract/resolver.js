@@ -1,4 +1,4 @@
-const {SmartContract, User, Order, CompiledContract,PurchasedContract} = require('../../models');
+const {SmartContract, User, Order, CompiledContract,PurchasedContract, License} = require('../../models');
 const path = require('path');
 const fs = require('fs');
 const sol=require("solc");
