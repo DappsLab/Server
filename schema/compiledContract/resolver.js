@@ -37,7 +37,7 @@ const resolvers = {
             if(newCompile.purchasedContract!==undefined&&newCompile.purchasedContract!==""){
                 let license = await License.findById(newCompile.license)
                 console.log("License:",license)
-                if(license.purchasedContract===newCompile.purchasedContract){
+                if(license.purchasedContract.toString()===newCompile.purchasedContract.toString()){
                     console.log("fetching...")
                     purchasedContract = await PurchasedContract.findById(newCompile.purchasedContract);
                 }
