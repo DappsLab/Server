@@ -22,6 +22,9 @@ const resolvers = {
         smartContracts: () => {
             return fetchData()
         },
+        verifiedSmartContracts: () => {
+            return SmartContract.find({verified:"VERIFIED"});
+        },
         smartContractById: async (_,args)=>{
             let smartContract= await SmartContract.findById(args.id);
             console.log("SmartContract:",smartContract);

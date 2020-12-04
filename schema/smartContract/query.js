@@ -4,6 +4,7 @@ const {gql} = require('apollo-server-express');
 const smartContractQuery = gql`
     extend type Query {
         smartContracts: [SmartContract],
+        verifiedSmartContracts:[SmartContract],
         searchPendingSmartContracts:[SmartContract] @isAuth,
         smartContractById(id:ID!): SmartContract,
         filterSmartContract(searchSmartContract: SearchSmartContract): [SmartContract],
