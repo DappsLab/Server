@@ -56,6 +56,7 @@ const resolvers = {
             }
 
             let filter = {
+                verified:"VERIFIED",
                 contractName:filterName,
                 contractCategory:filterCategory,
                 tags: filterTags,
@@ -111,6 +112,7 @@ const resolvers = {
 
 
             let filter = {
+                verified:"VERIFIED",
                 '$or':[
                     {contractName:{ "$regex": searchSmartContract.contractName, "$options": "i" }},
                     {tags: { "$regex":  searchSmartContract.contractName, "$options": "i" }}
