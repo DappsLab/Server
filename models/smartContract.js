@@ -16,7 +16,7 @@ const smartContractSchema = new Schema({
     publishingDateTime:String,
     verified: {
         type: String,
-        default:"NOT_VERIFIED"
+        default:"PENDING"
     },
     // verifiedBy: mongoose.ObjectId,
     verifiedDateTime:String,
