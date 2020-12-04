@@ -112,11 +112,41 @@ const resolvers = {
             }catch(err){
                 throw new ApolloError(err)
             }
+        }, searchPendingKyc:async(_,{},{user})=>{
+            if(user.type=== "ADMIN"){
+                return await User.find({"kyc.kycStatus":"PENDING"});
+            }else{
+                throw new ApolloError("Unauthorised", '401');
+            }
         },
 
 
     },
     Mutation: {
+        verifyKyc:async (_, {id},{user})=>{
+            if(user.type === "ADMIN"){
+                try{
+                    await User.findByIdAndUpdate(id,{$set: {"kyc.kycStatus":"VERIFIED"}});
+                    return true
+                }catch(err){
+                    throw new ApolloError("User not found", '404');
+                }
+            }else{
+                throw new ApolloError("Unauthorised", '401');
+            }
+        },
+        cancelKyc: async (_,{id},{user}) => {
+            if(user.type === "ADMIN"){
+                try{
+                    await User.findByIdAndUpdate(id,{$set: {"kyc.kycStatus":"NOT_VERIFIED"}});
+                    return true
+                }catch(err){
+                    throw new ApolloError("User not found", '404');
+                }
+            }else{
+                throw new ApolloError("Unauthorised", '401');
+            }
+        },
         disable2FA:async (_,__,{User,user})=>{
             try{
                 let response = await User.findByIdAndUpdate(user.id, {

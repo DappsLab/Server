@@ -10,13 +10,13 @@ let fetchData = ()=>{
 }
 
 const resolvers = {
-    SmartContract:{
+    SmartContract: {
         publisher:async (parent)=>{
             return await User.findOne({"_id":parent.publisher})
         },
         verifiedBy: async (parent)=>{
             return await User.findOne({"_id":parent.verifiedBy})
-        }
+        },
     },
     Query: {
         smartContracts: () => {
@@ -126,10 +126,45 @@ const resolvers = {
             }catch(err){
                 console.log(err);
             }
+        },
+        searchPendingSmartContracts:async(_,{},{user})=>{
+            if(user.type==="ADMIN"){
+                return await SmartContract.find({verified:"PENDING"});
+            }else{
+                throw new ApolloError("UnAuthorized User",)
+            }
         }
 
     },
     Mutation:{
+        cancelSmartContract: async (_, {id},{user})=>{
+            if(user.type ==="ADMIN"){
+                let smartContract;
+                try {
+                    smartContract = {
+                        verifiedBy: user.id,
+                        verifiedDateTime:dateTime(),
+                        verified:"NOT_VERIFIED",
+                    };
+                }catch(e){
+                    console.log("error:",e)
+                }
+                try {
+                    console.log("smartContract:",smartContract)
+                    let response = await SmartContract.findByIdAndUpdate(id, {$set:smartContract},{new:true})
+                    console.log("response",response)
+                    if (!response) {
+                    }
+                    return response
+
+                } catch (err) {
+                    throw new ApolloError("Update Failed");
+                    // throw new ApolloError(err.message);
+                }
+            }else{
+                throw new ApolloError("UnAuthorized User",403);
+            }
+        },
         createSmartContract:async (_,{newSmartContract},{SmartContract,user})=>{
 
             let smartContract;
@@ -194,12 +229,12 @@ const resolvers = {
                 throw new ApolloError(err.message);
             }
         },
-        verifySmartContract:async (_,{newSmartContract,id},{SmartContract,user})=>{
+        verifySmartContract:async (_,{id},{SmartContract,user})=>{
             if(user.type ==="ADMIN"){
                 let smartContract;
                 try {
                     smartContract = {
-                        ...newSmartContract,
+                        verified:"VERIFIED",
                         verifiedBy: user.id,
                         verifiedDateTime:dateTime(),
                     };
@@ -208,7 +243,8 @@ const resolvers = {
                 }
                 try {
                     console.log("smartContract:",smartContract)
-                    let response = await SmartContract.findByIdAndUpdate(id,smartContract,{new:true})
+                    let response = await SmartContract.findByIdAndUpdate(id, {$set:smartContract},{new:true})
+
                     console.log("response",response)
                     if (!response) {
                     }
@@ -221,8 +257,7 @@ const resolvers = {
             }else{
                 throw new ApolloError("UnAuthorized User",403);
             }
-        }
-
+        },
     }
 }
 

@@ -9,9 +9,12 @@ const userQuery = gql`
         me:User! @isAuth,
 #        getBalance:User! @isAuth,
         userById(id:ID!):User,
+        searchPendingKyc:[User] @isAuth,
     },
     
     extend type Mutation {
+        verifyKyc(id:ID!):Boolean @isAuth,
+        cancelKyc(id:ID!):Boolean @isAuth,
         registerUser(newUser: UserRegisterInput!): AuthUser!,
         editUser(newUser: UserInput!): User @isAuth,
         confirmEmail(token: String!): Boolean!,

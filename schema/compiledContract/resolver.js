@@ -27,8 +27,23 @@ const resolvers = {
             return await fetchData();
         },
         compiledContractById:async(_,{id})=>{
+
             return await CompiledContract.findById(id);
         },
+        getABI: async (_,{id},{user})=>{
+            let compiled = await CompiledContract.findById(id)
+            const sourceFile = path.resolve ( './' ,'contracts/compiledContracts/',compiled.compiledFile);
+            let sourceCode = JSON.parse(await fs.readFileSync (sourceFile,'utf8'));
+            console.log(sourceCode);
+            return sourceCode.interface;
+        },
+        getBinary:async(_,{id},{user})=>{
+            let compiled = await CompiledContract.findById(id)
+            const sourceFile = path.resolve ( './' ,'contracts/compiledContracts/',compiled.compiledFile);
+            let sourceCode = JSON.parse(await fs.readFileSync (sourceFile,'utf8'));
+            console.log(sourceCode);
+            return sourceCode.bytecode;
+        }
     },
     Mutation: {
         compileContract:async (_,{newCompile},{user,CompiledContract})=>{

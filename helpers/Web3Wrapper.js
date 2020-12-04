@@ -60,6 +60,14 @@ export const getTransactionReceipt= async (transactionHash)=>{
     return await web3.eth.getTransactionReceipt(transactionHash);
 }
 
+export const deploy = async (abi, bytecode, argumentsArray, address)=>{
+    let contract = await new web3.eth.Contract(JSON.parse(abi))
+        .deploy({data:'0x'+bytecode,arguments:argumentsArray})
+        .send({from:address});
+    return contract;
+};
+
+
 // export const getAccounts = async ()=>{
 //     return await web3.eth.personal.getAccounts().then(console.log);
 // }
