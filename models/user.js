@@ -88,6 +88,10 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'smartcontracts',
     }],
+    dapps: [{
+        type: Schema.Types.ObjectId,
+        ref: 'smartcontracts',
+    }],
     purchasedContracts: [{
         type: Schema.Types.ObjectId,
         ref: 'purchasedcontracts',
@@ -99,6 +103,10 @@ const userSchema = new Schema({
     orders: [{
         type: Schema.Types.ObjectId,
         ref: 'orders',
+    }],
+    customOrders: [{
+        type: Schema.Types.ObjectId,
+        ref: 'customorders',
     }],
 }, {
     timestamps: true

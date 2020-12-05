@@ -20,6 +20,8 @@ const licenseTypeDefs = require('./license/type')
 const licenseQuery = require('./license/query')
 const deployedContractQuery = require('./deployedContract/query')
 const deployedContractTypeDefs = require('./deployedContract/type')
+const customOrderQuery = require('./customOrder/query')
+const customOrderTypeDefs = require('./customOrder/type')
 
 
 const typeDefs = [
@@ -41,6 +43,8 @@ const typeDefs = [
     licenseQuery,
     deployedContractQuery,
     deployedContractTypeDefs,
+    customOrderTypeDefs,
+    customOrderQuery,
 
 ];
 

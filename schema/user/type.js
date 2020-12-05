@@ -42,6 +42,7 @@ const userTypeDefs = gql`
         wallet:Wallet,
         smartContracts:[SmartContract],
         orders:[Order],
+        customOrders:[CustomOrder],
         purchasedContracts:[PurchasedContract],
     }
 
@@ -59,18 +60,20 @@ const userTypeDefs = gql`
         city: String,
         street: String,
         building: String,
-        kycStatus(status: Status): String!
+        kycStatus(status: Status): String! 
     }
 
     enum Status {
-        NOT_VERIFIED
+        NOT_SUBMITTED
         PENDING
         VERIFIED
+        REJECTED
     }
 
     enum Type {
         ADIMN
         USER
+        DEVELOPER
     }
 
     type TestAddress{

@@ -91,17 +91,6 @@ const resolvers = {
                 token,
             }
         },
-        /**
-         * @DESC to get the authenticated User
-         * @Headers Authorization
-         * @Access Private
-         */
-        authUser: (_, __, {
-            req: {
-                user
-            }
-        }) => user,
-
         verify2FA:async (_,{token},{user})=>{
             try {
                 return await speakeasy.totp.verify({
@@ -112,13 +101,19 @@ const resolvers = {
             }catch(err){
                 throw new ApolloError(err)
             }
-        }, searchPendingKyc:async(_,{},{user})=>{
+        },
+        searchPendingKyc:async(_,{},{user})=>{
             if(user.type=== "ADMIN"){
                 return await User.find({"kyc.kycStatus":"PENDING"});
             }else{
                 throw new ApolloError("Unauthorised", '401');
             }
         },
+        authUser: async (_, __, {
+            req: {
+                user
+            }
+        }) => user,
 
 
     },
@@ -296,15 +291,6 @@ const resolvers = {
                 return e.message;
             }
         },
-        // editUser: async (_, args) => {
-        //     try {
-        //         let response = await User.findByIdAndUpdate(args.id, args, {new: true});
-        //         console.log(response);
-        //         return response;
-        //     } catch (e) {
-        //         return e.message;
-        //     }
-        // },
         editUser: async (_, {newUser}, {User, user}) => {
             // console.log("user:", user);
             // console.log("User:", User);
@@ -466,7 +452,6 @@ const resolvers = {
                 throw new ApolloError(err.message);
             }
         },
-
     },
 }
 

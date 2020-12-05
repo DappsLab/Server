@@ -6,6 +6,7 @@ const smartContractQuery = gql`
         smartContracts: [SmartContract],
         verifiedSmartContracts:[SmartContract],
         searchPendingSmartContracts:[SmartContract] @isAuth,
+        getSource(id:ID!):String! @isAuth,
         smartContractById(id:ID!): SmartContract,
         filterSmartContract(searchSmartContract: SearchSmartContract): [SmartContract],
         searchSmartContract(searchSmartContract: SearchSmartContract): [SmartContract],

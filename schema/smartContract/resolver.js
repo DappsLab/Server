@@ -138,8 +138,22 @@ const resolvers = {
             }else{
                 throw new ApolloError("UnAuthorized User",)
             }
-        }
-
+        },
+        getSource:async (_,{id},{user}) => {
+            if(user.type ==="ADMIN"){
+                let smartContract  = await SmartContract.findOne({id:id})
+                let filename = smartContract.source.substr(22,99);
+                filename =  filename.slice(0, -4);
+                const sourceFile=path.resolve ( './' ,'contracts',filename+'.sol');
+                try{
+                    return await fs.readFileSync (sourceFile,'utf8');
+                }catch(err){
+                    throw new ApolloError("error file not exist",404)
+                }
+            } else{
+                throw new ApolloError("UnAuthorized User",403)
+            }
+        },
     },
     Mutation:{
         cancelSmartContract: async (_, {id},{user})=>{
