@@ -1,13 +1,13 @@
 import {ApolloError} from "apollo-server-express";
 import lodash from "lodash"
+import {serializeDApp, serializeDApps} from '../../serializers'
 const path = require('path');
 const fs = require('fs');
 const {DApp,User} = require('../../models');
 const dateTime = require('../../helpers/DateTimefunctions');
 const {walletObject}= require('../../helpers/Walletfunctions');
 
-
-let fetchData = ()=>{
+let fetchData = async()=>{
     return DApp.find()
 }
 
@@ -21,14 +21,14 @@ const resolvers = {
         },
     },
     Query: {
-        dApps: () => {
-            return fetchData()
+        dApps: async(_,{},{}) => {
+            return serializeDApps(await fetchData());
         },
-        verifiedDApps: () => {
-            return DApp.find({verified:"VERIFIED"});
+        verifiedDApps: async(_,{},{}) => {
+            return serializeDApps(await DApp.find({verified:"VERIFIED"}));
         },
         dAppById: async (_,args)=>{
-            return await DApp.findById(args.id);
+            return serializeDApp(await DApp.findById(args.id));
         },
         filterDApps: async (_,{searchDApp})=>{
             let filterCategory;
@@ -84,7 +84,7 @@ const resolvers = {
                 console.log("filter:",filter);
                 console.log("sortBy:",SortBy);
                 let response = await DApp.find(filter).sort(SortBy)
-                console.log("response:",response)
+                console.log("response:", response)
                 let {
                     minPrice,
                     maxPrice
@@ -103,7 +103,7 @@ const resolvers = {
                 });
 
                 console.log("filteredResponse",filteredResponse)
-                return filteredResponse;
+                return serializeDApps(filteredResponse)
             }catch(err){
                 console.log(err);
             }
@@ -125,14 +125,14 @@ const resolvers = {
                 console.log("filter:",filter)
                 let response = await DApp.find(filter)
                 console.log("response:",response)
-                return response;
+                return serializeDApps(response)
             }catch(err){
                 console.log(err);
             }
         },
         searchPendingDApps:async(_,{},{user})=>{
             if(user.type==="ADMIN"){
-                return await DApp.find({verified:"PENDING"});
+                return serializeDApps(await DApp.find({verified:"PENDING"}));
             }else{
                 throw new ApolloError("UnAuthorized User",)
             }
@@ -178,7 +178,7 @@ const resolvers = {
                     console.log("response",response)
                     if (!response) {
                     }
-                    return response
+                    return serializeDApp(response)
 
                 } catch (err) {
                     throw new ApolloError("Update Failed");
@@ -220,7 +220,7 @@ const resolvers = {
                 ...result.toObject(),
                 id: result._id.toString()
             }
-            return result;
+            return serializeDApp(result)
         },
         updateDApp:async (_,{newDApp,id},{DApp,user})=>{
 
@@ -230,7 +230,7 @@ const resolvers = {
                 if (!response) {
                     throw new ApolloError("UPDATE failed");
                 }
-                return response
+                return serializeDApp(response)
 
             } catch (err) {
                 throw new ApolloError(err.message);
@@ -271,7 +271,7 @@ const resolvers = {
                     console.log("response",response)
                     if (!response) {
                     }
-                    return response
+                    return serializeDApp(response)
 
                 } catch (err) {
                     throw new ApolloError("Update Failed");

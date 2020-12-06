@@ -2,7 +2,7 @@ import {Master, User,Order,SmartContract,PurchasedContract} from "../../models";
 
 const {USERSPATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
-const {serializeUser, issueAuthToken, serializeEmail} = require('../../helpers/Userfunctions.js')
+const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
 const {UserRegisterationRules, UserAuthenticationRules, EmailRules, PasswordRules} = require('../../validations');
 const {walletObject} = require('../../helpers/Walletfunctions.js');
 const {verify} = require('jsonwebtoken');

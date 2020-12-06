@@ -1,4 +1,4 @@
-import {issueConfirmEmailToken} from "../helpers/Userfunctions";
+import {issueConfirmEmailToken} from "../serializers";
 const {User} = require('../models');
 
 const emailConfirmationUrl=async(user)=>{

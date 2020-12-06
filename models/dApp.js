@@ -8,8 +8,11 @@ const dAppSchema = new Schema({
     shortDescription: String,
     description: String,
     singleLicensePrice: String,
-    source: String,
+    zip: String,
     publishingDateTime:String,
+    dAppCategory:[{
+        type:String,
+    }],
     verified: {
         type: String,
         default:"PENDING"

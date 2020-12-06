@@ -24,14 +24,14 @@ const DAppsTypeDefs = gql`
     }
     
     input DAppInput{
-        dAppName: String,
-        image: String,
-        tags:[String],
+        dAppName: String!,
+        image: String!,
+        tags:[String]!,
         dAppCategory:[Category!]!,
-        shortDescription: String,
-        description: String,
-        singleLicensePrice: String,
-        zip: String,
+        shortDescription: String!,
+        description: String!,
+        singleLicensePrice: String!,
+        zip: String!,
     }
     
     input SearchDApp{
