@@ -1,5 +1,7 @@
 import {ApolloError} from "apollo-server-express";
 import lodash from "lodash"
+const path = require('path');
+const fs = require('fs');
 const {SmartContract,User} = require('../../models');
 const dateTime = require('../../helpers/DateTimefunctions');
 const {walletObject}= require('../../helpers/Walletfunctions');
@@ -141,12 +143,18 @@ const resolvers = {
         },
         getSource:async (_,{id},{user}) => {
             if(user.type ==="ADMIN"){
-                let smartContract  = await SmartContract.findOne({id:id})
+                let smartContract  = await SmartContract.findOne({"_id":id})
+                console.log("response",smartContract)
                 let filename = smartContract.source.substr(22,99);
+                console.log(filename)
                 filename =  filename.slice(0, -4);
+                console.log('filename:',filename)
                 const sourceFile=path.resolve ( './' ,'contracts',filename+'.sol');
+                console.log(sourceFile)
                 try{
-                    return await fs.readFileSync (sourceFile,'utf8');
+                    let sourceCode= await fs.readFileSync (sourceFile,'utf8');
+                    console.log(sourceCode)
+                    return sourceCode;
                 }catch(err){
                     throw new ApolloError("error file not exist",404)
                 }
