@@ -88,9 +88,9 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'smartcontracts',
     }],
-    dapps: [{
+    dApps: [{
         type: Schema.Types.ObjectId,
-        ref: 'dapps',
+        ref: 'dApps',
     }],
     purchasedContracts: [{
         type: Schema.Types.ObjectId,

@@ -41,7 +41,7 @@ const userTypeDefs = gql`
         testAddress:[TestAddress],
         wallet:Wallet,
         smartContracts:[SmartContract],
-        dapps:[Dapp],
+        dApps:[DApp],
         orders:[Order],
         customOrders:[CustomOrder],
         purchasedContracts:[PurchasedContract],
