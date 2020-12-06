@@ -28,7 +28,7 @@ const orderSchema = new Schema({
     },
     // dapp:{
     //     type: Schema.Types.ObjectId,
-    //     ref: 'dapps'
+    //     ref: 'dApp'
     // }
 }, {
     timestamps: true

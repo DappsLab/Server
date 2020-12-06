@@ -90,7 +90,7 @@ const userSchema = new Schema({
     }],
     dapps: [{
         type: Schema.Types.ObjectId,
-        ref: 'smartcontracts',
+        ref: 'dapps',
     }],
     purchasedContracts: [{
         type: Schema.Types.ObjectId,

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const dappSchema = new Schema({
-    dappName: String,
+const dAppSchema = new Schema({
+    dAppName: String,
     image: String,
     tags:[String],
     shortDescription: String,
@@ -15,7 +15,10 @@ const dappSchema = new Schema({
         default:"PENDING"
     },
     verifiedDateTime:String,
-    purchasedCounts: String,
+    purchasedCounts: {
+        type:Number,
+        default:0,
+    },
     publisher: {
         ref: 'users',
         type: Schema.Types.ObjectId
@@ -29,5 +32,5 @@ const dappSchema = new Schema({
     timestamps: true
 });
 
-const Dapp = mongoose.model('dapps', dappSchema);
-export default Dapp;
+const DApp = mongoose.model('dApps', dAppSchema);
+export default DApp;

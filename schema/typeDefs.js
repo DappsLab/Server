@@ -1,6 +1,4 @@
-// const {gql} = require('apollo-server-express');
 const { mergeTypeDefs } = require('@graphql-tools/merge');
-// const _ = require('lodash');
 
 const userQuery = require('./user/query.js')
 const userTypeDefs =require('./user/type')
@@ -22,7 +20,8 @@ const deployedContractQuery = require('./deployedContract/query')
 const deployedContractTypeDefs = require('./deployedContract/type')
 const customOrderQuery = require('./customOrder/query')
 const customOrderTypeDefs = require('./customOrder/type')
-
+const dAppTypeDefs = require('./dApp/type')
+const dAppQueryDefs = require('./dApp/query')
 
 const typeDefs = [
     baseTypeDefs,
@@ -45,6 +44,8 @@ const typeDefs = [
     deployedContractTypeDefs,
     customOrderTypeDefs,
     customOrderQuery,
+    dAppTypeDefs,
+    dAppQueryDefs,
 
 ];
 

@@ -85,11 +85,3 @@ const smartContractTypeDefs = gql`
 
 
 module.exports = smartContractTypeDefs;
-
-
-const RequestActionEnum = {
-    TOOLS: 'TOOLS',
-    SOCIAL: 'SOCIAL',
-    ESCROW: 'ESCROW'
-}
-let array = [RequestActionEnum.TOOLS, RequestActionEnum.SOCIAL, RequestActionEnum.ESCROW];
