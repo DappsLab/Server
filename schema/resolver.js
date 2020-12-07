@@ -10,7 +10,7 @@ const licenseResolver = require('./license/resolver.js')
 const deployedContractResolver = require('./deployedContract/resolver.js')
 const customOrderResolver = require('./customOrder/resolver.js')
 const dAppResolver = require('./dapp/resolver.js')
-
+const dAppUploaderResolver = require('./dAppUploader/resolver.js')
 
 const resolvers = [
     userResolver,
@@ -24,6 +24,7 @@ const resolvers = [
     deployedContractResolver,
     customOrderResolver,
     dAppResolver,
+    dAppUploaderResolver,
 ];
 
 module.exports = mergeResolvers(resolvers);

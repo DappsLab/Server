@@ -19,7 +19,7 @@ import {
 
 const resolvers = {
     Mutation:{
-        contractUploader: async (_, {
+        dAppUploader: async (_, {
             file
         }) => {
             try {

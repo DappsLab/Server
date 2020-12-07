@@ -24,6 +24,7 @@ const dAppTypeDefs = require('./dApp/type')
 const dAppQueryDefs = require('./dApp/query')
 const purchasedDAppTypeDefs = require('./purchasedDApp/type')
 const purchasedDAppQuery = require('./purchasedDApp/query')
+const dAppUploaderQuery = require('./dAppUploader/query')
 
 const typeDefs = [
     baseTypeDefs,
@@ -50,6 +51,7 @@ const typeDefs = [
     dAppQueryDefs,
     purchasedDAppTypeDefs,
     purchasedDAppQuery,
+    dAppUploaderQuery,
 
 ];
 
