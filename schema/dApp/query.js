@@ -6,7 +6,7 @@ const dAppQuery = gql`
         dApps: [DApp],
         verifiedDApps:[DApp],
         searchPendingDApps:[DApp] @isAuth,
-        getZip(id:ID!):String! @isAuth,
+        getZip(zipInput:DAppZipInput!):String! @isAuth,
         dAppById(id:ID!): DApp,
         filterDApps(searchDApp: SearchDApp): [DApp],
         searchDApps(searchDApp: SearchDApp): [DApp],

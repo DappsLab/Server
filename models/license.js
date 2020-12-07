@@ -18,6 +18,10 @@ const licenseSchema = new Schema({
         ref: 'purchasedcontracts',
         type: Schema.Types.ObjectId,
     },
+    purchasedDApp: {
+        ref: 'purchaseddApps',
+        type: Schema.Types.ObjectId,
+    },
     compilations: [{
         ref:'compiledcontracts',
         type:Schema.Types.ObjectId,

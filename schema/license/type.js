@@ -6,7 +6,8 @@ const licenseTypeDefs = gql`
     type License{
         id:ID!,
         used:Boolean!,
-        purchasedContract:PurchasedContract!,
+        purchasedContract:PurchasedContract,
+        purchasedDApp:PurchasedDApp,
         order:Order!,
         purchaseDateTime:String!,
         compilations:[CompiledContract],

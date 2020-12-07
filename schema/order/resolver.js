@@ -5,7 +5,7 @@ import {Master} from "../../models";
 import {walletObject} from "../../helpers/Walletfunctions";
 import {ORDERSPATH} from "../../config";
 
-const {SmartContract, User, Order} = require('../../models');
+const {SmartContract, User, Order, DApp} = require('../../models');
 
 
 let fetchData = () => {
@@ -13,17 +13,17 @@ let fetchData = () => {
 }
 
 const resolvers = {
-    Order:{
-        user:async (parent)=>{
-            return await User.findOne({"_id":parent.user})
+    Order: {
+        user: async (parent) => {
+            return await User.findOne({"_id": parent.user})
         },
-        smartContract:async(parent)=>{
+        smartContract: async (parent) => {
             return await SmartContract.findOne({"_id": parent.smartContract})
         },
     },
     Query: {
-        orders:async(_)=>{
-           return fetchData();
+        orders: async (_) => {
+            return fetchData();
         },
         verifyOrder: async (_, {id}) => {
             let order = await Order.findById(id);
@@ -32,8 +32,8 @@ const resolvers = {
             return !!receipt.status;
 
         },
-        orderById: async(_,{id})=>{
-          return await Order.findById(id);
+        orderById: async (_, {id}) => {
+            return await Order.findById(id);
         },
 
     },
@@ -73,7 +73,7 @@ const resolvers = {
                             ...newOrder,
                             user: user.id,
                             price: price,
-                            status:tx.receipt.status,
+                            status: tx.receipt.status,
                             fee: newOrder.fee.toString(),
                             dateTime: dateTime(),
                             address: address,
@@ -85,13 +85,13 @@ const resolvers = {
                         });
                         let orderResponse = await order.save();
 
-                        try{
+                        try {
                             let response = await User.findById(user.id);
                             response.orders.push(orderResponse._id);
                             response.save();
                             // console.log("hello to response:",response);
-                        }catch(e){
-                            console.log("error:",e)
+                        } catch (e) {
+                            console.log("error:", e)
                         }
 
                         console.log("order:", order);
@@ -105,6 +105,69 @@ const resolvers = {
                     //todo return low balance error
                     throw new ApolloError("Low Balance");
                 }
+
+            } else if (newOrder.productType === "DAPP") {
+                console.log("newOrder:", newOrder)
+                let dApp = await DApp.findById(newOrder.dApp);
+                let price = dApp.singleLicensePrice;
+
+                //todo verify user account
+                let balance = await getBalance(user.address)
+                console.log("total Price:", (parseFloat(price) + parseFloat(toEth(newOrder.fee))))
+                if (toEth(balance) >= (parseFloat(price) + parseFloat(toEth(newOrder.fee)))) {
+                    // todo create address
+                    let master = await Master.findOne({})
+                    let wallet = walletObject.hdwallet.derivePath(ORDERSPATH + master.orderCount).getWallet();
+                    let address = wallet.getAddressString();
+                    master.orderCount = (parseInt(master.orderCount) + 1).toString();
+                    // * changed from id top master.id
+                    const response = await Master.findByIdAndUpdate(master.id, master, {new: true});
+
+                    try {
+                        let tx
+                        console.log("towei:", toEth(newOrder.fee))
+
+                        tx = await signAndSendTransaction(address, price, newOrder.fee, user.wallet.privateKey)
+                        console.log("transactions", tx)
+
+                        let order = Order({
+                            ...newOrder,
+                            user: user.id,
+                            price: price,
+                            status: tx.receipt.status,
+                            fee: newOrder.fee.toString(),
+                            dateTime: dateTime(),
+                            address: address,
+                            transactionHash: tx.receipt.transactionHash,
+                            wallet: {
+                                privateKey: wallet.getPrivateKeyString(),
+                                publicKey: wallet.getPublicKeyString(),
+                            }
+                        });
+                        let orderResponse = await order.save();
+
+                        try {
+                            let response = await User.findById(user.id);
+                            response.orders.push(orderResponse._id);
+                            response.save();
+                            // console.log("hello to response:",response);
+                        } catch (e) {
+                            console.log("error:", e)
+                        }
+
+                        console.log("order:", order);
+                        return orderResponse
+                    } catch (err) {
+                        console.log(err)
+                        console.log("error", err)
+                        throw new ApolloError(err.message);
+                    }
+                } else {
+                    //todo return low balance error
+                    throw new ApolloError("Low Balance");
+                }
+
+            } else {
 
             }
 

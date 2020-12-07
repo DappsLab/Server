@@ -22,6 +22,8 @@ const customOrderQuery = require('./customOrder/query')
 const customOrderTypeDefs = require('./customOrder/type')
 const dAppTypeDefs = require('./dApp/type')
 const dAppQueryDefs = require('./dApp/query')
+const purchasedDAppTypeDefs = require('./purchasedDApp/type')
+const purchasedDAppQuery = require('./purchasedDApp/query')
 
 const typeDefs = [
     baseTypeDefs,
@@ -46,6 +48,8 @@ const typeDefs = [
     customOrderQuery,
     dAppTypeDefs,
     dAppQueryDefs,
+    purchasedDAppTypeDefs,
+    purchasedDAppQuery,
 
 ];
 

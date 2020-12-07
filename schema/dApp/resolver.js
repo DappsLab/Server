@@ -3,7 +3,7 @@ import lodash from "lodash"
 import {serializeDApp, serializeDApps} from '../../serializers'
 const path = require('path');
 const fs = require('fs');
-const {DApp,User} = require('../../models');
+const {DApp,User, License, PurchasedDApp} = require('../../models');
 const dateTime = require('../../helpers/DateTimefunctions');
 const {walletObject}= require('../../helpers/Walletfunctions');
 
@@ -137,23 +137,17 @@ const resolvers = {
                 throw new ApolloError("UnAuthorized User",)
             }
         },
-        getZip:async (_,{id},{user}) => {
-            if(user.type ==="ADMIN"){
-            //     let dApp  = await DApp.findOne({"_id":id})
-            //     console.log("response",dApp)
-            //     let filename = dApp.zip.substr(22,99);
-            //     console.log(filename)
-            //     filename =  filename.slice(0, -4);
-            //     console.log('filename:',filename)
-            //     const sourceFile=path.resolve ( './' ,'dApps',filename+'.zip');
-            //     console.log(sourceFile)
-            //     try{
-            //         let sourceCode= await fs.readFileSync (sourceFile,'utf8');
-            //         console.log(sourceCode)
-            //         return sourceCode;
-            //     }catch(err){
-            //         throw new ApolloError("error file not exist",404)
-            //     }
+        getZip:async (_,{zipInput},{user}) => {
+            let license;
+            if(zipInput.purchasedDApp!==undefined&&zipInput.purchasedDApp!==""){
+                license = await License.findById(zipInput.license)
+                console.log("License:",license)
+                if(license.purchasedDApp.toString()===zipInput.purchasedDApp.toString()&&license.used===false){
+                    let data = DApp.findById(zipInput.dApp);
+                    license.used=true;
+                    license.save();
+                    return data.zip;
+                }
             } else{
                 throw new ApolloError("UnAuthorized User",403)
             }

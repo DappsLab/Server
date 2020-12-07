@@ -5,6 +5,7 @@ export {default as CompiledContract} from './compiledContract';
 export {default as DeployedContract} from './deployedContract';
 export {default as Order} from './order';
 export {default as PurchasedContract} from './purchasedContract';
+export {default as PurchasedDApp} from './purchasedDApp';
 export {default as License} from './license';
 export {default as DApp} from './dApp';
 export {default as TestedContract} from './testedContract';

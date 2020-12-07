@@ -14,6 +14,7 @@ const smartContractTypeDefs = gql`
         transactionHash:String!,
         productType(productType:ProductType):String!,
         smartContract:SmartContract,
+        dApp:DApp,
         status:String!,
         createdAt: String!,
         updatedAt: String!,

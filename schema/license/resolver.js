@@ -15,18 +15,21 @@ const resolvers = {
             return await CompiledContract.find({"id":parent.compilations}) //! have to change compiled Contracts
         },
         order:async(parent)=>{
-            return await Order.findOne({"_id": parent.order})
+            return Order.findOne({"_id": parent.order})
         },
         purchasedContract:async(parent)=>{
-            return await PurchasedContract.findOne({"_id": parent.purchasedContract})
-        }
+            return PurchasedContract.findOne({"_id": parent.purchasedContract})
+        },
+        purchasedDApp:async(parent)=>{
+            return PurchasedDApp.findOne({"_id": parent.purchasedContract})
+        },
     },
     Query: {
         licenses:async(_)=>{
             return fetchData();
         },
         licenseById: async (_, {id}) => {
-            return await License.findOne({"_id":id})
+            return License.findOne({"_id":id})
         },
 
     },

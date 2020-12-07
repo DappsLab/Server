@@ -26,10 +26,10 @@ const orderSchema = new Schema({
         privateKey: String,
         publicKey: String,
     },
-    // dapp:{
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'dApp'
-    // }
+    dApp:{
+        type: Schema.Types.ObjectId,
+        ref: 'dApps'
+    }
 }, {
     timestamps: true
 });
