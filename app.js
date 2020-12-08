@@ -44,6 +44,7 @@ app.use(cors());
 
 // view engine setup
 app.use(express.static(join(__dirname, './uploads')));
+app.use(express.static(join(__dirname, './dapps')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
