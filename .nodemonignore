@@ -43,6 +43,7 @@ build/Release
 node_modules/
 contracts/
 uploads/
+dapps/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)

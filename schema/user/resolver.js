@@ -1,4 +1,4 @@
-import {Master, User,Order,SmartContract,PurchasedContract} from "../../models";
+import {Master, User,Order,SmartContract,PurchasedContract, DApp} from "../../models";
 
 const {USERSPATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
@@ -29,7 +29,10 @@ const resolvers = {
         },
         purchasedContracts:async(parent)=>{
             return await PurchasedContract.find({"user":parent.id})
-        }
+        },
+        dApps:async(parent)=>{
+            return await DApp.find({"user":parent.id})
+        },
     },
     Query: {
         users: () => {

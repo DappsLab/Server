@@ -1,50 +1,52 @@
 import Web3 from 'web3';
-import {MAIN_NET_HTTP} from "../config";
+import {TEST_NET_HTTP} from "../config";
+import {toWei} from "./Web3Wrapper";
+import {TEST_MAIN_ADDRESS} from "../config";
 
-export const web3 = new Web3(MAIN_NET_HTTP);
+export const web3 = new Web3(TEST_NET_HTTP);
 
 
-export const getBalance = async(address)=>{
+export const test_getBalance = async(address)=>{
     return await web3.eth.getBalance(address);
 }
 
-export const getAccounts = async()=>{
+export const test_getAccounts = async()=>{
     return await web3.eth.getAccounts();
 }
 
-export const getBlockNumber = async()=>{
+export const test_getBlockNumber = async()=>{
     return await web3.eth.getBlockNumber();
 }
 
-export const isSyncing = async()=>{
+export const test_isSyncing = async()=>{
     return await web3.eth.isSyncing()
 }
 
 
-export const getTransactionCount = async(address)=>{
+export const test_getTransactionCount = async(address)=>{
     return await web3.eth.getTransactionCount(address)
 
 }
 
-export const getTransaction = async(transactionHash)=>{
+export const test_getTransaction = async(transactionHash)=>{
     return await web3.eth.getTransaction(transactionHash)
 
 }
 
-export const toEth= (wei)=>{
+export const test_toEth= (wei)=>{
     return wei/1000000000000000000;
 }
-export const toWei=  (eth)=>{
+export const test_toWei=  (eth)=>{
     return eth*1000000000000000000;
 }
-export const signAndSendTransaction= async (to,amount,gas,privateKey)=>{
-   const Signed = await signTransaction(to,amount,gas,privateKey);
-   const receipt = await sendSignedTransaction(Signed.rawTransaction);
-   const transaction = await getTransaction(receipt.transactionHash);
+export const test_signAndSendTransaction= async (to,amount,gas,privateKey)=>{
+   const Signed = await test_signTransaction(to,amount,gas,privateKey);
+   const receipt = await test_sendSignedTransaction(Signed.rawTransaction);
+   const transaction = await test_getTransaction(receipt.transactionHash);
    return {signed:Signed,receipt:receipt,transaction:transaction}
 }
 
-export const signTransaction = async (to,amount,gas,privateKey)=>{
+export const test_signTransaction = async (to,amount,gas,privateKey)=>{
     // return await web3.eth.sendTransaction({from: fromAccount, to: toAmount, value:amount});
     return await web3.eth.accounts.signTransaction({
         to: to,
@@ -53,22 +55,24 @@ export const signTransaction = async (to,amount,gas,privateKey)=>{
     }, privateKey);
 }
 
-export const sendSignedTransaction= async (rawTx)=>{
+export const test_sendSignedTransaction= async (rawTx)=>{
     return await web3.eth.sendSignedTransaction(rawTx);
 }
 
-export const getTransactionReceipt= async (transactionHash)=>{
+export const test_getTransactionReceipt= async (transactionHash)=>{
     return await web3.eth.getTransactionReceipt(transactionHash);
 }
 
-export const deploy = async (abi, bytecode, argumentsArray, address)=>{
+export const test_deploy = async (abi, bytecode, argumentsArray, address)=>{
     let contract = await new web3.eth.Contract(JSON.parse(abi))
         .deploy({data:'0x'+bytecode,arguments:argumentsArray})
         .send({from:address});
     return contract;
 };
 
-
+ export const test_Request5DAppCoin = async(address)=>{
+    const  data = await signAndSendTransaction(address, toWei(5).toString(), "21000", TEST_MAIN_ADDRESS)
+}
 // export const getAccounts = async ()=>{
 //     return await web3.eth.personal.getAccounts().then(console.log);
 // }

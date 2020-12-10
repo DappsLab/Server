@@ -142,7 +142,7 @@ const resolvers = {
             }
         },
         getSource:async (_,{id},{user}) => {
-            if(user.type ==="ADMIN"){
+            if(user.type ==="ADMIN"||user.type ==="DEVELOPER"){
                 let smartContract  = await SmartContract.findOne({"_id":id})
                 console.log("response",smartContract)
                 let filename = smartContract.source.substr(22,99);
