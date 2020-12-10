@@ -31,7 +31,7 @@ const resolvers = {
             return await PurchasedContract.find({"user":parent.id})
         },
         dApps:async(parent)=>{
-            return await DApp.find({"user":parent.id})
+            return await DApp.find({"publisher":parent.id})
         },
     },
     Query: {
