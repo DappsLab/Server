@@ -79,7 +79,14 @@ const userSchema = new Schema({
             default: "NOT_SUBMITTED"
         }
     },
-    testAddress: [{address: String, balance: String, password: String}],
+    testAddress: [{
+        address: String,
+        balance: String,
+        wallet: {
+            privateKey: String,
+            publicKey: String,
+        },
+    }],
     wallet: {
         privateKey: String,
         publicKey: String,

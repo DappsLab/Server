@@ -31,8 +31,10 @@ const DAppsTypeDefs = gql`
         shortDescription: String!,
         description: String!,
         singleLicensePrice: String!,
-        zip: String!,
+        zip: String,
     }
+    
+    
     input DAppZipInput{
         dApp:ID!,
         purchasedDApp:ID!,

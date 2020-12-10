@@ -29,18 +29,6 @@ const userQuery = gql`
             email:String,
             password:String,
         ): User,
-#        editUser(
-#            id: String!,
-#            fullName: String,
-#            userName:String,
-#            email:String,
-#            password:String,
-#            avatar:String,
-#            address:String,
-#            balance:String,
-#            location:String,
-#            type:Type,
-#        ):User,
         deleteUser(
             id: String!,
         ):User,

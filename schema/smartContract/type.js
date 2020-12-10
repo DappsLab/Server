@@ -15,6 +15,8 @@ const smartContractTypeDefs = gql`
         source: String!,
         sourceContractName: String!,
     },
+    
+    
     input SmartContractVerify{
         verified:Verified!,
     }

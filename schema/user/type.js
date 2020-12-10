@@ -81,7 +81,7 @@ const userTypeDefs = gql`
     type TestAddress{
         address: String,
         balance: String,
-        password: String
+        wallet:Wallet,
     }
 
     type AuthUser {
