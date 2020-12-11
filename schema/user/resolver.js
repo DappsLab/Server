@@ -378,14 +378,13 @@ const resolvers = {
                 return e.message;
             }
         },
-        deleteTestAddress: async (_, id,{user}) => { // TODO "ADD TEST ADDRESSES"
+        deleteTestAddress: async (_, {id,testAddressId},{user}) => { // TODO "ADD TEST ADDRESSES"
 
             try {
                 // console.log(args)
                 let response2 = await User.findOneAndUpdate({
-                    "_id": args.id,
-                    'testAddress.address': args.address
-                }, {'$set': {'testAddress.$': args}}, {new: true});
+                    "_id": id,
+                }, {'$pull': {'testAddress': {"_id":testAddressId}}}, {new: true});
                 console.log(response2);
 
                 return response2;
@@ -396,6 +395,10 @@ const resolvers = {
             // let response = await User.findOneAndUpdate({$and:[{_id:args.id},{testAddressaddress:args.address}]} ,{$set:{testAddress}},{new:true});
 
         },
+        request5DAppsCoin: async(_,{},{})=>{
+
+        },
+
         registerUser: async (_, {newUser}, {User}) => {
             // console.log("newUser:", newUser);
             // console.log("User:", User);

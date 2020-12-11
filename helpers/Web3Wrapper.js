@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import {MAIN_NET_HTTP} from "../config";
 
 export const web3 = new Web3(MAIN_NET_HTTP);
-
+console.log("MAIN_NET_HTTP:",MAIN_NET_HTTP)
 
 export const getBalance = async(address)=>{
     return await web3.eth.getBalance(address);

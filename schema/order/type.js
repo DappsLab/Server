@@ -24,7 +24,8 @@ const smartContractTypeDefs = gql`
         productType:ProductType!,
         licenseType:LicenseType!,
         fee:String!,
-        smartContract:String!,
+        smartContract:String,
+        dApp:ID,
     }
 
     enum ProductType {

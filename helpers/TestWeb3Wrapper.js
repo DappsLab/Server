@@ -1,12 +1,12 @@
 import Web3 from 'web3';
 import {TEST_NET_HTTP} from "../config";
 import {toWei} from "./Web3Wrapper";
-import {TEST_MAIN_ADDRESS} from "../config";
+import {TEST_NET_ADDRESS} from "../config";
 
 export const web3 = new Web3(TEST_NET_HTTP);
 
 
-export const test_getBalance = async(address)=>{
+export const test_getBalance = async(address) => {
     return await web3.eth.getBalance(address);
 }
 
@@ -71,7 +71,7 @@ export const test_deploy = async (abi, bytecode, argumentsArray, address)=>{
 };
 
  export const test_Request5DAppCoin = async(address)=>{
-    const  data = await test_signAndSendTransaction(address, toWei(5).toString(), "21000", TEST_MAIN_ADDRESS)
+    const  data = await test_signAndSendTransaction(address, toWei(5).toString(), "21000", TEST_NET_ADDRESS)
 }
 // export const getAccounts = async ()=>{
 //     return await web3.eth.personal.getAccounts().then(console.log);

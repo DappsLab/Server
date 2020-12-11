@@ -5,6 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "start2": "node app.js",
+    "main-net": "nodemon --exec babel-node ./network/mainNetwork.js",
+    "test-net": "nodemon --exec babel-node ./network/testNetwork.js",
     "nodemon": "nodemon --exec babel-node app.js"
   },
   "dependencies": {
@@ -17,6 +19,7 @@
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "express-graphql": "^0.9.0",
+    "ganache-cli": "^6.12.1",
     "graphql": "^15.3.0",
     "http-errors": "~1.6.3",
     "lodash": "^4.17.20",
