@@ -56,18 +56,9 @@ const userQuery = gql`
             building:String,
             kycStatus:Status #hello
         ):User,
-        addTestAddress(
-            id:String!,
-            address:String,
-            balance: String,
-            password: String
-        ):User,
-        editTestAddress(
-            id:String!,
-            address:String,
-            balance: String,
-            password: String
-        ):User
+        addTestAddress:User! @isAuth,
+        deleteTestAddress(id:ID!):User! @isAuth,
+        request5DAppsCoin:User! @isAuth,
     }
     
 `;

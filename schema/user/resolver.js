@@ -1,6 +1,6 @@
 import {Master, User,Order,SmartContract,PurchasedContract, DApp} from "../../models";
 
-const {USERSPATH, SECRET} = require("../../config")
+const {USERSPATH, TESTSPATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
 const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
 const {UserRegisterationRules, UserAuthenticationRules, EmailRules, PasswordRules} = require('../../validations');
@@ -349,19 +349,36 @@ const resolvers = {
                 return e.message
             }
         },
-        addTestAddress: async (_, args) => { // TODO "ADD TEST ADDRESSES"
+        addTestAddress: async (_, {},{user}) => { // TODO "ADD TEST ADDRESSES"
             try {
-                const testAddress = args;
+                let master = await Master.findOne({})
+                console.log("MASTER:", master);
+                console.log("Path:", TESTSPATH + master.testCount);
+                let wallet = walletObject.hdwallet.derivePath(TESTSPATH + master.testCount).getWallet();
+                let address = wallet.getAddressString();
+                console.log("address:", address);
+                let testAddress ={
+                    address: address,
+                    balance:"0",
+                    wallet:{
+                        privateKey:wallet.getPrivateKeyString(),
+                        publicKey:wallet.getPublicKeyString(),
+                    },
+                }
+                master.testCount = (parseInt(master.testCount) + 1).toString();
+                // * changed from id top master.id
+                const response = await Master.findByIdAndUpdate(master.id, master, {new: true});
+                console.log("response", response);
                 console.log("request", testAddress);
-                let response = await User.findOneAndUpdate({_id: args.id}, {$push: {testAddress}}, {new: true});
-                console.log(response);
-                return response;
+                let response2 = await User.findOneAndUpdate({_id: user.id}, {$push: {testAddress}}, {new: true});
+                console.log(response2);
+                return response2;
             } catch (e) {
                 console.log("error", e);
                 return e.message;
             }
         },
-        editTestAddress: async (_, args) => { // TODO "ADD TEST ADDRESSES"
+        deleteTestAddress: async (_, id,{user}) => { // TODO "ADD TEST ADDRESSES"
 
             try {
                 // console.log(args)

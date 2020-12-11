@@ -234,22 +234,26 @@ const resolvers = {
         },
         updateDApp:async (_,{newDApp,id},{DApp,user})=>{
 
-            let dApp;
-            let filename = newDApp.zip.substr(22,99);
-            console.log(filename)
-            filename =  filename.slice(0, -4);
-            console.log('filename:',filename)
-            const sourceFile=path.resolve ( './' ,'dapps',filename+`${Date.now()}`+'.zip');
-            const oldSourceFile=path.resolve ( './' ,'dapps',filename+'.zip');
-            console.log("OldPath:",oldSourceFile)
-            console.log("Path:",sourceFile)
-            try{
-                fs.renameSync(oldSourceFile, sourceFile);
-                let path = sourceFile.split('/');
-                let lastPath = path.length;
-                newDApp.zip = "http://localhost:4000/"+path[lastPath - 1]
-            }catch(err){
-                throw new ApolloError("error file not exist",404)
+            if(!!newDApp.zip){
+                let filename = newDApp.zip.substr(22,99);
+                console.log(filename)
+                filename =  filename.slice(0, -4);
+                console.log('filename:',filename)
+                const sourceFile=path.resolve ( './' ,'dapps',filename+`${Date.now()}`+'.zip');
+                const oldSourceFile=path.resolve ( './' ,'dapps',filename+'.zip');
+                console.log("OldPath:",oldSourceFile)
+                console.log("Path:",sourceFile)
+                try{
+                    fs.renameSync(oldSourceFile, sourceFile);
+                    let path = sourceFile.split('/');
+                    let lastPath = path.length;
+                    newDApp.zip = "http://localhost:4000/"+path[lastPath - 1]
+                }catch(err){
+                    throw new ApolloError("error file not exist",404)
+                }
+            }else
+            {
+                delete newDApp.zip
             }
             try {
                 let response = await DApp.findByIdAndUpdate(id,newDApp,{new:true})
