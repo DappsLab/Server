@@ -6,6 +6,7 @@ const {
     parsed
 } = config();
 
+
 export const {
     PROD,
     SECRET,
@@ -19,9 +20,10 @@ export const {
     BASE_URL = `http://localhost:${PORT}`,
     GMAIL_USER,
     GMAIL_PASSWORD,
-    TEST_NET_ADDRESS,
     TEST_NET_PORT,
     MAIN_NET_PORT,
+    TEST_NET_ADDRESS,
+    MAIN_NET_ADDRESS,
     NET_HTTP,
     NET_WS,
     TEST_NET_HTTP = `${NET_HTTP}${TEST_NET_PORT}`,

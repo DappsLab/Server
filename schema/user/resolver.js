@@ -1,5 +1,5 @@
 import {Master, User,Order,SmartContract,PurchasedContract, DApp} from "../../models";
-
+import {find} from "lodash"
 const {USERSPATH, TESTSPATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
 const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
@@ -13,10 +13,23 @@ import {forgetPasswordUrl} from "../../utils/forgetPasswordUrl";
 import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 import {toEth, getBalance} from "../../helpers/Web3Wrapper";
+import {test_Request5DAppCoin, test_getBalance} from "../../helpers/TestWeb3Wrapper";
 
 
 let fetchData = () => {
     return User.find();
+}
+let fetchBalance = async(id) => {
+    console.log("user ID:",id)
+    let user = await User.findOne({"_id":id})
+    console.log("User:",user)
+    user.balance = toEth(await getBalance(user.address))
+    let x;
+    for(x of user.testAddress){
+        x.balance = toEth(await test_getBalance(x.address))
+    }
+    user.save()
+    return user
 }
 
 const resolvers = {
@@ -41,8 +54,8 @@ const resolvers = {
         me:async (_,{},{user})=>{
             console.log("user",user)
             try{
-                return await User.findByIdAndUpdate(user.id,{$set: {balance:await getBalance(user.address)}}, {new: true})
-                // return await User.findById(user.id);
+                await fetchBalance(user.id);
+                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
             }catch(err){
                 console.log("error",err)
             }
@@ -392,10 +405,13 @@ const resolvers = {
         request5DAppsCoin: async(_,{testAddressId},{user})=>{
             try {
                 // console.log(args)
-                let response2 = await User.findOne({"_id": user.id,})
-                console.log(response2);
-
-                return response2;
+                let response2 = await User.findById(user.id)
+                console.log("response2",response2)
+                let testAddress = find(response2.testAddress, { 'id': testAddressId});
+                console.log("testAddress:",testAddress)
+                let data = await test_Request5DAppCoin(testAddress.address);
+                console.log("testAddress:",data);
+                return fetchBalance(user.id);
             } catch (e) {
                 console.log("error", e)
                 return e.message

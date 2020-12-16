@@ -79,6 +79,7 @@ const userTypeDefs = gql`
     }
 
     type TestAddress{
+        id:ID,
         address: String,
         balance: String,
         wallet:Wallet,

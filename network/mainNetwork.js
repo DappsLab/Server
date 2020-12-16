@@ -1,13 +1,13 @@
-import {MAIN_NET_PORT, TEST_MAIN_ADDRESS, MNEMONIC} from "../config"
+import {MAIN_NET_PORT, MAIN_NET_ADDRESS, MNEMONIC} from "../config"
 import ganache from "ganache-cli"
 
 const accounts = [{
-    balance:"0x2710",
-    secretKey:TEST_MAIN_ADDRESS //* private key
+    balance:"0x152D02C7E14AF6800000",
+    secretKey:MAIN_NET_ADDRESS //* private key
 }]
 const options = {
     accounts:accounts,
-    "default_balance_ether":10000,
+    "default_balance_ether":100000,
     "total_accounts":1,
     "network_id":13936,
     "db_path":"./database/main",
