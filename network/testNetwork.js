@@ -10,7 +10,10 @@ const options = {
     "default_balance_ether":10000000000000000,
     "total_accounts":1,
     "network_id":13937,
-    "port":TEST_NET_PORT
+    "port":TEST_NET_PORT,
+    "db_path":"./database/test",
+    "mnemonic":"garden betray unhappy wine stomach narrow horse save token dial portion okay tree saddle apart",
+    "account_keys_path":"./keys/test.key",
 }
 const server = ganache.server(options);
 server.listen(TEST_NET_PORT, function(err, blockchain) {
