@@ -46,6 +46,7 @@ contracts/
 dapps/
 jspm_packages/
 database/
+keys/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/

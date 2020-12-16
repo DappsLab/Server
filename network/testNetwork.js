@@ -1,4 +1,4 @@
-import {TEST_NET_PORT, TEST_NET_ADDRESS} from "../config"
+import {TEST_NET_PORT, TEST_NET_ADDRESS, MNEMONIC} from "../config"
 import ganache from "ganache-cli"
 
 const accounts = [{
@@ -12,7 +12,7 @@ const options = {
     "network_id":13937,
     "port":TEST_NET_PORT,
     "db_path":"./database/test",
-    "mnemonic":"garden betray unhappy wine stomach narrow horse save token dial portion okay tree saddle apart",
+    "mnemonic":MNEMONIC,
     "account_keys_path":"./keys/test.key",
 }
 const server = ganache.server(options);
