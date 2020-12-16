@@ -41,7 +41,7 @@ const resolvers = {
         me:async (_,{},{user})=>{
             console.log("user",user)
             try{
-                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
+                return await User.findByIdAndUpdate(user.id,{$set: {balance:await getBalance(user.address)}}, {new: true})
                 // return await User.findById(user.id);
             }catch(err){
                 console.log("error",err)
@@ -378,13 +378,21 @@ const resolvers = {
                 return e.message;
             }
         },
-        deleteTestAddress: async (_, {id,testAddressId},{user}) => { // TODO "ADD TEST ADDRESSES"
+        deleteTestAddress: async (_, {testAddressId},{user}) => { // TODO "ADD TEST ADDRESSES"
 
             try {
-                // console.log(args)
                 let response2 = await User.findOneAndUpdate({
-                    "_id": id,
+                    "_id": user.id,
                 }, {'$pull': {'testAddress': {"_id":testAddressId}}}, {new: true});
+                return response2;
+            } catch (e) {
+                return e.message
+            }
+        },
+        request5DAppsCoin: async(_,{testAddressId},{user})=>{
+            try {
+                // console.log(args)
+                let response2 = await User.findOne({"_id": user.id,})
                 console.log(response2);
 
                 return response2;
@@ -392,11 +400,6 @@ const resolvers = {
                 console.log("error", e)
                 return e.message
             }
-            // let response = await User.findOneAndUpdate({$and:[{_id:args.id},{testAddressaddress:args.address}]} ,{$set:{testAddress}},{new:true});
-
-        },
-        request5DAppsCoin: async(_,{},{})=>{
-
         },
 
         registerUser: async (_, {newUser}, {User}) => {

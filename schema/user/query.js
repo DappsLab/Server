@@ -57,8 +57,8 @@ const userQuery = gql`
             kycStatus:Status #hello
         ):User,
         addTestAddress:User! @isAuth,
-        deleteTestAddress(id:ID!,testAddressId:ID!):User! @isAuth,
-        request5DAppsCoin:User! @isAuth,
+        deleteTestAddress(testAddressId:ID!):User! @isAuth,
+        request5DAppsCoin(testAddressId:ID!):User! @isAuth,
     }
     
 `;
