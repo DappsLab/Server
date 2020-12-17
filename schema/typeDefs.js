@@ -13,13 +13,21 @@ const testOrderTypeDefs = require('./testOrder/type.js')
 const testOrderQuery = require('./testOrder/query.js')
 const purchasedContractTypeDefs = require('./purchasedContract/type.js')
 const purchasedContractQuery = require('./purchasedContract/query.js')
+const testPurchasedContractTypeDefs = require('./testPurchasedContract/type.js')
+const testPurchasedContractQuery = require('./testPurchasedContract/query.js')
 const contractUploaderQuery = require('./contractUploader/query.js')
 const compiledContractTypeDefs = require('./compiledContract/type')
 const compiledContractQuery = require('./compiledContract/query')
+const testCompiledContractTypeDefs = require('./testCompiledContract/type')
+const testCompiledContractQuery = require('./testCompiledContract/query')
 const licenseTypeDefs = require('./license/type')
 const licenseQuery = require('./license/query')
+const testLicenseTypeDefs = require('./testLicense/type')
+const testLicenseQuery = require('./testLicense/query')
 const deployedContractQuery = require('./deployedContract/query')
 const deployedContractTypeDefs = require('./deployedContract/type')
+const testDeployedContractQuery = require('./testDeployedContract/query')
+const testDeployedContractTypeDefs = require('./testDeployedContract/type')
 const customOrderQuery = require('./customOrder/query')
 const customOrderTypeDefs = require('./customOrder/type')
 const dAppTypeDefs = require('./dApp/type')
@@ -43,12 +51,20 @@ const typeDefs = [
     testOrderQuery,
     purchasedContractTypeDefs,
     purchasedContractQuery,
+    testPurchasedContractTypeDefs,
+    testPurchasedContractQuery,
     compiledContractTypeDefs,
     compiledContractQuery,
+    testCompiledContractTypeDefs,
+    testCompiledContractQuery,
     licenseTypeDefs,
     licenseQuery,
+    testLicenseTypeDefs,
+    testLicenseQuery,
     deployedContractQuery,
     deployedContractTypeDefs,
+    testDeployedContractQuery,
+    testDeployedContractTypeDefs,
     customOrderTypeDefs,
     customOrderQuery,
     dAppTypeDefs,
