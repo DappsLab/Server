@@ -43,6 +43,7 @@ const userTypeDefs = gql`
         smartContracts:[SmartContract],
         dApps:[DApp],
         orders:[Order],
+        testOrders:[TestOrder],
         customOrders:[CustomOrder],
         purchasedContracts:[PurchasedContract],
         purchasedDApps:[PurchasedDApp],

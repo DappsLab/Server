@@ -1,4 +1,4 @@
-import {Master, User,Order,SmartContract,PurchasedContract, DApp} from "../../models";
+import {Master, User,Order,SmartContract,PurchasedContract, DApp, TestOrder} from "../../models";
 import {find} from "lodash"
 const {USERSPATH, TESTSPATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
@@ -36,6 +36,9 @@ const resolvers = {
     User:{
         orders:async (parent)=>{
             return await Order.find({"user":parent.id});
+        },
+        testOrders:async (parent)=>{
+            return await TestOrder.find({"user":parent.id});
         },
         smartContracts:async(parent)=>{
             return await SmartContract.find({"publisher":parent.id})

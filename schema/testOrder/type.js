@@ -1,11 +1,12 @@
 const {gql} = require('apollo-server-express');
 
 
-const orderTypeDefs = gql`
+const testOrderTypeDefs = gql`
     
-    type Order {
+    type TestOrder {
         id: ID!,
         user:User!,
+        testAddressId:ID!,
         licenseType(licenseType:LicenseType):String!,
         price:String!,
         orderUsed:Boolean!,
@@ -20,25 +21,16 @@ const orderTypeDefs = gql`
         updatedAt: String!,
     }
     
-    input OrderInput{
+    input TestOrderInput{
+        testAddressId:ID!,
         productType:ProductType!,
         licenseType:LicenseType!,
         fee:String!,
         smartContract:String,
         dApp:ID,
     }
-
-    enum ProductType {
-        SMARTCONTRACT
-        DAPP
-    }
-    
-    enum LicenseType{
-        SINGLELICENSE,
-        UNLIMITEDLICENSE
-    }
 `;
 
 
 
-module.exports = orderTypeDefs;
+module.exports = testOrderTypeDefs;

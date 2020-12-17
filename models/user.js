@@ -111,6 +111,10 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'orders',
     }],
+    testOrders: [{
+        type: Schema.Types.ObjectId,
+        ref: 'testorders',
+    }],
     customOrders: [{
         type: Schema.Types.ObjectId,
         ref: 'customorders',
