@@ -4,6 +4,7 @@ const smartContractResolver = require('./smartContract/resolver.js');
 const imageResolver = require('./image/resolver.js');
 const contractUploaderResolver = require('./contractUploader/resolver.js');
 const orderResolver = require('./order/resolver.js');
+const testOrderResolver = require('./testOrder/resolver.js');
 const purchasedContractResolver = require('./purchasedContract/resolver.js');
 const compiledContractResolver = require('./compiledContract/resolver.js')
 const licenseResolver = require('./license/resolver.js')
@@ -18,6 +19,7 @@ const resolvers = [
     imageResolver,
     contractUploaderResolver,
     orderResolver,
+    testOrderResolver,
     purchasedContractResolver,
     compiledContractResolver,
     licenseResolver,

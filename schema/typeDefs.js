@@ -9,6 +9,8 @@ const imageTypeDefs = require('./image/type.js')
 const imageQuery = require('./image/query.js')
 const orderTypeDefs = require('./order/type.js')
 const orderQuery = require('./order/query.js')
+const testOrderTypeDefs = require('./testOrder/type.js')
+const testOrderQuery = require('./testOrder/query.js')
 const purchasedContractTypeDefs = require('./purchasedContract/type.js')
 const purchasedContractQuery = require('./purchasedContract/query.js')
 const contractUploaderQuery = require('./contractUploader/query.js')
@@ -37,6 +39,8 @@ const typeDefs = [
     imageQuery,
     orderTypeDefs,
     orderQuery,
+    testOrderTypeDefs,
+    testOrderQuery,
     purchasedContractTypeDefs,
     purchasedContractQuery,
     compiledContractTypeDefs,
