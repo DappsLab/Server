@@ -9,6 +9,4 @@ const licenseQuery = gql`
     
 `;
 
-
-
 module.exports = licenseQuery;

@@ -1,8 +1,5 @@
-import {ApolloError} from "apollo-server-express";
-import dateTime from "../../helpers/DateTimefunctions";
 
-
-const {SmartContract, User, Order, PurchasedContract, CompiledContract, License} = require('../../models');
+const {PurchasedDApp, Order, PurchasedContract, CompiledContract, License} = require('../../models');
 
 
 let fetchData = () => {
@@ -12,7 +9,7 @@ let fetchData = () => {
 const resolvers = {
     License:{
         compilations:async(parent)=>{
-            return await CompiledContract.find({"id":parent.compilations}) //! have to change compiled Contracts
+            return await CompiledContract.find({"id":parent.compilations})
         },
         order:async(parent)=>{
             return Order.findOne({"_id": parent.order})
@@ -25,8 +22,9 @@ const resolvers = {
         },
     },
     Query: {
-        licenses:async(_)=>{
-            return fetchData();
+        licenses: () => {
+            console.log("error")
+            return fetchData()
         },
         licenseById: async (_, {id}) => {
             return License.findOne({"_id":id})

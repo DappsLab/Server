@@ -77,7 +77,7 @@ const smartContractTypeDefs = gql`
         UTILITY
     },
     enum Verified {
-        NOT_VERIFIED
+        REJECTED
         PENDING
         VERIFIED
     }

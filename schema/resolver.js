@@ -9,13 +9,13 @@ const purchasedContractResolver = require('./purchasedContract/resolver.js');
 const testPurchasedContractResolver = require('./testPurchasedContract/resolver.js');
 const compiledContractResolver = require('./compiledContract/resolver.js')
 const testCompiledContractResolver = require('./testCompiledContract/resolver.js')
-const licenseResolver = require('./license/resolver.js')
 const testLicenseResolver = require('./testLicense/resolver.js')
 const deployedContractResolver = require('./deployedContract/resolver.js')
 const testDeployedContractResolver = require('./testDeployedContract/resolver.js')
 const customOrderResolver = require('./customOrder/resolver.js')
 const dAppResolver = require('./dapp/resolver.js')
 const dAppUploaderResolver = require('./dAppUploader/resolver.js')
+const licenseResolver = require('./license/resolver.js')
 
 const resolvers = [
     userResolver,

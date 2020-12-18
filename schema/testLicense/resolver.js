@@ -22,10 +22,10 @@ const resolvers = {
         },
     },
     Query: {
-        licenses:async(_)=>{
+        testLicenses:async(_)=>{
             return fetchData();
         },
-        licenseById: async (_, {id}) => {
+        testLicenseById: async (_, {id}) => {
             return TestLicense.findOne({"_id":id})
         },
 

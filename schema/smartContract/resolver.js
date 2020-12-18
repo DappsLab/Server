@@ -171,7 +171,7 @@ const resolvers = {
                     smartContract = {
                         verifiedBy: user.id,
                         verifiedDateTime:dateTime(),
-                        verified:"NOT_VERIFIED",
+                        verified:"REJECTED",
                     };
                 }catch(e){
                     console.log("error:",e)

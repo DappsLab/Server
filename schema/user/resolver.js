@@ -37,9 +37,9 @@ const resolvers = {
         orders:async (parent)=>{
             return await Order.find({"user":parent.id});
         },
-        testOrders:async (parent)=>{
-            return await TestOrder.find({"user":parent.id});
-        },
+        // testOrders:async (parent)=>{
+        //     return await TestOrder.find({"user":parent.id});
+        // },
         smartContracts:async(parent)=>{
             return await SmartContract.find({"publisher":parent.id})
         },
