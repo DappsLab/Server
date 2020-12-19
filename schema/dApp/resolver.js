@@ -241,7 +241,8 @@ const resolvers = {
                 console.log(filename)
                 filename =  filename.slice(0, -4);
                 console.log('filename:',filename)
-                const sourceFile=path.resolve ( './' ,'dapps',filename+`${Date.now()}`+'.zip');
+                let newfilename = filename+`${Date.now()}`
+                const sourceFile=path.resolve ( './' ,'dapps',newfilename+'.zip');
                 const oldSourceFile=path.resolve ( './' ,'dapps',filename+'.zip');
                 console.log("OldPath:",oldSourceFile)
                 console.log("Path:",sourceFile)
@@ -249,7 +250,7 @@ const resolvers = {
                     fs.renameSync(oldSourceFile, sourceFile);
                     let path = sourceFile.split('/');
                     let lastPath = path.length;
-                    newDApp.zip = "http://localhost:4000/"+path[lastPath - 1]
+                    newDApp.zip = "http://localhost:4000/"+newfilename+".zip";
                 }catch(err){
                     throw new ApolloError("error file not exist",404)
                 }
