@@ -199,7 +199,7 @@ const resolvers = {
                 fs.renameSync(oldSourceFile, sourceFile);
                 let path = sourceFile.split('/');
                 let lastPath = path.length;
-                newDApp.zip = "http://localhost:4000/dapps/"+newfilename
+                newDApp.zip = "http://localhost:4000/dapps/"+newfilename+".zip";
             }catch(err){
                 throw new ApolloError("error file not exist",404)
             }
