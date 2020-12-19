@@ -143,9 +143,10 @@ const resolvers = {
                 license = await License.findById(zipInput.license)
                 console.log("License:",license)
                 if(license.purchasedDApp.toString()===zipInput.purchasedDApp.toString()&&license.used===false){
-                    let data = DApp.findById(zipInput.dApp);
+                    let data = await DApp.findOne({"_id":zipInput.dApp});
                     license.used=true;
                     license.save();
+                    console.log("Smart Contract:",data)
                     return data.zip;
                 }
             } else{
