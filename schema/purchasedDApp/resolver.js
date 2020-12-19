@@ -14,7 +14,7 @@ const resolvers = {
             return User.findOne({"_id":parent.user})
         },
         dApp:async(parent)=>{
-            return DApp.findOne({"_id": parent.smartContract})
+            return DApp.findOne({"_id": parent.dApp})
         },
         licenses:async(parent)=>{
             return await License.find({"_id": parent.licenses})
@@ -23,17 +23,17 @@ const resolvers = {
     },
 
     Query: {
-        PurchasedDApps:async(_)=>{
+        purchasedDApps:async(_)=>{
             return fetchData();
         },
-        PurchasedDAppById: async (_, {id}) => {
-            return await PurchasedContract.findOne({"_id":id})
+        purchasedDAppById:async(id)=>{
+            return PurchasedDApp.findOne({"id":id});
         },
-
     },
     Mutation: {
-        PurchaseDApp: async (_, {newPurchase}, {PurchasedDApp, user}) => {
+        purchaseDApp: async (_, {newPurchase}, {PurchasedDApp, user}) => {
             let order = await Order.findOne({"_id":newPurchase.orderId})
+            console.log("oldPurchase")
             if(order.status==="true"&&(order.user.toString()===user.id.toString())&&!order.orderUsed&&order.productType==="DAPP"){
                 let oldPurchase = await PurchasedDApp.findOne({"user":user.id,"dApp":newPurchase.dAppId})
                 console.log("oldPurchase =",oldPurchase)

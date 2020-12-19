@@ -30,10 +30,10 @@ const testDeployedContractQuery = require('./testDeployedContract/query.js')
 const testDeployedContractTypeDefs = require('./testDeployedContract/type.js')
 const customOrderQuery = require('./customOrder/query.js')
 const customOrderTypeDefs = require('./customOrder/type.js')
-const dAppTypeDefs = require('./dApp/type.js')
-const dAppQueryDefs = require('./dApp/query.js')
 const purchasedDAppTypeDefs = require('./purchasedDApp/type.js')
 const purchasedDAppQuery = require('./purchasedDApp/query.js')
+const dAppTypeDefs = require('./dApp/type.js')
+const dAppQueryDefs = require('./dApp/query.js')
 const dAppUploaderQuery = require('./dAppUploader/query.js')
 
 const typeDefs = [

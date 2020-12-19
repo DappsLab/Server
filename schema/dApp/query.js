@@ -17,7 +17,7 @@ const dAppQuery = gql`
         updateDApp(newDApp: DAppInput, id: ID!): DApp! @isAuth,
         deleteDApp(id: ID!): DAppMessageResponse! @isAuth,
         verifyDApp(id: ID!): DApp! @isAuth,
-        cancelDApp(id: ID!): [DApp] @isAuth,
+        cancelDApp(id: ID!): DApp @isAuth,
     }
 
 `;

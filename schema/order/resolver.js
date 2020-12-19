@@ -15,10 +15,13 @@ let fetchData = () => {
 const resolvers = {
     Order: {
         user: async (parent) => {
-            return await User.findOne({"_id": parent.user})
+            return User.findOne({"_id": parent.user})
         },
         smartContract: async (parent) => {
-            return await SmartContract.findOne({"_id": parent.smartContract})
+            return SmartContract.findOne({"_id": parent.smartContract})
+        },
+        dApp:async(parent)=>{
+            return DApp.findOne({"_id": parent.dApp})
         },
     },
     Query: {

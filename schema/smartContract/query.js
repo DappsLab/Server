@@ -17,7 +17,7 @@ const smartContractQuery = gql`
         updateSmartContract(newSmartContract: SmartContractInput, id: ID!): SmartContract! @isAuth,
         deleteSmartContract(id: ID!): SmartContractMessageResponse! @isAuth,
         verifySmartContract(id: ID!): SmartContract! @isAuth,
-        cancelSmartContract(id: ID!): [SmartContract] @isAuth,
+        cancelSmartContract(id: ID!): SmartContract! @isAuth,
     }
 
 `;
