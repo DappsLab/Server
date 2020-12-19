@@ -142,7 +142,7 @@ const resolvers = {
             if(zipInput.purchasedDApp!==undefined&&zipInput.purchasedDApp!==""){
                 license = await License.findById(zipInput.license)
                 console.log("License:",license)
-                if(license.purchasedDApp.toString()===zipInput.purchasedDApp.toString()&&license.used===false){
+                if(license.purchasedDApp.toString()===zipInput.purchasedDApp.toString()){
                     let data = await DApp.findOne({"_id":zipInput.dApp});
                     license.used=true;
                     license.save();
