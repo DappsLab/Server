@@ -64,6 +64,7 @@ const resolvers = {
 
                     try{
                         let response = await User.findById(user.id);
+                        console.log("response:",response)
                         response.testPurchasedContracts.push(data._id);
                         response.save();
                     }catch(e){
@@ -91,7 +92,7 @@ const resolvers = {
                         smartContract:oldPurchase.smartContract,
                         unlimitedCustomization:unlimitedCustomization,
                         customizationsLeft:oldPurchase.customizationsLeft+1,
-                        testLicenses:oldPurchase.licenses,
+                        testLicenses:oldPurchase.testLicenses,
                     }
                     newPurchase.testLicenses.push(license.id)
                     console.log("oldPurchase update",oldPurchase)

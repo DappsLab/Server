@@ -103,6 +103,10 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'purchasedcontracts',
     }],
+    testPurchasedContracts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'testpurchasedcontracts',
+    }],
     purchasedDApps: [{
         type: Schema.Types.ObjectId,
         ref: 'purchaseddApps',
