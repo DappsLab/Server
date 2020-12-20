@@ -1,2 +1,2 @@
 Server
-this is a server side file.
+this is a server side code.
