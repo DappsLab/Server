@@ -35,9 +35,11 @@ const purchasedDAppQuery = require('./purchasedDApp/query.js')
 const dAppTypeDefs = require('./dApp/type.js')
 const dAppQueryDefs = require('./dApp/query.js')
 const dAppUploaderQuery = require('./dAppUploader/query.js')
+const enumsTypeDefs = require('./constants/enums.js')
 
 const typeDefs = [
     baseTypeDefs,
+    enumsTypeDefs,
     contractUploaderQuery,
     userTypeDefs,
     userQuery,

@@ -28,15 +28,7 @@ const orderTypeDefs = gql`
         dApp:ID,
     }
 
-    enum ProductType {
-        SMARTCONTRACT
-        DAPP
-    }
-    
-    enum LicenseType{
-        SINGLELICENSE,
-        UNLIMITEDLICENSE
-    }
+
 `;
 
 

@@ -66,19 +66,7 @@ const userTypeDefs = gql`
         building: String,
         kycStatus(status: Status): String! 
     }
-
-    enum Status {
-        NOT_SUBMITTED
-        PENDING
-        VERIFIED
-        REJECTED
-    }
-
-    enum Type {
-        ADIMN
-        USER
-        DEVELOPER
-    }
+    
 
     type TestAddress{
         id:ID,

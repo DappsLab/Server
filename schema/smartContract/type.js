@@ -28,13 +28,7 @@ const smartContractTypeDefs = gql`
         tags:[String],
         sortBy:Sort,
     }
-
-    enum Sort{
-        NEWEST
-        LOW_TO_HIGH
-        HIGH_TO_LOW
-        TOP_SOLD
-    }
+    
     
     type SmartContract {
         id: ID!,
@@ -68,19 +62,7 @@ const smartContractTypeDefs = gql`
         message: String!
         success: Boolean
     },
-    enum Category {
-        DOCUMENTS
-        ESCROW
-        FINANCIAL
-        SOCIAL
-        TOOLS
-        UTILITY
-    },
-    enum Verified {
-        REJECTED
-        PENDING
-        VERIFIED
-    }
+
     
 `;
 
