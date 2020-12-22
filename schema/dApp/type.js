@@ -48,11 +48,6 @@ const DAppsTypeDefs = gql`
         tags:[String],
         sortBy:Sort,
     }
-
-    type DAppMessageResponse {
-        message: String!
-        success: Boolean
-    },
 `;
 
 

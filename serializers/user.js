@@ -1,3 +1,5 @@
+import {AuthenticationError} from "apollo-server";
+
 const {pick} = require('lodash');
 
 const {sign,} = require('jsonwebtoken');

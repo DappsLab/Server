@@ -1,6 +1,7 @@
 import {deploy} from "../../helpers/Web3Wrapper";
+import {AuthenticationError, ApolloError} from "apollo-server-express"
 
-const {SmartContract, User, TestOrder, TestCompiledContract,TestPurchasedContract, TestLicense, TestDeployedContract} = require('../../models');
+const {SmartContract, TestCompiledContract, TestDeployedContract} = require('../../models');
 const path = require('path');
 const fs = require('fs');
 const sol=require("solc");
@@ -12,10 +13,10 @@ let fetchData = () => {
 const resolvers = {
     TestDeployedContract:{
         testCompiledContract:async (parent)=>{
-            return await TestCompiledContract.findOne({"_id":parent.testCompiledContract})
+            return TestCompiledContract.findOne({"_id":parent.testCompiledContract})
         },
         smartContract:async(parent)=>{
-            return await SmartContract.findOne({"_id": parent.smartContract})
+            return SmartContract.findOne({"_id": parent.smartContract})
         },
     },
     Query: {
@@ -29,12 +30,23 @@ const resolvers = {
     },
     Mutation: {
         testDeployContract:async (_,{compiledContractId},{user})=>{
-            let compiledContract = await TestCompiledContract.findById(compiledContractId);
-            if(compiledContract.user === user.id){
-                let deployData = await deploy();
-            }else{
-                //! error Unauthorized user
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
             }
+            try{
+                let compiledContract = await TestCompiledContract.findById(compiledContractId);
+                if(!compiledContract){
+                    return new ApolloError("Test Compiled Contract Not Found",'404')
+                }
+                if(compiledContract.user === user.id){
+                    let deployData = await deploy();
+                }else{
+                    return new AuthenticationError("UnAuthorized", '401')
+                }
+            }catch (err) {
+                throw new ApolloError("Internal Server Error", '500')
+            }
+
         },
     }
 }

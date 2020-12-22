@@ -12,10 +12,10 @@ let fetchData = () => {
 const resolvers = {
     DeployedContract:{
         compiledContract:async (parent)=>{
-            return await CompiledContract.findOne({"_id":parent.compiledContract})
+            return CompiledContract.findOne({"_id":parent.compiledContract})
         },
         smartContract:async(parent)=>{
-            return await SmartContract.findOne({"_id": parent.smartContract})
+            return SmartContract.findOne({"_id": parent.smartContract})
         },
     },
     Query: {

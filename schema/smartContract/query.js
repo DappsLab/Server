@@ -15,7 +15,7 @@ const smartContractQuery = gql`
     extend type Mutation {
         createSmartContract(newSmartContract: SmartContractInput): SmartContract! @isAuth,
         updateSmartContract(newSmartContract: SmartContractInput, id: ID!): SmartContract! @isAuth,
-        deleteSmartContract(id: ID!): SmartContractMessageResponse! @isAuth,
+        deleteSmartContract(id: ID!): MessageResponse! @isAuth,
         verifySmartContract(id: ID!): SmartContract! @isAuth,
         cancelSmartContract(id: ID!): SmartContract! @isAuth,
     }

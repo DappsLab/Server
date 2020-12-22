@@ -1,12 +1,23 @@
-import {TestPurchasedContract, PurchasedDApp, Master, User,Order,SmartContract,PurchasedContract, DApp, TestOrder} from "../../models";
+import {
+    TestPurchasedContract,
+    PurchasedDApp,
+    Master,
+    User,
+    Order,
+    SmartContract,
+    PurchasedContract,
+    DApp,
+    TestOrder
+} from "../../models";
 import {find} from "lodash"
+
 const {USERSPATH, TESTSPATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
 const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
-const {UserRegisterationRules, UserAuthenticationRules, EmailRules, PasswordRules} = require('../../validations');
+const {UserRegisterationRules, UserAuthenticationRules, EmailRules, PasswordRules, UserRules} = require('../../validations');
 const {walletObject} = require('../../helpers/Walletfunctions.js');
 const {verify} = require('jsonwebtoken');
-import {ApolloError} from 'apollo-server-express';
+import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-express';
 import {sendEmail} from "../../utils/sendEmail";
 import {emailConfirmationUrl} from "../../utils/emailConfirmationUrl";
 import {forgetPasswordUrl} from "../../utils/forgetPasswordUrl";
@@ -19,13 +30,13 @@ import {test_Request5DAppCoin, test_getBalance} from "../../helpers/TestWeb3Wrap
 let fetchData = () => {
     return User.find();
 }
-let fetchBalance = async(id) => {
-    console.log("user ID:",id)
-    let user = await User.findOne({"_id":id})
-    console.log("User:",user)
+let fetchBalance = async (id) => {
+    console.log("user ID:", id)
+    let user = await User.findOne({"_id": id})
+    console.log("User:", user)
     user.balance = toEth(await getBalance(user.address))
     let x;
-    for(x of user.testAddress){
+    for (x of user.testAddress) {
         x.balance = toEth(await test_getBalance(x.address))
     }
     user.save()
@@ -33,46 +44,46 @@ let fetchBalance = async(id) => {
 }
 
 const resolvers = {
-    User:{
-        orders:async (parent)=>{
-            return await Order.find({"user":parent.id});
+    User: {
+        orders: async (parent) => {
+            return await Order.find({"user": parent.id});
         },
-        testOrders:async (parent)=>{
-            return await TestOrder.find({"user":parent.id});
+        testOrders: async (parent) => {
+            return await TestOrder.find({"user": parent.id});
         },
-        smartContracts:async(parent)=>{
-            return await SmartContract.find({"publisher":parent.id})
+        smartContracts: async (parent) => {
+            return await SmartContract.find({"publisher": parent.id})
         },
-        purchasedContracts:async(parent)=>{
-            return await PurchasedContract.find({"user":parent.id})
+        purchasedContracts: async (parent) => {
+            return await PurchasedContract.find({"user": parent.id})
         },
-        testPurchasedContracts:async(parent)=>{
-            return await TestPurchasedContract.find({"user":parent.id})
+        testPurchasedContracts: async (parent) => {
+            return await TestPurchasedContract.find({"user": parent.id})
         },
-        dApps:async(parent)=>{
-            return await DApp.find({"publisher":parent.id})
+        dApps: async (parent) => {
+            return await DApp.find({"publisher": parent.id})
         },
-        purchasedDApps:async(parent)=>{
-            return await PurchasedDApp.find({"user":parent.id})
+        purchasedDApps: async (parent) => {
+            return await PurchasedDApp.find({"user": parent.id})
         },
     },
     Query: {
         users: () => {
             return fetchData()
         },
-        me:async (_,{},{user})=>{
-            console.log("user",user)
-            try{
+        me: async (_, {}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
                 await fetchBalance(user.id);
-                return await User.findByIdAndUpdate(user.id,{$set: {balance:toEth(await getBalance(user.address))}}, {new: true})
-            }catch(err){
-                console.log("error",err)
+                return await User.findByIdAndUpdate(user.id, {$set: {balance: toEth(await getBalance(user.address))}}, {new: true})
+            } catch (err) {
+                throw new ApolloError(err)
             }
         },
         userById: async (_, args) => {
-            let response = await User.findById(args.id);
-            console.log("response:", response)
-            return response;
+            return await User.findById(args.id);
         },
         loginUser: async (_, {userName, password}, {User}) => {
             // Validate Incoming User Credentials
@@ -83,31 +94,27 @@ const resolvers = {
             });
             // If User is not found
             if (!user) {
-                throw new ApolloError("Username not found", '404');
-            }else if(!user.confirmed){
-                console.log("sending email")
-                console.log("User",user)
+                throw new ApolloError("User Not Found", '404');
+            } else if (!user.confirmed) {
+                /// Sending Email to user
                 let emailData = {
                     id: user.id,
                     email: user.email
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await emailConfirmationUrl(userEmail);
-                let resp = await sendEmail(user.email, emailLink)
-                throw new ApolloError("Email not confirmed", '403');
-            }else{
+                await sendEmail(user.email, emailLink)
+                throw new ApolloError("Email Not Confirmed", '403');
+            } else {
 
             }
             // If user is found then compare the password
             let isMatch = await compare(password, user.password);
             // If Password don't match
-            console.log("isMatch:", isMatch);
             if (!isMatch) {
-                throw new ApolloError("Username or Password is invalid", '403');
+                throw new ApolloError("Username or Password Is Invalid", '403');
             }
 
-            // If Password don't match
-            //
             user = await serializeUser(user);
             // Issue Token
             let token = await issueAuthToken(user);
@@ -116,22 +123,28 @@ const resolvers = {
                 token,
             }
         },
-        verify2FA:async (_,{token},{user})=>{
+        verify2FA: async (_, {token}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
                 return await speakeasy.totp.verify({
-                    secret:user.twoFactorSecret,
-                    encoding:'base32',
-                    token:token
+                    secret: user.twoFactorSecret,
+                    encoding: 'base32',
+                    token: token
                 })
-            }catch(err){
-                throw new ApolloError(err)
+            } catch (err) {
+                throw new ApolloError("Verification Failed")
             }
         },
-        searchPendingKyc:async(_,{},{user})=>{
-            if(user.type=== "ADMIN"){
-                return await User.find({"kyc.kycStatus":"PENDING"});
-            }else{
-                throw new ApolloError("Unauthorised", '401');
+        searchPendingKyc: async (_, {}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            if (user.type === "ADMIN") {
+                return await User.find({"kyc.kycStatus": "PENDING"});
+            } else {
+                throw new AuthenticationError("Unauthorised User", '401');
             }
         },
         authUser: async (_, __, {
@@ -143,78 +156,99 @@ const resolvers = {
 
     },
     Mutation: {
-        verifyKyc:async (_, {id},{user})=>{
-            if(user.type === "ADMIN"){
-                try{
-                    await User.findByIdAndUpdate(id,{$set: {"kyc.kycStatus":"VERIFIED"}});
+        verifyKyc: async (_, {id}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+
+            if (user.type === "ADMIN") {
+                try {
+                    let response = await User.findByIdAndUpdate(id, {$set: {"kyc.kycStatus": "VERIFIED"}});
+                    if (!response) {
+                        return new ApolloError("User not found", '404');
+                    }
                     return true
-                }catch(err){
-                    throw new ApolloError("User not found", '404');
+                } catch (err) {
+                    throw new ApolloError("Internal Server Error", '500')
                 }
-            }else{
-                throw new ApolloError("Unauthorised", '401');
+            } else {
+                throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        cancelKyc: async (_,{id},{user}) => {
-            if(user.type === "ADMIN"){
-                try{
-                    await User.findByIdAndUpdate(id,{$set: {"kyc.kycStatus":"NOT_VERIFIED"}});
+        cancelKyc: async (_, {id}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+
+            if (user.type === "ADMIN") {
+                try {
+                    let response = await User.findByIdAndUpdate(id, {$set: {"kyc.kycStatus": "NOT_VERIFIED"}});
+                    if (!response) {
+                        return new ApolloError("User Not Found", '404')
+                    }
                     return true
-                }catch(err){
-                    throw new ApolloError("User not found", '404');
+                } catch (err) {
+                    throw new ApolloError("Internal Server Error", '500');
                 }
-            }else{
-                throw new ApolloError("Unauthorised", '401');
+            } else {
+                throw new AuthenticationError("Unauthorised", '401');
             }
         },
-        disable2FA:async (_,__,{User,user})=>{
-            try{
+        disable2FA: async (_, __, {User, user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+
+            try {
                 let response = await User.findByIdAndUpdate(user.id, {
                     $set: {
-                        twoFactorEnabled:false,
-                        twoFactorSecret:"",
-                        twoFactorCode:""
-                    }}, {new: true});
-                // return true
+                        twoFactorEnabled: false,
+                        twoFactorSecret: "",
+                        twoFactorCode: ""
+                    }
+                }, {new: true});
+                if (!response) {
+                    return new ApolloError("User Not Found", '404')
+                }
                 return true;
-            }catch(err){
-                return false;
+            } catch (err) {
+                throw new ApolloError("Internal Server Error", '500')
             }
         },
-        enable2FA:async (_,__ ,{User,user})=>{
+        enable2FA: async (_, __, {User, user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
 
-            console.log("User:",user);
-            try{
+            try {
                 let secret = speakeasy.generateSecret({
-                    name:"DappsLab"
+                    name: "DappsLab"
                 })
 
                 const data = await qrcode.toDataURL(secret.otpauth_url);
-                console.log("data:",data)
 
                 let response = await User.findByIdAndUpdate(user.id, {
                     $set: {
-                        twoFactorEnabled:true,
-                        twoFactorSecret:secret.base32,
-                        twoFactorCode:data
-                    }}, {new: true});
-                // return true
-                console.log("Response:",response)
+                        twoFactorEnabled: true,
+                        twoFactorSecret: secret.base32,
+                        twoFactorCode: data
+                    }
+                }, {new: true});
+                if (!response) {
+                    return new ApolloError("User Not Found", '404')
+                }
                 return response;
-            }catch(err){
-                throw new ApolloError(err);
+            } catch (err) {
+                throw new ApolloError("Internal Server Error", '500');
             }
         },
         forgetPassword: async (_, {email}) => {
             await EmailRules.validate({email}, {abortEarly: false});
 
             const user = await User.findOne({email: email});
-            console.log("User", user)
-            if(!user){
-                console.log("Email not Registered!")
+            if (!user) {
                 throw new ApolloError("Email not registered", '404');
-
-            }else{
+            } else {
                 let emailData = {
                     id: user.id,
                     email: user.email
@@ -225,12 +259,10 @@ const resolvers = {
             }
 
         },
-        resetPassword: async (_, {token,password}) => {
+        resetPassword: async (_, {token, password}) => {
 
-            console.log("token",token)
-            console.log("Psaaword:",password)
             if (!token || token === "" || token == "") {
-                throw new ApolloError("token not found", '404');
+                throw new UserInputError("Token Not Found", '401');
             }
 
             // Verify the extracted token
@@ -238,41 +270,46 @@ const resolvers = {
             try {
                 decodedToken = verify(token, SECRET);
             } catch (err) {
-                throw new ApolloError("token not found", '404');
+                throw new AuthenticationError("Token Not Found", '401');
             }
 
             // If decoded token is null then set authentication of the request false
             if (!decodedToken) {
-                throw new ApolloError("token not found", '404');
+                throw new AuthenticationError("Token Not Found", '401');
             }
 
             // If the user has valid token then Find the user by decoded token's id
             let authUser = await User.findById(decodedToken.id);
             let user;
             if (!authUser) {
-                throw new ApolloError("invalid token", '404');
-
+                throw new AuthenticationError("Invalid Token", '401');
             } else {
 
                 await PasswordRules.validate({password}, {abortEarly: false});
                 const passwordHash = await hash(password, 10);
                 if (authUser.resetPasswordToken === token) {
-                    user = await User.findByIdAndUpdate(authUser.id, {
-                        $set: {
-                            password: passwordHash,
-                            resetPasswordToken: ""
+                    try {
+                        user = await User.findByIdAndUpdate(authUser.id, {
+                            $set: {
+                                password: passwordHash,
+                                resetPasswordToken: ""
+                            }
+                        }, {new: true});
+                        if (!user) {
+                            return new ApolloError("User Not Found", '404')
                         }
-                    }, {new: true});
-                    // console.log("User", user)
-                    return true
+                        return true
+                    } catch (err) {
+                        return new ApolloError("Internal Server Error", '500')
+                    }
                 }
             }
             return false
         },
         confirmEmail: async (_, {token}) => {
-            console.log("token", token)
+
             if (!token || token === "" || token == "") {
-                return "token not found"
+                throw new UserInputError("Token Not Found", '401');
             }
 
             // Verify the extracted token
@@ -280,189 +317,179 @@ const resolvers = {
             try {
                 decodedToken = verify(token, SECRET);
             } catch (err) {
-                return "token not found"
+                throw new AuthenticationError("Token Not Found", '401');
             }
 
             // If decoded token is null then set authentication of the request false
             if (!decodedToken) {
-                return "token not found"
+                throw new AuthenticationError("Token Not Found", '401');
             }
 
             // If the user has valid token then Find the user by decoded token's id
             let authUser = await User.findById(decodedToken.id);
             let user;
             if (!authUser) {
-                return "invalid token"
-                return false
+                throw new AuthenticationError("Invalid Token", '401');
             } else {
                 if (authUser.emailConfirmToken === token) {
-                    user = await User.findByIdAndUpdate(authUser.id, {
-                        $set: {
-                            confirmed: true,
-                            emailConfirmToken: ""
+                    try{
+                        user = await User.findByIdAndUpdate(authUser.id, {
+                            $set: {
+                                confirmed: true,
+                                emailConfirmToken: ""
+                            }
+                        }, {new: true});
+                        if(!user){
+                            return new ApolloError("User Not Found", '404')
                         }
-                    }, {new: true});
-                    return true
+                        return true
+                    }catch (err) {
+                        throw new ApolloError("Internal Server Error", '500')
+                    }
                 }
             }
-            console.log("authUser:", user);
             return false
         },
         addUser: async (_, args) => {
             try {
-                let response = await User.create(args);
-                return response;
+                return await User.create(args);
             } catch (e) {
-                return e.message;
+                throw new ApolloError("Internal Server Error", '500');
             }
         },
         editUser: async (_, {newUser}, {User, user}) => {
-            // console.log("user:", user);
-            // console.log("User:", User);
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
-                let response = await User.findOneAndUpdate({_id: user.id}, newUser, {new: true});
-                if (!response) {
-                    throw new Error("Unathorized Access");
-                }
-                return response
-
+                return await User.findOneAndUpdate({_id: user.id}, newUser, {new: true});
             } catch (err) {
-                throw new ApolloError(err.message);
+                throw new ApolloError("Internal Server Error", '500');
             }
         },
         deleteUser: async (_, args) => {
             try {
-                let response = await User.findByIdAndRemove(args.id);
-                console.log(response);
-                return response;
+                return await User.findByIdAndRemove(args.id);
             } catch (e) {
-                return e.message;
+                throw new ApolloError("Internal Server Error", '500');
             }
         },
-        addKyc: async (_, args) => {
+        addKyc: async (_, args,{user}) => {
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
-                // console.log(args, Object.entries(args))
                 const kyc = args;
-                let response = await User.findOneAndUpdate({_id: args.id}, {$set: {kyc}}, {new: true});
-                // console.log(response);
-                return response;
+                return await User.findOneAndUpdate({_id: args.id}, {$set: {kyc}}, {new: true});
             } catch (e) {
-                console.log("error", e)
-                return e.message;
+                throw new ApolloError("Internal Server Error", '500');
             }
         },
-        editKyc: async (_, args) => {
+        editKyc: async (_, args, {user}) => {
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
                 const kyc = args;
-                console.log(kyc)
                 let response = await User.findById(args.id);
-                // console.log("old kyc",response.kyc);
                 let oldKyc = response.kyc;
                 let newKyc = {...oldKyc, ...kyc};
                 delete newKyc.id;
                 delete newKyc["$init"];
-                // console.log("new kyc:",newKyc);
-                let response2 = await User.findByIdAndUpdate({_id: args.id}, {$set: {kyc: newKyc}}, {new: true});
-                console.log(response2);
-
-                return response2;
+                return await User.findByIdAndUpdate({_id: args.id}, {$set: {kyc: newKyc}}, {new: true});
             } catch (e) {
-                console.log("error", e)
-                return e.message
+                throw new ApolloError("Internal Server Error", '500');
             }
         },
-        addTestAddress: async (_, {},{user}) => { // TODO "ADD TEST ADDRESSES"
+        addTestAddress: async (_, {}, {user}) => {
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
                 let master = await Master.findOne({})
-                console.log("MASTER:", master);
-                console.log("Path:", TESTSPATH + master.testCount);
+                if(!master){
+                    return new ApolloError("Internal Server Error", '500')
+                }
+                // console.log("MASTER:", master);
+                // console.log("Path:", TESTSPATH + master.testCount);
                 let wallet = walletObject.hdwallet.derivePath(TESTSPATH + master.testCount).getWallet();
                 let address = wallet.getAddressString();
-                console.log("address:", address);
-                let testAddress ={
+                // console.log("address:", address);
+                let testAddress = {
                     address: address,
-                    balance:"0",
-                    wallet:{
-                        privateKey:wallet.getPrivateKeyString(),
-                        publicKey:wallet.getPublicKeyString(),
+                    balance: "0",
+                    wallet: {
+                        privateKey: wallet.getPrivateKeyString(),
+                        publicKey: wallet.getPublicKeyString(),
                     },
                 }
                 master.testCount = (parseInt(master.testCount) + 1).toString();
                 // * changed from id top master.id
-                const response = await Master.findByIdAndUpdate(master.id, master, {new: true});
-                console.log("response", response);
-                console.log("request", testAddress);
-                let response2 = await User.findOneAndUpdate({_id: user.id}, {$push: {testAddress}}, {new: true});
-                console.log(response2);
-                return response2;
+                await Master.findByIdAndUpdate(master.id, master, {new: true});
+                return await User.findOneAndUpdate({_id: user.id}, {$push: {testAddress}}, {new: true});
             } catch (e) {
-                console.log("error", e);
-                return e.message;
+                throw new ApolloError("Internal Server Error", '500')
             }
         },
-        deleteTestAddress: async (_, {testAddressId},{user}) => { // TODO "ADD TEST ADDRESSES"
-
+        deleteTestAddress: async (_, {testAddressId}, {user}) => {
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
-                let response2 = await User.findOneAndUpdate({
+                return await User.findOneAndUpdate({
                     "_id": user.id,
-                }, {'$pull': {'testAddress': {"_id":testAddressId}}}, {new: true});
-                return response2;
+                }, {'$pull': {'testAddress': {"_id": testAddressId}}}, {new: true});
             } catch (e) {
-                return e.message
+                throw new ApolloError("Internal Server Error", '500');
             }
         },
-        request5DAppsCoin: async(_,{testAddressId},{user})=>{
+        request5DAppsCoin: async (_, {testAddressId}, {user}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
-                // console.log(args)
-                let response2 = await User.findById(user.id)
-                console.log("response2",response2)
-                let testAddress = find(response2.testAddress, { 'id': testAddressId});
-                console.log("testAddress:",testAddress)
-                let data = await test_Request5DAppCoin(testAddress.address);
-                console.log("testAddress:",data);
+                let response = await User.findById(user.id)
+                if(!response){
+                    return new ApolloError("User Not Found", '404')
+                }
+                let testAddress = find(response.testAddress, {'id': testAddressId});
+                await test_Request5DAppCoin(testAddress.address);
                 return fetchBalance(user.id);
             } catch (e) {
-                console.log("error", e)
-                return e.message
+                throw new ApolloError("Internal Server Error", '500');
             }
         },
 
         registerUser: async (_, {newUser}, {User}) => {
-            // console.log("newUser:", newUser);
-            // console.log("User:", User);
             try {
-
                 let {
                     email,
                     userName,
                 } = newUser;
-                // console.log("UserName:",userName);
                 // Validate Incoming New User Arguments
                 await UserRegisterationRules.validate(newUser, {abortEarly: false});
-
                 // Check if the Username is taken
                 let user = await User.findOne({
                     userName
                 });
                 if (user) {
-                    throw new ApolloError('Username is already taken.', '403')
+                    return new ApolloError('Username Is Already Taken.', '403')
                 }
 
-                // Check is the Email address is already registred
+                // Check is the Email address is already registered
                 user = await User.findOne({
                     email
                 });
                 if (user) {
-                    throw new ApolloError('Email is already registred.', '403')
+                    return new ApolloError('Email is already registered.', '403')
                 }
 
-                // * changed from findbyid to findone
                 let master = await Master.findOne({})
-                console.log("MASTER:", master);
-                console.log("Path:", USERSPATH + master.walletCount);
+                // console.log("MASTER:", master);
+                // console.log("Path:", USERSPATH + master.walletCount);
                 let wallet = walletObject.hdwallet.derivePath(USERSPATH + master.walletCount).getWallet();
                 let address = wallet.getAddressString();
-                console.log("address:", address);
+                // console.log("address:", address);
 
                 user = new User(newUser);
                 user.wallet.privateKey = wallet.getPrivateKeyString()
@@ -471,9 +498,7 @@ const resolvers = {
                 user.type = "USER";
                 master.walletCount = (parseInt(master.walletCount) + 1).toString();
                 // * changed from id top master.id
-                const response = await Master.findByIdAndUpdate(master.id, master, {new: true});
-                console.log("response", response);
-
+                return await Master.findByIdAndUpdate(master.id, master, {new: true});
 
                 // Hash the user password
                 user.password = await hash(user.password, 10);
@@ -484,11 +509,8 @@ const resolvers = {
                     id: user.id,
                     email: user.email
                 }
-                // console.log("emailstr:", emailstr)
                 let userEmail = await serializeEmail(emailstr);
-                // console.log("userEmail:", userEmail)
                 let emailLink = await emailConfirmationUrl(userEmail);
-                // console.log("emailLink:", emailLink);
                 await sendEmail(result.email, emailLink);
 
                 result = await serializeUser(result);
@@ -500,7 +522,7 @@ const resolvers = {
                     user: result
                 }
             } catch (err) {
-                throw new ApolloError(err.message);
+                throw new ApolloError("Internal Server Error", '500');
             }
         },
     },

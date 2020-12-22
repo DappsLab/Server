@@ -1,18 +1,20 @@
 import {Master} from "./models";
 
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var sassMiddleware = require('node-sass-middleware');
-const {ApolloServer, gql} = require('apollo-server-express');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const sassMiddleware = require('node-sass-middleware');
+const {ApolloServer, gql, ApolloError} = require('apollo-server-express');
+import { v4 } from "uuid";
+import { GraphQLError } from "graphql";
 const typeDefs = require('./schema/typeDefs.js')
 const resolvers = require('./schema/resolver.js')
 const mongoose = require('mongoose');
 import * as AppModels from './models';
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 const {MNEMONIC} =require('./config');
 const {walletObject}= require('./helpers/Walletfunctions.js');
 import AuthMiddleware from './middleware/auth.js';
@@ -80,7 +82,22 @@ const server = new ApolloServer({
             isAuth,
             ...AppModels,
         };
-    }
+    },
+    formatError:(err)=> {
+        if (err.message.startsWith("Authentication Must Be Provided")) {
+            return new Error('Authentication Must Be Provided');
+        }else if (err.message.startsWith("Database Error")) {
+            return new Error('Database Error');
+        }else if (err.originalError instanceof ApolloError) {
+            return err;
+        } else{
+            const errId = v4();
+            console.log("errId: ", errId);
+            console.log(err);
+            return new Error('Internal Server Error: '+errId);
+            // return err
+        }
+    },
 });
 server.applyMiddleware({app});
 

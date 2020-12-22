@@ -1,8 +1,8 @@
-const {SmartContract, User, TestOrder, TestCompiledContract,TestPurchasedContract, TestLicense} = require('../../models');
+const {SmartContract, User, TestCompiledContract,TestPurchasedContract, TestLicense} = require('../../models');
 const path = require('path');
 const fs = require('fs');
 const sol=require("solc");
-
+import {ApolloError, AuthenticationError} from 'apollo-server-express'
 let fetchData = () => {
     return TestCompiledContract.find();
 }
@@ -10,16 +10,16 @@ let fetchData = () => {
 const resolvers = {
     TestCompiledContract:{
         user:async (parent)=>{
-            return await User.findOne({"_id":parent.user})
+            return User.findOne({"_id":parent.user})
         },
         smartContract:async(parent)=>{
-            return await SmartContract.findOne({"_id": parent.smartContract})
+            return SmartContract.findOne({"_id": parent.smartContract})
         },
         testPurchasedContract:async()=>{
-            return await TestPurchasedContract.findOne({"_id": parent.testPurchasedContract})
+            return TestPurchasedContract.findOne({"_id": parent.testPurchasedContract})
         },
         testLicense:async()=>{
-            return await TestLicense.findOne({"_id": parent.testLicense})
+            return TestLicense.findOne({"_id": parent.testLicense})
         },
     },
     Query: {
@@ -27,84 +27,116 @@ const resolvers = {
             return await fetchData();
         },
         testCompiledContractById:async(_,{id})=>{
-
             return await TestCompiledContract.findById(id);
         },
         testGetABI: async (_,{id},{user})=>{
-            let compiled = await TestCompiledContract.findById(id)
-            const sourceFile = path.resolve ( './' ,'contracts/compiledContracts/',compiled.compiledFile);
-            let sourceCode = JSON.parse(await fs.readFileSync (sourceFile,'utf8'));
-            console.log(sourceCode);
-            return sourceCode.interface;
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                let compiled = await TestCompiledContract.findById(id)
+                if(!compiled){
+                    return new ApolloError("Test Compiled Contract Not Found", 404)
+                }
+                try{
+                    const sourceFile = path.resolve ( './' ,'contracts/compiledContracts/',compiled.compiledFile);
+                    let sourceCode = JSON.parse(await fs.readFileSync (sourceFile,'utf8'));
+                    return sourceCode.interface;
+                }catch (err) {
+                    return new ApolloError("Reading File Failed", 500)
+                }
+            }catch (err) {
+                throw new ApolloError("Internal Server Error", 500)
+            }
         },
         testGetBinary:async(_,{id},{user})=>{
-            let compiled = await TestCompiledContract.findById(id)
-            const sourceFile = path.resolve ( './' ,'contracts/compiledContracts/',compiled.compiledFile);
-            let sourceCode = JSON.parse(await fs.readFileSync (sourceFile,'utf8'));
-            console.log(sourceCode);
-            return sourceCode.bytecode;
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try{
+                let compiled = await TestCompiledContract.findById(id)
+                if(!compiled){
+                    return new ApolloError("Test Compiled Contract Not Found", 404)
+                }
+                try{
+                    const sourceFile = path.resolve ( './' ,'contracts/compiledContracts/',compiled.compiledFile);
+                    let sourceCode = JSON.parse(await fs.readFileSync (sourceFile,'utf8'));
+                    return sourceCode.bytecode;
+                }catch (err) {
+                    return new ApolloError("Reading File Failed", 500)
+                }
+            }catch (err) {
+                return new ApolloError("Internal Server Error", 500)
+            }
         }
     },
     Mutation: {
         testCompileContract:async (_,{newCompile},{user,TestCompiledContract})=>{
-            let smartContract = await SmartContract.findById(newCompile.smartContract)
-            let purchasedContract=null;
-            let license;
-            if(newCompile.testPurchasedContract!==undefined&&newCompile.testPurchasedContract!==""){
-                license = await TestLicense.findById(newCompile.testLicense)
-                console.log("License:",license)
-                if(license.testPurchasedContract.toString()===newCompile.testPurchasedContract.toString()){
-                    console.log("fetching...")
-                    purchasedContract = await TestPurchasedContract.findById(newCompile.testPurchasedContract);
-                }
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
             }
-            console.log("PurchasedContract:",purchasedContract)
-            if(!smartContract.preCompiled){
-                let filename = smartContract.source.substr(22,99);
-                filename =  filename.slice(0, -4);
-                console.log ("filename:",filename)
-                const sourceFile=path.resolve ( './' ,'contracts',filename+'.sol');
-                console.log ("sourceFile:",sourceFile);
-
-                let sourceCode;
-                let compiledData
-                let compiledFile;
-
-                try{
-                    sourceCode = await fs.readFileSync (sourceFile,'utf8');
-                    // console.log ("sourceCode:",sourceCode);
-                    compiledData = await sol.compile(sourceCode,1).contracts[':'+smartContract.sourceContractName];
-                    // console.log ("Compiled Data:",compiledData)
-                    compiledFile = `${filename}-${Date.now()}.json`
-                    fs.writeFile( "./contracts/compiledContracts/"+compiledFile, JSON.stringify(compiledData), function(err) {
-                        if (err) {
-                            console.log(err);
+            try{
+                let smartContract = await SmartContract.findById(newCompile.smartContract)
+                if(!smartContract){
+                    return new ApolloError("SmartContract Not Found", 404)
+                }
+                let purchasedContract=null;
+                let license;
+                if(newCompile.testPurchasedContract!==undefined&&newCompile.testPurchasedContract!==""){
+                    license = await TestLicense.findById(newCompile.testLicense)
+                    if(!license){
+                        return new ApolloError("Test License Not Found", 404)
+                    }
+                    if(license.testPurchasedContract.toString()===newCompile.testPurchasedContract.toString()){
+                        purchasedContract = await TestPurchasedContract.findById(newCompile.testPurchasedContract);
+                        if(!purchasedContract){
+                            return new ApolloError("Test Purchased Contract Not Found", 404)
                         }
+                    }
+                }
+                if(!smartContract.preCompiled){
+                    let filename = smartContract.source.substr(22,99);
+                    filename =  filename.slice(0, -4);
+                    const sourceFile=path.resolve ( './' ,'contracts',filename+'.sol');
+
+                    let sourceCode;
+                    let compiledData
+                    let compiledFile;
+
+                    try{
+                        sourceCode = await fs.readFileSync (sourceFile,'utf8');
+                        compiledData = await sol.compile(sourceCode,1).contracts[':'+smartContract.sourceContractName];
+                        compiledFile = `${filename}-${Date.now()}.json`
+                        fs.writeFile( "./contracts/compiledContracts/"+compiledFile, JSON.stringify(compiledData), function(err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                        })
+                    }catch(err){
+                        return new ApolloError("Reading File Failed", 500)
+                    }
+                    let purchasedContractID="";
+                    let licenseID="";
+                    if(purchasedContract){
+                        purchasedContractID=newCompile.testPurchasedContract;
+                        licenseID=newCompile.testLicense;
+                    }
+                    let compiledContract=TestCompiledContract({
+                        compilationName:newCompile.compilationName,
+                        user:user.id,
+                        smartContract:smartContract.id,
+                        compiledFile:compiledFile,
+                        testPurchasedContract:purchasedContractID,
+                        testLicense:licenseID,
                     })
-                }catch(err){
-                    console.log ("error file not exist")
+                    if(purchasedContract!=null){
+                        await TestLicense.findByIdAndUpdate(license._id,{$set:{used:true}});
+                        await TestLicense.findByIdAndUpdate(license._id,{$push:{testCompilations:compiledContract.id}});
+                    }
+                    return await compiledContract.save();
                 }
-                let purchasedContractID="";
-                let licenseID="";
-                if(purchasedContract){
-                    purchasedContractID=newCompile.testPurchasedContract;
-                    licenseID=newCompile.testLicense;
-                }
-                let compiledContract=TestCompiledContract({
-                    compilationName:newCompile.compilationName,
-                    user:user.id,
-                    smartContract:smartContract.id,
-                    compiledFile:compiledFile,
-                    testPurchasedContract:purchasedContractID,
-                    testLicense:licenseID,
-                })
-                if(purchasedContract!=null){
-                    await TestLicense.findByIdAndUpdate(license._id,{$set:{used:true}});
-                    await TestLicense.findByIdAndUpdate(license._id,{$push:{testCompilations:compiledContract.id}});
-                }
-                return await compiledContract.save();
-
-
+            }catch (err) {
+                throw new ApolloError("Internal Server Error", 500)
             }
         }
     }

@@ -47,6 +47,11 @@ const enumsTypeDefs = gql`
         UNLIMITEDLICENSE
     }
     
+    type MessageResponse {
+        message: String!
+        success: Boolean
+    },
+    
 `;
 
 module.exports = enumsTypeDefs;
