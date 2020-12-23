@@ -41,12 +41,12 @@ build/Release
 
 # Dependency directories
 node_modules/
-#uploads/
-#contracts/
-#dapps/
+uploads/
+contracts/
+dapps/
 jspm_packages/
-#database/
-#keys/
+database/
+keys/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
