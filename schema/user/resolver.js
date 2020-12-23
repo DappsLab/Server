@@ -502,7 +502,7 @@ const resolvers = {
                 user.type = "USER";
                 master.walletCount = (parseInt(master.walletCount) + 1).toString();
                 // * changed from id top master.id
-                return await Master.findByIdAndUpdate(master.id, master, {new: true});
+                await Master.findByIdAndUpdate(master.id, master, {new: true});
 
                 // Hash the user password
                 user.password = await hash(user.password, 10);
