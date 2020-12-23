@@ -140,8 +140,8 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                if(user.type ==="ADMIN"||user.type ==="DEVELOPER"){
-                    let smartContract  = await SmartContract.findOne({"_id":id})
+                let smartContract  = await SmartContract.findOne({"_id":id})
+                if(user.type ==="ADMIN"||user.type ==="DEVELOPER"||(user.id === smartContract.publisher)){
                     if(!smartContract){
                         return new ApolloError("SmartContract Not Found", 404)
                     }
