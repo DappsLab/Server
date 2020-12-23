@@ -225,10 +225,10 @@ const resolvers = {
                 return  new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                let newContract = new SmartContract({
+                let newContract = {
                     ...newSmartContract,
                     verified:"PENDING"
-                })
+                }
                 return await SmartContract.findByIdAndUpdate(id,newContract,{new:true})
             } catch (err) {
                 throw new ApolloError("Internal Server Error", 500);
