@@ -12,7 +12,7 @@ let fetchData = () => {
 const resolvers = {
     TestLicense:{
         testCompilations:async(parent)=>{
-            return await TestCompiledContract.find({"id":parent.testCompilations})
+            return await TestCompiledContract.find({"_id":parent.testCompilations})
         },
         testOrder:async(parent)=>{
             return TestOrder.findOne({"_id": parent.testOrder})
