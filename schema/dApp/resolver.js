@@ -236,7 +236,11 @@ const resolvers = {
                 } else {
                     delete newDApp.zip
                 }
-                let response = await DApp.findByIdAndUpdate(id, newDApp, {new: true})
+                let DApp = DApp({
+                    ...newDApp,
+                    verified:"PENDING"
+                })
+                let response = await DApp.findByIdAndUpdate(id, DApp, {new: true})
                 if (!response) {
                     return new ApolloError("Update Failed", 500);
                 }
