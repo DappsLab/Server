@@ -36,7 +36,7 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try{
-                let compiledContract = await TestCompiledContract.findById(newDeploy.compiledContractId);
+                let compiledContract = await TestCompiledContract.findById(newDeploy.testCompiledContractId);
                 let response = await User.findById(user.id)
                 if(!response){
                     return new ApolloError("User Not Found", '404')
