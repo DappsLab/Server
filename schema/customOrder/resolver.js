@@ -22,7 +22,7 @@ const resolvers = {
             if (!user){
                 return new AuthenticationError("Authentication Must Be Provided")
             }
-            if(user.type === "DEVELOPER"){
+            if(user.type === "ADMIN"){
                 return await CustomOrder.find({status:"PENDING"})
             }else{
                 throw new ApolloError("UnAuthorized User", 403)

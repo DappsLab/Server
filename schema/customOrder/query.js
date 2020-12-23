@@ -9,6 +9,7 @@ const customOrderQuery = gql`
     }
     extend type Mutation {
         createCustomOrder(newCustomOrder:CustomOrderInput!):CustomOrder! @isAuth,
+        verifyCustomOrder(id:ID!):Boolean! @isAuth
     }
 
 `;

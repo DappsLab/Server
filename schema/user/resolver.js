@@ -7,7 +7,8 @@ import {
     SmartContract,
     PurchasedContract,
     DApp,
-    TestOrder
+    TestOrder,
+    CustomOrder
 } from "../../models";
 import {find} from "lodash"
 
@@ -66,6 +67,9 @@ const resolvers = {
         purchasedDApps: async (parent) => {
             return await PurchasedDApp.find({"user": parent.id})
         },
+        customOrders:async(parent) => {
+            return await CustomOrder.find({"user": parent.id})
+        }
     },
     Query: {
         users: () => {
