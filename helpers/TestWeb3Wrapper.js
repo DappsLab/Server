@@ -77,10 +77,18 @@ export const test_getTransactionReceipt= async (transactionHash)=>{
 }
 
 export const test_deploy = async (abi, bytecode, argumentsArray, address)=>{
-    let contract = await new web3.eth.Contract(JSON.parse(abi))
-        .deploy({data:'0x'+bytecode,arguments:argumentsArray})
-        .send({from:address});
-    return contract;
+    if(!argumentsArray){
+
+        let contract = await new web3.eth.Contract(JSON.parse(abi))
+            .deploy({data:'0x'+bytecode})
+            .send({from:address});
+        return contract;
+    }else{
+        let contract = await new web3.eth.Contract(JSON.parse(abi))
+            .deploy({data:'0x'+bytecode,arguments:argumentsArray})
+            .send({from:address});
+        return contract;
+    }
 };
 
  export const test_Request5DAppCoin = async(address)=>{

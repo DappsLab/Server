@@ -62,6 +62,7 @@ const resolvers = {
                         return new ApolloError("Reading File Failed", 500)
                     }
                     let deployData = await test_deploy(abi, bytecode, newDeploy.argumentsArray, testAddress.address);
+                    console.log(deployData);
                 }else{
                     return new AuthenticationError("UnAuthorized", '401')
                 }
