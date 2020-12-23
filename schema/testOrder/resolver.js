@@ -2,7 +2,7 @@ import {ApolloError, AuthenticationError} from "apollo-server-express";
 import dateTime from "../../helpers/DateTimefunctions";
 import {
     test_getBalance,
-    test_getTransactionReceipt,
+    test_getTransactionReceipt, test_Request5DAppCoin,
     test_signAndSendTransaction,
     test_toEth
 } from "../../helpers/TestWeb3Wrapper";
@@ -26,8 +26,10 @@ const resolvers = {
         smartContract: async (parent) => {
             return SmartContract.findOne({"_id": parent.smartContract})
         },
-        testAddressId: async (parent) => {
-            return User.findOne({'testAddress': {"_id": parent.testAddressId}})
+        testAddress: async (parent) => {
+            let response = await User.findById( parent.user)
+            let testAddress = find(response.testAddress, {'_id': parent.testAddress});
+            return testAddress;
         },
     },
     Query: {
@@ -69,7 +71,7 @@ const resolvers = {
                 } else {
 
                 }
-                let testAddress = find(user.testAddress, {'id': newOrder.testAddressId});
+                let testAddress = find(user.testAddress, {'id': newOrder.testAddress});
                 // console.log("testAddress:", testAddress)
 
                 let balance = await test_getBalance(testAddress.address)

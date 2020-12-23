@@ -10,6 +10,7 @@ const testOrderSchema = new Schema({
     licenseType:String,
     dateTime:String,
     productType:String,
+    address:String,
     status:String,
     transactionHash:String,
     fee:String,
@@ -21,7 +22,9 @@ const testOrderSchema = new Schema({
         ref: 'smartcontracts',
         type: Schema.Types.ObjectId,
     },
-    address:String,
+    testAddress:{
+        type: Schema.Types.ObjectId,
+    },
     wallet: {
         privateKey: String,
         publicKey: String,
