@@ -18,7 +18,7 @@ const testDeployedContractTypeDefs = gql`
     }
     
     input TestDeployedContractInput{
-        compiledContractId:ID!,
+        testCompiledContractId:ID!,
         testAddressId:ID!,
         argumentsArray:[String]
     }

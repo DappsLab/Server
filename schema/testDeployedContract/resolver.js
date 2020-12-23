@@ -41,11 +41,11 @@ const resolvers = {
                 if(!response){
                     return new ApolloError("User Not Found", '404')
                 }
-                let testAddress = find(response.testAddress, {'id': newDeploy.testAddressId});
+                let testAddress = find(response.testAddress, {'_id': newDeploy.testAddressId});
                 if(!compiledContract){
                     return new ApolloError("Test Compiled Contract Not Found",'404')
                 }
-                if(compiledContract.user === user.id){
+                if(compiledContract.user.equals(user.id.toString())){
                     let abi, bytecode;
                     try{
                         const sourceFile = path.resolve ( './' ,'contracts/compiledContracts/',compiledContract.compiledFile);
