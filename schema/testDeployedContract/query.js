@@ -7,7 +7,7 @@ const testDeployedContractQuery = gql`
         testDeployedContractById(id:ID!):TestDeployedContract,
     }
     extend type Mutation {
-        testDeployContract(compiledContractId:ID!):TestDeployedContract! @isAuth
+        testDeployContract(newDeploy:TestDeployedContractInput):TestDeployedContract! @isAuth
     }
 
 `;

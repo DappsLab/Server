@@ -26,6 +26,9 @@ const resolvers = {
         smartContract: async (parent) => {
             return SmartContract.findOne({"_id": parent.smartContract})
         },
+        testAddressId: async (parent) => {
+            return User.findOne({'testAddress': {"_id": parent.testAddressId}})
+        },
     },
     Query: {
         testOrders: async (_) => {
