@@ -2,7 +2,8 @@ import {ApolloError, AuthenticationError} from "apollo-server-express";
 import dateTime from "../../helpers/DateTimefunctions";
 import {
     test_getBalance,
-    test_getTransactionReceipt, test_Request5DAppCoin,
+    test_getTransactionReceipt,
+    test_Request5DAppCoin,
     test_signAndSendTransaction,
     test_toEth
 } from "../../helpers/TestWeb3Wrapper";
@@ -63,6 +64,9 @@ const resolvers = {
             }
             if (newOrder.productType === "SMARTCONTRACT") {
                 let smartContract = await SmartContract.findById(newOrder.smartContract);
+                if(!smartContract){
+                    return new ApolloError("SmartContract Not Found", 404)
+                }
                 let price;
                 if (newOrder.licenseType === "SINGLELICENSE") {
                     price = smartContract.singleLicensePrice;
@@ -72,13 +76,15 @@ const resolvers = {
 
                 }
                 let testAddress = find(user.testAddress, {'id': newOrder.testAddress});
+                if(!testAddress){
+                    return new ApolloError("Test Address Not Found", 404)
+                }
                 // console.log("testAddress:", testAddress)
-
                 let balance = await test_getBalance(testAddress.address)
                 if (test_toEth(balance) >= (parseFloat(price) + parseFloat(test_toEth(newOrder.fee)))) {
                     let master = await Master.findOne({})
                     if(!master){
-                        return new ApolloError("Internal Server Error", '500')
+                        return new ApolloError("Master Not Found", 404)
                     }
                     let wallet = walletObject.hdwallet.derivePath(TESTORDERSPATH + master.testOrderCount).getWallet();
                     let address = wallet.getAddressString();
