@@ -105,15 +105,21 @@ const resolvers = {
 
                     try{
                         sourceCode = await fs.readFileSync (sourceFile,'utf8');
-                        compiledData = await sol.compile(sourceCode,1).contracts[':'+smartContract.sourceContractName];
-                        compiledFile = `${filename}-${Date.now()}.json`
-                        fs.writeFile( "./contracts/compiledContracts/"+compiledFile, JSON.stringify(compiledData), function(err) {
+                        sol.loadRemoteVersion(smartContract.compilerVersion, function (err, solSnapshot) {
                             if (err) {
-                                console.log(err);
+                                return new ApolloError("Compiler Version Failed", 500)
                             }
+                            compiledData = solSnapshot.compile(sourceCode,1).contracts[':'+smartContract.sourceContractName];
+                            compiledFile = `${filename}-${Date.now()}.json`
+                            fs.writeFile( "./contracts/compiledContracts/"+compiledFile, JSON.stringify(compiledData), function(err) {
+                                if (err) {
+                                    return new ApolloError("WriteFile File Failed", 500)
+                                }
+                            })
                         })
+                        // compiledData = await sol.compile(sourceCode,1).contracts[':'+smartContract.sourceContractName];
                     }catch(err){
-                        return new ApolloError("Reading File Failed", 500)
+                        console.log ("Reading File Failed", 500)
                     }
                     let purchasedContractID="";
                     let licenseID="";

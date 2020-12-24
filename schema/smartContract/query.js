@@ -10,6 +10,7 @@ const smartContractQuery = gql`
         smartContractById(id:ID!): SmartContract,
         filterSmartContract(searchSmartContract: SearchSmartContract): [SmartContract],
         searchSmartContract(searchSmartContract: SearchSmartContract): [SmartContract],
+        getCompilerVersions:[String]!,
     },
 
     extend type Mutation {

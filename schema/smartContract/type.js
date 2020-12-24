@@ -14,6 +14,7 @@ const smartContractTypeDefs = gql`
         unlimitedLicensePrice: String!,
         source: String!,
         sourceContractName: String!,
+        compilerVersion:String!,
     },
     
     
@@ -35,6 +36,7 @@ const smartContractTypeDefs = gql`
         contractName: String,
 #        kycStatus(status: Status): String!
         contractCategory(category:Category):[String],
+        compilerVersion:String!,
         image: String,
         shortDescription: String,
         description: String,

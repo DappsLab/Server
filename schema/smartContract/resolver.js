@@ -1,4 +1,5 @@
 import {ApolloError, AuthenticationError} from "apollo-server-express";
+import {compilerVersions} from "../../helpers/compilerVersions"
 import lodash from "lodash"
 const path = require('path');
 const fs = require('fs');
@@ -160,6 +161,9 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
+        getCompilerVersions:async (_,{},{})=>{
+            return compilerVersions();
+        }
     },
     Mutation:{
         cancelSmartContract: async (_, {id},{user})=>{

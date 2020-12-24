@@ -76,17 +76,23 @@ export const test_getTransactionReceipt= async (transactionHash)=>{
     return await web3.eth.getTransactionReceipt(transactionHash);
 }
 
-export const test_deploy = async (abi, bytecode, argumentsArray, address)=>{
+export const test_deploy = async (abi, bytecode, address, argumentsArray, gas)=>{
     if(!argumentsArray){
 
         let contract = await new web3.eth.Contract(JSON.parse(abi))
             .deploy({data:'0x'+bytecode})
-            .send({from:address});
+            .send({from:address, gas:gas})
+            .estimateGas(function(err, gas){
+                console.log(gas);
+            });
         return contract;
     }else{
         let contract = await new web3.eth.Contract(JSON.parse(abi))
             .deploy({data:'0x'+bytecode,arguments:argumentsArray})
-            .send({from:address});
+            .send({from:address, gas:gas})
+            .estimateGas(function(err, gas){
+                console.log(gas);
+            });
         return contract;
     }
 };
