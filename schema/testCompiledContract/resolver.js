@@ -78,7 +78,7 @@ const resolvers = {
         }
     },
     Mutation: {
-        testCompiledContractVersion:async(_,{newCompile},{user,TestCompiledContractVersion})=>{
+        testCompiledContractVersion:async(_,{smartContractId},{user})=>{
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -89,23 +89,9 @@ const resolvers = {
                 let abi;
                 let error;
 
-                let smartContract = await SmartContract.findById(newCompile.smartContract)
+                let smartContract = await SmartContract.findById(smartContractId)
                 if (!smartContract) {
                     return new ApolloError("SmartContract Not Found", 404)
-                }
-                let purchasedContract = null;
-                let license;
-                if (newCompile.testPurchasedContract !== undefined && newCompile.testPurchasedContract !== "") {
-                    license = await TestLicense.findById(newCompile.testLicense)
-                    if (!license) {
-                        return new ApolloError("Test License Not Found", 404)
-                    }
-                    if (license.testPurchasedContract.toString() === newCompile.testPurchasedContract.toString()) {
-                        purchasedContract = await TestPurchasedContract.findById(newCompile.testPurchasedContract);
-                        if (!purchasedContract) {
-                            return new ApolloError("Test Purchased Contract Not Found", 404)
-                        }
-                    }
                 }
                 if (!smartContract.preCompiled) {
                     let filename = smartContract.source.replace(`${BASE_URL}` + "\\", "");
@@ -161,31 +147,9 @@ const resolvers = {
                     } catch (err) {
                         return new ApolloError("Compiling Failed", 500)
                     }
-                    let purchasedContractID = "";
-                    let licenseID = "";
-                    if (purchasedContract) {
-                        purchasedContractID = newCompile.testPurchasedContract;
-                        licenseID = newCompile.testLicense;
-                    }
-                    let compiledContract = TestCompiledContract({
-                        compilationName: newCompile.compilationName,
-                        user: user.id,
-                        smartContract: smartContract.id,
-                        compiledFile: compiledFile,
-                        testPurchasedContract: purchasedContractID,
-                        testLicense: licenseID,
-                    })
-                    if (purchasedContract != null) {
-                        await TestLicense.findByIdAndUpdate(license.id, {$set: {used: true}});
-                        await TestLicense.findByIdAndUpdate(license.id, {$push: {testCompilations: compiledContract.id}});
-                    }
-                    await compiledContract.save();
                     return {
                         error: error,
                         abi:abi,
-                        testCompiledContract:{
-                            ...compiledContract
-                        }
                     }
                 }
             } catch (err) {

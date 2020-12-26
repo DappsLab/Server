@@ -18,7 +18,6 @@ const testCompiledContractTypeDefs = gql`
     type TestCompiledContractVersion{
         error: String,
         abi:String,
-        testCompiledContract:TestCompiledContract
     }
     input TestCompiledContractInput{
         compilationName:String!,
