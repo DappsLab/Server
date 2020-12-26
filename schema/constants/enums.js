@@ -11,7 +11,7 @@ const enumsTypeDefs = gql`
     }
 
     enum Type {
-        ADIMN
+        ADMIN
         USER
         DEVELOPER
     }

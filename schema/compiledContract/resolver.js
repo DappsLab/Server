@@ -1,8 +1,10 @@
-const {SmartContract, User, Order, CompiledContract, PurchasedContract, License} = require('../../models');
+import {BASE_URL} from "../../config";
+
+const {SmartContract, User, CompiledContract, PurchasedContract, License} = require('../../models');
 const path = require('path');
 const fs = require('fs');
-const sol = require("solc");
 import {ApolloError, AuthenticationError} from 'apollo-server-express'
+import {solCompilerSync} from "../../utils/solcCompiler";
 
 let fetchData = () => {
     return CompiledContract.find();
@@ -96,29 +98,50 @@ const resolvers = {
                     }
                 }
                 if(!smartContract.preCompiled){
-                    let filename = smartContract.source.substr(22,99);
-                    filename =  filename.slice(0, -4);
-                    const sourceFile=path.resolve ( './' ,'contracts',filename+'.sol');
+                    let filename = smartContract.source.replace(`${BASE_URL}` + "\\", "");
+                    let solFile = filename
+                    filename = filename.slice(0, -4);
+                    const sourceFile = path.resolve('./', 'contracts', filename + '.sol');
+
                     let sourceCode;
                     let compiledData
                     let compiledFile;
-                    try{
-                        sourceCode = await fs.readFileSync (sourceFile,'utf8');
-                        sol.loadRemoteVersion(smartContract.compilerVersion, function (err, solSnapshot) {
-                            if (err) {
-                                return new ApolloError("Compiler Version Failed", 500)
-                            }
-                            compiledData = solSnapshot.compile(sourceCode,1).contracts[':'+smartContract.sourceContractName];
-                            compiledFile = `${filename}-${Date.now()}.json`
-                            fs.writeFile( "./contracts/compiledContracts/"+compiledFile, JSON.stringify(compiledData), function(err) {
-                                if (err) {
-                                   return new ApolloError("WriteFile File Failed", 500)
+
+                    try {
+                        try {
+                            sourceCode = await fs.readFileSync(sourceFile, 'utf8');
+                        }catch (err) {
+                            return new ApolloError("Reading File Failed", 500)
+                        }
+                        let solCompiler = await solCompilerSync(smartContract.compilerVersion);
+                        if (!solCompiler) {
+                            return new ApolloError("Compiler Error", 500)
+                        }
+                        let input = {
+                            language: 'Solidity',
+                            sources: {
+                            },
+                            settings: {
+                                outputSelection: {
+                                    '*': {
+                                        '*': ['*']
+                                    }
                                 }
-                            })
+                            }
+                        };
+                        input.sources[solFile] = {
+                            content: sourceCode
+                        }
+                        compiledData = solCompiler.compile(JSON.stringify(input))
+                        compiledFile = `${filename}-${Date.now()}.json`
+                        fs.writeFile("./contracts/compiledContracts/" + compiledFile, compiledData, function (err) {
+                            if (err) {
+                                return new ApolloError("Writing File Failed", 500)
+                            }
                         })
-                        // compiledData = await sol.compile(sourceCode,1).contracts[':'+smartContract.sourceContractName];
+
                     }catch(err){
-                        console.log ("Reading File Failed", 500)
+                        return new ApolloError("Compiling Failed", 500)
                     }
                     let purchasedContractID="";
                     let licenseID="";

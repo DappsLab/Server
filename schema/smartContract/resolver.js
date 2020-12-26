@@ -1,11 +1,10 @@
 import {ApolloError, AuthenticationError} from "apollo-server-express";
-import {compilerVersions} from "../../helpers/compilerVersions"
+import {compilerVersions} from "../../helpers/solidityVersions"
 import lodash from "lodash"
 const path = require('path');
 const fs = require('fs');
 const {SmartContract,User} = require('../../models');
 const dateTime = require('../../helpers/DateTimefunctions');
-const {walletObject}= require('../../helpers/Walletfunctions');
 
 
 let fetchData = ()=>{
