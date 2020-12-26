@@ -43,7 +43,10 @@ const resolvers = {
                 try {
                     const sourceFile = path.resolve('./', 'contracts/compiledContracts/', compiled.compiledFile);
                     let sourceCode = JSON.parse(await fs.readFileSync(sourceFile, 'utf8'));
-                    return sourceCode.interface;
+                    let contractsFile = Object.keys(sourceCode.contracts)
+                    let contract = Object.keys(sourceCode.contracts[contractsFile[0]])
+                    let abi = sourceCode.contracts[contractsFile[0]][contract[0]].abi
+                    return JSON.stringify(abi)
                 } catch (err) {
                     return new ApolloError("Reading File Failed", 500)
                 }
@@ -63,7 +66,9 @@ const resolvers = {
                 try {
                     const sourceFile = path.resolve('./', 'contracts/compiledContracts/', compiled.compiledFile);
                     let sourceCode = JSON.parse(await fs.readFileSync(sourceFile, 'utf8'));
-                    return sourceCode.bytecode;
+                    let contractsFile = Object.keys(sourceCode.contracts)
+                    let contract = Object.keys(sourceCode.contracts[contractsFile[0]])
+                    return sourceCode.contracts[contractsFile[0]][contract[0]].evm.bytecode.object
                 } catch (err) {
                     return new ApolloError("Reading File Failed", 500)
                 }
