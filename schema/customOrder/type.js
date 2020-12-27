@@ -28,8 +28,6 @@ const customOrderTypeDefs = gql`
         productType:String!,
         requirements:String!,
         status: Status!,
-        createdAt: String!,
-        updatedAt: String!,
     }
 
 `;

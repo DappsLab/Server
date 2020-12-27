@@ -43,7 +43,7 @@ const userQuery = gql`
             street:String,
             building:String,
             kycStatus:Status #hello
-        ):User,
+        ):User @isAuth,
         editKyc(
             id:String!,
             mobile:String,
@@ -55,7 +55,7 @@ const userQuery = gql`
             street:String,
             building:String,
             kycStatus:Status #hello
-        ):User,
+        ):User @isAuth,
         addTestAddress:User! @isAuth,
         deleteTestAddress(testAddressId:ID!):User! @isAuth,
         request5DAppsCoin(testAddressId:ID!):User! @isAuth,

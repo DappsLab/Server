@@ -1,6 +1,4 @@
-
 const {PurchasedDApp, Order, PurchasedContract, CompiledContract, License} = require('../../models');
-
 
 let fetchData = () => {
     return License.find();

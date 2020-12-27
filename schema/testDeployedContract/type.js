@@ -17,6 +17,19 @@ const testDeployedContractTypeDefs = gql`
         updatedAt: String!,
     }
     
+    input TestDeployedContractInput{
+        testCompiledContractId:ID!,
+        testAddressId:ID!,
+        argumentsArray:[Argument],
+        deplopmentLabel:String!,
+        fee:String!,
+    }
+    input Argument{ 
+        dataType:String!,  
+        data:[String],
+        
+    }
+    
 `;
 
 

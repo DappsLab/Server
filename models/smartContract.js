@@ -14,6 +14,7 @@ const smartContractSchema = new Schema({
     sourceContractName: String,
     // publisher: mongoose.ObjectId,
     publishingDateTime:String,
+    compilerVersion: String,
     verified: {
         type: String,
         default:"PENDING"

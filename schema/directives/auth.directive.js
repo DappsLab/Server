@@ -1,11 +1,5 @@
-import {
-    defaultFieldResolver
-} from "graphql";
-
-import {
-    ApolloError,
-    SchemaDirectiveVisitor
-} from 'apollo-server-express';
+import {defaultFieldResolver} from "graphql";
+import {AuthenticationError, SchemaDirectiveVisitor} from 'apollo-server-express';
 
 export class IsAuthDirective extends SchemaDirectiveVisitor {
     visitFieldDefinition(field) {
@@ -19,12 +13,11 @@ export class IsAuthDirective extends SchemaDirectiveVisitor {
                 isAuth
             }] = args;
             if (isAuth) {
-                const result = await resolve.apply(this, args);
-                return result;
+                return await resolve.apply(this, args);
+            }else if(!user){
+                throw new AuthenticationError("Authentication Must Be Provided")
             } else {
-                throw new ApolloError(
-                    'You must be the authenticated user to get this information'
-                );
+                throw new AuthenticationError("Authentication Must Be Provided")
             }
         };
     }

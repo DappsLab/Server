@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d36295d5-c2a8-4192-a241-917a31e3e9d6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.cache/@babel/register/.babel.7.11.6.development.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/@babel/register/.babel.7.11.6.development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/testDeployedContract/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/testDeployedContract/type.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="2" />
+  </component>
+  <component name="ProjectId" id="1m5ensyFMDo99rfGITRkTneCLdW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_MARK_IGNORED_FILES_AS_EXCLUDED" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="add_unversioned_files" value="true&#10;/Users/qasimkhokhar/Desktop/DappsLab/Server/contracts/compiledContracts/Ballot-1608810965319.json" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/helpers" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/helpers" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/helpers" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.nodemon">
+    <configuration name="main-net" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="main-net" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="nodemon" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="nodemon" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="test-net" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="test-net" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.nodemon" />
+        <item itemvalue="npm.test-net" />
+        <item itemvalue="npm.main-net" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d36295d5-c2a8-4192-a241-917a31e3e9d6" name="Default Changelist" comment="" />
+      <created>1608788049753</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1608788049753</updated>
+      <workItem from="1608788050926" duration="2541000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1899" height="572" key="GridCell.Tab.0.bottom" timestamp="1609065543162">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state width="1899" height="572" key="GridCell.Tab.0.bottom/0.0.1920.1200@0.0.1920.1200" timestamp="1609065543162" />
+    <state width="1899" height="572" key="GridCell.Tab.0.center" timestamp="1609065543160">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state width="1899" height="572" key="GridCell.Tab.0.center/0.0.1920.1200@0.0.1920.1200" timestamp="1609065543160" />
+    <state width="1899" height="572" key="GridCell.Tab.0.left" timestamp="1609065543151">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state width="1899" height="572" key="GridCell.Tab.0.left/0.0.1920.1200@0.0.1920.1200" timestamp="1609065543151" />
+    <state width="1899" height="572" key="GridCell.Tab.0.right" timestamp="1609065543161">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state width="1899" height="572" key="GridCell.Tab.0.right/0.0.1920.1200@0.0.1920.1200" timestamp="1609065543161" />
+  </component>
+</project>

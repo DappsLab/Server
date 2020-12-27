@@ -1,27 +1,16 @@
-import {
-    join,
-    parse
-} from 'path';
+import {join, parse} from 'path';
+import {createWriteStream} from 'fs';
 
-import {
-    mkdirSync,
-    existsSync,
-    createWriteStream
-} from 'fs';
+import {BASE_URL} from '../../config';
 
-import {
-    BASE_URL
-} from '../../config';
-
-import {
-    ApolloError
-} from 'apollo-server-express';
+import {ApolloError, AuthenticationError} from 'apollo-server-express';
 
 const resolvers = {
     Mutation:{
-        dAppUploader: async (_, {
-            file
-        }) => {
+        dAppUploader: async (_, {file},{user}) => {
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
                 const {
                     filename,
@@ -51,7 +40,7 @@ const resolvers = {
 
                 return serverFile;
             } catch (err) {
-                throw new ApolloError(err.message);
+                throw new ApolloError("Internal Server Error", 500);
             }
         }
     },

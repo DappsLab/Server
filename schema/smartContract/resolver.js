@@ -1,10 +1,10 @@
-import {ApolloError} from "apollo-server-express";
+import {ApolloError, AuthenticationError} from "apollo-server-express";
+import {compilerVersions} from "../../helpers/solidityVersions"
 import lodash from "lodash"
 const path = require('path');
 const fs = require('fs');
 const {SmartContract,User} = require('../../models');
 const dateTime = require('../../helpers/DateTimefunctions');
-const {walletObject}= require('../../helpers/Walletfunctions');
 
 
 let fetchData = ()=>{
@@ -14,10 +14,10 @@ let fetchData = ()=>{
 const resolvers = {
     SmartContract: {
         publisher:async (parent)=>{
-            return await User.findOne({"_id":parent.publisher})
+            return User.findOne({"_id":parent.publisher})
         },
         verifiedBy: async (parent)=>{
-            return await User.findOne({"_id":parent.verifiedBy})
+            return User.findOne({"_id":parent.verifiedBy})
         },
     },
     Query: {
@@ -28,258 +28,247 @@ const resolvers = {
             return SmartContract.find({verified:"VERIFIED"});
         },
         smartContractById: async (_,args)=>{
-            let smartContract= await SmartContract.findById(args.id);
-            console.log("SmartContract:",smartContract);
-            return smartContract;
+            return await SmartContract.findById(args.id);
         },
         filterSmartContract: async (_,{searchSmartContract})=>{
-            // console.log("searchSmartContract:",searchSmartContract.contractName)
             let filterCategory;
-            if(searchSmartContract.contractCategory!==[]&&searchSmartContract.contractCategory!==undefined&&searchSmartContract.contractCategory!==""&&searchSmartContract.contractCategory[0]!==''&&searchSmartContract.contractCategory[0]!==undefined){
-                filterCategory = {
-                    '$in':searchSmartContract.contractCategory
-                }
-            }else{
-                filterCategory={$ne:null}
-            }
-
-            let filterTags;
-            // console.log("tag:",searchSmartContract.contractCategory[0]);
-            if(searchSmartContract.tags!==[]&&searchSmartContract.tags!==undefined&&searchSmartContract.tags!==""&&searchSmartContract.tags[0]!==''&&searchSmartContract.tags[0]!==undefined){
-                filterTags = {
-                    '$in':searchSmartContract.tags
-                }
-            }else{
-                filterTags={$ne:null}
-            }
-
-            let filterName;
-            if(searchSmartContract.contractName!==[]&&searchSmartContract.contractName!==undefined&&searchSmartContract.contractName!==""){
-                filterName = { "$regex": searchSmartContract.contractName, "$options": "i" }
-            }else{
-                filterName={$ne:null}
-            }
-
-            let filter = {
-                verified:"VERIFIED",
-                contractName:filterName,
-                contractCategory:filterCategory,
-                tags: filterTags,
-            };
-
-
-            let SortBy;
-            if(searchSmartContract.sortBy!==""&&searchSmartContract.sortBy!==undefined){
-                if(searchSmartContract.sortBy==='NEWEST'){
-                    SortBy={createdAt: -1}
-                }else if(searchSmartContract.sortBy==='LOW_TO_HIGH'){
-                    SortBy={singleLicensePrice: 1}
-                }else if(searchSmartContract.sortBy==='HIGH_TO_LOW'){
-                    SortBy={singleLicensePrice: -1}
-                }else if(searchSmartContract.sortBy==='TOP_SOLD'){
-                    SortBy={purchasedCounts: -1}
-                }
-            }else {
-                SortBy = 0;
-            }
-
             try{
-                console.log("filter:",filter);
-                console.log("sortBy:",SortBy);
-                let response = await SmartContract.find(filter).sort(SortBy)
-                console.log("response:",response)
-                let {
-                    minPrice,
-                    maxPrice
-                } = searchSmartContract
-                console.log("minPrice",minPrice)
-                if(minPrice===undefined&&maxPrice===undefined){
-                    minPrice=0;
-                    maxPrice=999999999;
-                }
-                let filteredResponse = lodash.remove(response, (n)=> {
-                    console.log("n.singleLicensePrice >= searchSmartContract.minPrice:",n.singleLicensePrice , maxPrice)
-                    if((parseFloat(n.singleLicensePrice) <= parseFloat(maxPrice)) && (parseFloat(n.singleLicensePrice) >= parseFloat(minPrice))){
-                        console.log("returning...")
-                        return n;
+                if(searchSmartContract.contractCategory!==[]&&searchSmartContract.contractCategory!==undefined&&searchSmartContract.contractCategory!==""&&searchSmartContract.contractCategory[0]!==''&&searchSmartContract.contractCategory[0]!==undefined){
+                    filterCategory = {
+                        '$in':searchSmartContract.contractCategory
                     }
-                });
+                }else{
+                    filterCategory={$ne:null}
+                }
 
-                console.log("filteredResponse",filteredResponse)
-                return filteredResponse;
-            }catch(err){
-                console.log(err);
+                let filterTags;
+                if(searchSmartContract.tags!==[]&&searchSmartContract.tags!==undefined&&searchSmartContract.tags!==""&&searchSmartContract.tags[0]!==''&&searchSmartContract.tags[0]!==undefined){
+                    filterTags = {
+                        '$in':searchSmartContract.tags
+                    }
+                }else{
+                    filterTags={$ne:null}
+                }
+
+                let filterName;
+                if(searchSmartContract.contractName!==[]&&searchSmartContract.contractName!==undefined&&searchSmartContract.contractName!==""){
+                    filterName = { "$regex": searchSmartContract.contractName, "$options": "i" }
+                }else{
+                    filterName={$ne:null}
+                }
+
+                let filter = {
+                    verified:"VERIFIED",
+                    contractName:filterName,
+                    contractCategory:filterCategory,
+                    tags: filterTags,
+                };
+
+
+                let SortBy;
+                if(searchSmartContract.sortBy!==""&&searchSmartContract.sortBy!==undefined){
+                    if(searchSmartContract.sortBy==='NEWEST'){
+                        SortBy={createdAt: -1}
+                    }else if(searchSmartContract.sortBy==='LOW_TO_HIGH'){
+                        SortBy={singleLicensePrice: 1}
+                    }else if(searchSmartContract.sortBy==='HIGH_TO_LOW'){
+                        SortBy={singleLicensePrice: -1}
+                    }else if(searchSmartContract.sortBy==='TOP_SOLD'){
+                        SortBy={purchasedCounts: -1}
+                    }
+                }else {
+                    SortBy = 0;
+                }
+                try{
+                    let response = await SmartContract.find(filter).sort(SortBy)
+                    if(!response){
+                        return new ApolloError("SmartContract Not Found", 404)
+                    }
+                    let {
+                        minPrice,
+                        maxPrice
+                    } = searchSmartContract
+
+                    if(minPrice===undefined&&maxPrice===undefined){
+                        minPrice=0;
+                        maxPrice=999999999;
+                    }
+                    let filteredResponse = lodash.remove(response, (n)=> {
+                        if((parseFloat(n.singleLicensePrice) <= parseFloat(maxPrice)) && (parseFloat(n.singleLicensePrice) >= parseFloat(minPrice))){
+                            return n;
+                        }
+                    });
+                    return filteredResponse;
+                }catch(err){
+                    return new ApolloError("Internal Server Error", 500)
+                }
+
+            }catch (err) {
+                throw new ApolloError("Internal Server Error", 500)
             }
-
         },
         searchSmartContract: async (_,{searchSmartContract})=>{
-            console.log("searchSmartContract:",searchSmartContract)
-
-
-            let filter = {
-                verified:"VERIFIED",
-                '$or':[
-                    {contractName:{ "$regex": searchSmartContract.contractName, "$options": "i" }},
-                    {tags: { "$regex":  searchSmartContract.contractName, "$options": "i" }}
-                ]
-            };
-
-
             try{
-                console.log("filter:",filter)
+                let filter = {
+                    verified:"VERIFIED",
+                    '$or':[
+                        {contractName:{ "$regex": searchSmartContract.contractName, "$options": "i" }},
+                        {tags: { "$regex":  searchSmartContract.contractName, "$options": "i" }}
+                    ]
+                };
                 let response = await SmartContract.find(filter)
-                console.log("response:",response)
+                if(!response){
+                    return new ApolloError("SmartContract Not Found", 404)
+                }
                 return response;
             }catch(err){
-                console.log(err);
+                throw new ApolloError("Internal Server Error", 500)
             }
         },
         searchPendingSmartContracts:async(_,{},{user})=>{
+            if (!user){
+                return  new AuthenticationError("Authentication Must Be Provided")
+            }
             if(user.type==="ADMIN"){
                 return await SmartContract.find({verified:"PENDING"});
             }else{
-                throw new ApolloError("UnAuthorized User",)
+                throw new ApolloError("UnAuthorized", 403)
             }
         },
         getSource:async (_,{id},{user}) => {
-            if(user.type ==="ADMIN"||user.type ==="DEVELOPER"){
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
                 let smartContract  = await SmartContract.findOne({"_id":id})
-                console.log("response",smartContract)
-                let filename = smartContract.source.substr(22,99);
-                console.log(filename)
-                filename =  filename.slice(0, -4);
-                console.log('filename:',filename)
-                const sourceFile=path.resolve ( './' ,'contracts',filename+'.sol');
-                console.log(sourceFile)
-                try{
-                    let sourceCode= await fs.readFileSync (sourceFile,'utf8');
-                    console.log(sourceCode)
-                    return sourceCode;
-                }catch(err){
-                    throw new ApolloError("error file not exist",404)
+                if(user.type ==="ADMIN"||user.type ==="DEVELOPER"||(user.id === smartContract.publisher)){
+                    if(!smartContract){
+                        return new ApolloError("SmartContract Not Found", 404)
+                    }
+                    let filename = smartContract.source.substr(22,99);
+                    filename =  filename.slice(0, -4);
+                    const sourceFile=path.resolve ( './' ,'contracts',filename+'.sol');
+                    try{
+                        return await fs.readFileSync (sourceFile,'utf8');
+                    }catch(err){
+                        return new ApolloError("Reading File Error", 500)
+                    }
+                } else{
+                    return new ApolloError("UnAuthorized User", 403)
                 }
-            } else{
-                throw new ApolloError("UnAuthorized User",403)
+            }catch (err) {
+                throw new ApolloError("Internal Server Error", 500)
             }
         },
+        getCompilerVersions:async (_,{},{})=>{
+            return compilerVersions();
+        }
     },
     Mutation:{
         cancelSmartContract: async (_, {id},{user})=>{
-            if(user.type ==="ADMIN"){
-                let smartContract;
-                try {
-                    smartContract = {
-                        verifiedBy: user.id,
-                        verifiedDateTime:dateTime(),
-                        verified:"REJECTED",
-                    };
-                }catch(e){
-                    console.log("error:",e)
-                }
-                try {
-                    console.log("smartContract:",smartContract)
-                    let response = await SmartContract.findByIdAndUpdate(id, {$set:smartContract},{new:true})
-                    console.log("response",response)
-                    if (!response) {
-                    }
-                    return response
-
-                } catch (err) {
-                    throw new ApolloError("Update Failed");
-                    // throw new ApolloError(err.message);
-                }
-            }else{
-                throw new ApolloError("UnAuthorized User",403);
+            if(!user){
+                return  new AuthenticationError("Authentication Must Be Provided")
             }
+            try {
+                if(user.type ==="ADMIN"){
+                    let smartContract;
+                    try {
+                        smartContract = {
+                            verifiedBy: user.id,
+                            verifiedDateTime:dateTime(),
+                            verified:"REJECTED",
+                        };
+                    }catch(e){
+                        console.log("error:",e)
+                    }
+                    try {
+                        let response = await SmartContract.findByIdAndUpdate(id, {$set:smartContract},{new:true})
+                        if (!response) {
+                            return new ApolloError("Request Not Found", 404)
+                        }
+                        return response
+
+                    } catch (err) {
+                        return new ApolloError("Internal Server Error", 500);
+                    }
+                }else{
+                    return new ApolloError("UnAuthorized User", 403);
+                }
+            }catch (err) {
+                return new ApolloError("Internal Server Error", 500);
+            }
+
         },
         createSmartContract:async (_,{newSmartContract},{SmartContract,user})=>{
-
-            let smartContract;
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
+                let smartContract;
                 smartContract =  SmartContract({
                     ...newSmartContract,
                     publisher: user.id,
                     publishingDateTime:dateTime(),
                 });
-            }catch(e){
-                console.log("error:",e)
-            }
-            //
-            // console.log("smartContract:",smartContract);
-
-            // Save the post
-            let result = await smartContract.save();
-            console.log("Smart Contract:",result)
-
-            try{
+                let result = await smartContract.save();
                 let response = await User.findById(user.id);
                 response.smartContracts.push(result._id);
                 response.save();
-                // console.log("hello to response:",response);
+                result = {
+                    ...result.toObject(),
+                    id: result._id.toString()
+                }
+                return result;
             }catch(e){
-                console.log("error:",e)
+                throw new ApolloError("Internal Server Error", 500)
             }
-
-            result = {
-                ...result.toObject(),
-                id: result._id.toString()
-            }
-            return result;
         },
         updateSmartContract:async (_,{newSmartContract,id},{SmartContract,user})=>{
-
+            if(!user){
+                return  new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
-                let response = await SmartContract.findByIdAndUpdate(id,newSmartContract,{new:true})
-                console.log("response",response)
-                if (!response) {
-                    throw new ApolloError("UPDATE failed");
+                let newContract = {
+                    ...newSmartContract,
+                    verified:"PENDING"
                 }
-                return response
-
+                return await SmartContract.findByIdAndUpdate(id,newContract,{new:true})
             } catch (err) {
-                throw new ApolloError(err.message);
+                throw new ApolloError("Internal Server Error", 500);
             }
         },
-        deleteSmartContract:async (_,{id})=>{
+        deleteSmartContract:async (_,{id},{user})=>{
+            if(!user){
+                return  new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
                 let response = await SmartContract.findByIdAndDelete(id);
-                console.log("response",response)
                 if (!response) {
-                    throw new ApolloError("delete failed");
+                    return new ApolloError("SmartContract Not Found", 404);
                 }
                 return {
                     success: true,
                     message: "SmartContract Deleted Successfully."
                 }
-
             } catch (err) {
-                throw new ApolloError(err.message);
+                throw new ApolloError("Internal Server Error", 500);
             }
         },
         verifySmartContract:async (_,{id},{SmartContract,user})=>{
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             if(user.type ==="ADMIN"){
-                let smartContract;
                 try {
+                    let smartContract;
                     smartContract = {
                         verified:"VERIFIED",
                         verifiedBy: user.id,
                         verifiedDateTime:dateTime(),
                     };
-                }catch(e){
-                    console.log("error:",e)
-                }
-                try {
-                    console.log("smartContract:",smartContract)
-                    let response = await SmartContract.findByIdAndUpdate(id, {$set:smartContract},{new:true})
-
-                    console.log("response",response)
-                    if (!response) {
-                    }
-                    return response
-
+                    return await SmartContract.findByIdAndUpdate(id, {$set:smartContract},{new:true})
                 } catch (err) {
-                    throw new ApolloError("Update Failed");
-                    // throw new ApolloError(err.message);
+                    throw new ApolloError("Internal Server Error", 500);
                 }
             }else{
                 throw new ApolloError("UnAuthorized User",403);
