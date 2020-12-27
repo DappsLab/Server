@@ -1,31 +1,50 @@
-const {MNEMONIC,USERSPATH} =require('../config');
+const {MNEMONIC} =require('../config');
 let {hdkey} = require('ethereumjs-wallet');
 let bip39 = require("bip39");
-let Master = require('../models/master.js')
+import {Master} from '../models'
 
 
-console.log("MNEMONIC:",MNEMONIC)
 let hdwallet=hdkey.fromMasterSeed(bip39.mnemonicToSeedSync(MNEMONIC)); // ! ROOT
-console.log("HDwallet:",hdwallet)
 let masterPrivateKey=hdwallet._hdkey._privateKey.toString('hex'); //! MASTER PRIVATE KEY
-console.log("Master Private Key:",masterPrivateKey)
 
 
-
-let walletObject={
+let walletObject = {
     hdwallet:hdwallet,
     masterPrivateKey:masterPrivateKey,
 }
+const checkMaster = async () => {
+    try {
+        let response = await Master.findOne({});
+        if(!response){
+            let master = Master({
+                mnemonic:MNEMONIC,
+                hdwallet:walletObject,
+                walletCount:"1",
+                orderCount:"1",
+                testCount:"1",
+                testOrderCount:"1"
+            });
+            await master.save();
+            console.log("Master Created:", master.walletCount,"\norderCount: ",master.orderCount,"\ntestCount: ",master.testCount,"\ntestOrderCount:",master.testOrderCount)
+        }else if(isNaN(response.walletCount)||response.walletCount===null){
+            let master = {
+                mnemonic:MNEMONIC,
+                hdwallet:walletObject,
+                walletCount:"1",
+                orderCount:"1",
+                testCount:"1",
+                testOrderCount:"1"
+            }
+            response = await Master.findByIdAndUpdate(response.id,master,{new:true});
+            console.log("Master Created:",response.walletCount,"\norderCount: ",response.orderCount,"\ntestCount: ",response.testCount,"\ntestOrderCount:",response.testOrderCount)
+        }else{
+            console.log("Master Loaded:", response.walletCount,"\norderCount: ",response.orderCount,"\ntestCount: ",response.testCount,"\ntestOrderCount:",response.testOrderCount)
+        }
+    }catch(e) {
+        console.log('error:',e);
+    }
+}
 
-// for (let i = 0; i < 5; i++) {
-//     let wallet = hdwallet.derivePath(USERSPATH + 0).getWallet();
-//     let address = wallet.getAddressString('hex');
-//     console.log("public key:",wallet.privateKey.toString('hex'));
-//     console.log("wallet2:",wallet);
-//     console.log('address-' + 0 + ': ' + address);
-// }
 
 
-
-
-module.exports ={walletObject}
+module.exports ={walletObject, checkMaster}

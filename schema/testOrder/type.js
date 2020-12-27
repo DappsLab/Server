@@ -6,7 +6,8 @@ const testOrderTypeDefs = gql`
     type TestOrder {
         id: ID!,
         user:User!,
-        testAddressId:ID!,
+        address:String!,
+        testAddress:TestAddress!,
         licenseType(licenseType:LicenseType):String!,
         price:String!,
         orderUsed:Boolean!,
@@ -22,7 +23,7 @@ const testOrderTypeDefs = gql`
     }
     
     input TestOrderInput{
-        testAddressId:ID!,
+        testAddress:ID!,
         productType:ProductType!,
         licenseType:LicenseType!,
         fee:String!,

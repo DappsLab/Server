@@ -11,7 +11,7 @@ const enumsTypeDefs = gql`
     }
 
     enum Type {
-        ADIMN
+        ADMIN
         USER
         DEVELOPER
     }
@@ -46,6 +46,11 @@ const enumsTypeDefs = gql`
         SINGLELICENSE,
         UNLIMITEDLICENSE
     }
+    
+    type MessageResponse {
+        message: String!
+        success: Boolean
+    },
     
 `;
 

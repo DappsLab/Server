@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Server.iml" filepath="$PROJECT_DIR$/.idea/Server.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../../../dexter/super-bright/vorticc-api/.idea/vorticc-api.iml" filepath="$PROJECT_DIR$/../../../../dexter/super-bright/vorticc-api/.idea/vorticc-api.iml" />
     </modules>
   </component>
 </project>

@@ -10,7 +10,7 @@ const testCompiledContractQuery = gql`
     }
     extend type Mutation {
         testCompileContract(newCompile:TestCompiledContractInput!):TestCompiledContract! @isAuth
-        
+        testCompiledContractVersion(smartContractId:ID!):TestCompiledContractVersion! @isAuth
     }
 
 `;

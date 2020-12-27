@@ -1,6 +1,9 @@
-import {deploy} from "../../helpers/Web3Wrapper";
+import {test_deploy} from "../../helpers/TestWeb3Wrapper";
+import {AuthenticationError, ApolloError} from "apollo-server-express"
+import {User} from "../../models";
+import {find} from "lodash";
 
-const {SmartContract, User, TestOrder, TestCompiledContract,TestPurchasedContract, TestLicense, TestDeployedContract} = require('../../models');
+const {SmartContract, TestCompiledContract, TestDeployedContract} = require('../../models');
 const path = require('path');
 const fs = require('fs');
 const sol=require("solc");
@@ -12,10 +15,10 @@ let fetchData = () => {
 const resolvers = {
     TestDeployedContract:{
         testCompiledContract:async (parent)=>{
-            return await TestCompiledContract.findOne({"_id":parent.testCompiledContract})
+            return TestCompiledContract.findOne({"_id":parent.testCompiledContract})
         },
         smartContract:async(parent)=>{
-            return await SmartContract.findOne({"_id": parent.smartContract})
+            return SmartContract.findOne({"_id": parent.smartContract})
         },
     },
     Query: {
@@ -28,13 +31,45 @@ const resolvers = {
         },
     },
     Mutation: {
-        testDeployContract:async (_,{compiledContractId},{user})=>{
-            let compiledContract = await TestCompiledContract.findById(compiledContractId);
-            if(compiledContract.user === user.id){
-                let deployData = await deploy();
-            }else{
-                //! error Unauthorized user
+        testDeployContract:async (_,{newDeploy},{user})=>{
+            if(!user){
+                return new AuthenticationError("Authentication Must Be Provided")
             }
+            try{
+                let compiledContract = await TestCompiledContract.findById(newDeploy.testCompiledContractId);
+                let response = await User.findById(user.id)
+                if(!response){
+                    return new ApolloError("User Not Found", '404')
+                }
+                let testAddress = find(response.testAddress, {'_id': newDeploy.testAddressId});
+                if(!compiledContract){
+                    return new ApolloError("Test Compiled Contract Not Found",'404')
+                }
+                if(compiledContract.user.equals(user.id.toString())){
+                    let abi, bytecode;
+                    try{
+                        const sourceFile = path.resolve ( './' ,'contracts/compiledContracts/',compiledContract.compiledFile);
+                        let sourceCode = JSON.parse(await fs.readFileSync (sourceFile,'utf8'));
+                         abi = sourceCode.interface;
+                    }catch (err) {
+                        return new ApolloError("Reading File Failed", 500)
+                    }
+                    try{
+                        const sourceFile = path.resolve ( './' ,'contracts/compiledContracts/',compiledContract.compiledFile);
+                        let sourceCode = JSON.parse(await fs.readFileSync (sourceFile,'utf8'));
+                        bytecode = sourceCode.bytecode;
+                    }catch (err) {
+                        return new ApolloError("Reading File Failed", 500)
+                    }
+                    let deployData = await test_deploy(abi, bytecode, testAddress.address, newDeploy.argumentsArray , gas);
+                    console.log(deployData);
+                }else{
+                    return new AuthenticationError("UnAuthorized", '401')
+                }
+            }catch (err) {
+                throw new ApolloError("Internal Server Error", '500')
+            }
+
         },
     }
 }

@@ -1,8 +1,13 @@
 import * as yup from 'yup';
+import {AuthenticationError} from "apollo-server-express";
 
 /**
  * USER MODEL Validation Rules
  */
+
+const id = yup
+    .string()
+    .required('Must Authenticate')
 
 const userName = yup
     .string()
@@ -48,4 +53,8 @@ export const EmailRules= yup.object().shape({
 
 export const PasswordRules= yup.object().shape({
     password
+});
+
+export const UserRules = yup.object().shape({
+    id
 });

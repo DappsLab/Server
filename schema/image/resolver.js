@@ -1,56 +1,30 @@
-import {
-    join,
-    parse
-} from 'path';
-
-import {
-    mkdirSync,
-    existsSync,
-    createWriteStream
-} from 'fs';
-
-import {
-    BASE_URL
-} from '../../config';
-
-import {
-    ApolloError
-} from 'apollo-server-express';
+import {join, parse} from 'path';
+import {createWriteStream} from 'fs';
+import {BASE_URL} from '../../config';
+import {ApolloError, AuthenticationError} from 'apollo-server-express';
 
 const resolvers = {
     Query: {
-        // hello: () => "I am Image Upload Resolver.",
-        uploads: () => "hello i am image!",
+        uploads: () => "No Response",
     },
     Mutation: {
 
-
-
-        imageUploader: async (_, {
-            file
-        }) => {
-            console.log("file:",file);
+        imageUploader: async (_, {file},{user}) => {
             try {
                 const {
                     filename,
                     createReadStream
                 } = await file;
-                console.log("readstresm():",file.createReadStream);
-
                 let stream = createReadStream();
-
                 let {
                     ext,
                     name
                 } = parse(filename);
 
-
                 name = name.replace(/([^a-z0-9 ]+)/gi, '-').replace(' ', '_');
-
                 let serverFile = join(
                     __dirname, `../../uploads/${name}-${Date.now()}${ext}`
                 );
-
                 serverFile = serverFile.replace(' ', '_');
 
                 let writeStream = await createWriteStream(serverFile);
@@ -61,7 +35,7 @@ const resolvers = {
 
                 return serverFile;
             } catch (err) {
-                throw new ApolloError(err.message);
+                throw new ApolloError("Internal Server Error", 500);
             }
         }
     },

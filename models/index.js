@@ -14,3 +14,4 @@ export {default as License} from './license';
 export {default as TestLicense} from './testLicense';
 export {default as DApp} from './dApp';
 export {default as TestedContract} from './testedContract';
+export {default as CustomOrder} from './customOrder';

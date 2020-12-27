@@ -15,7 +15,10 @@ const testCompiledContractTypeDefs = gql`
         createdAt: String!,
         updatedAt: String!,
     }
-    
+    type TestCompiledContractVersion{
+        error: String,
+        abi:String,
+    }
     input TestCompiledContractInput{
         compilationName:String!,
         smartContract:ID!,
