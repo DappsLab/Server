@@ -4,7 +4,11 @@
     <list default="true" id="d36295d5-c2a8-4192-a241-917a31e3e9d6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contracts/Ballot.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Ballot.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/test/!blockLogs!length" beforeDir="false" afterPath="$PROJECT_DIR$/database/test/!blockLogs!length" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/test/!blocks!length" beforeDir="false" afterPath="$PROJECT_DIR$/database/test/!blocks!length" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/.cache/@babel/register/.babel.7.11.6.development.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/@babel/register/.babel.7.11.6.development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/testCompiledContract/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/testCompiledContract/resolver.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,10 +37,14 @@
     <property name="ASKED_MARK_IGNORED_FILES_AS_EXCLUDED" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="add_unversioned_files" value="true&#10;/Users/qasimkhokhar/Desktop/DappsLab/Server/contracts/compiledContracts/Ballot-1608810965319.json" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/helpers" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/helpers" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/helpers" />
     </key>
@@ -96,21 +104,21 @@
     <option name="version" value="3" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1899" height="430" key="GridCell.Tab.0.bottom" timestamp="1608797441050">
+    <state width="1899" height="375" key="GridCell.Tab.0.bottom" timestamp="1608985105704">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
-    <state width="1899" height="430" key="GridCell.Tab.0.bottom/0.0.1920.1200@0.0.1920.1200" timestamp="1608797441050" />
-    <state width="1899" height="430" key="GridCell.Tab.0.center" timestamp="1608797441047">
+    <state width="1899" height="375" key="GridCell.Tab.0.bottom/0.0.1920.1200@0.0.1920.1200" timestamp="1608985105704" />
+    <state width="1899" height="375" key="GridCell.Tab.0.center" timestamp="1608985105702">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
-    <state width="1899" height="430" key="GridCell.Tab.0.center/0.0.1920.1200@0.0.1920.1200" timestamp="1608797441047" />
-    <state width="1899" height="430" key="GridCell.Tab.0.left" timestamp="1608797441045">
+    <state width="1899" height="375" key="GridCell.Tab.0.center/0.0.1920.1200@0.0.1920.1200" timestamp="1608985105702" />
+    <state width="1899" height="375" key="GridCell.Tab.0.left" timestamp="1608985105700">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
-    <state width="1899" height="430" key="GridCell.Tab.0.left/0.0.1920.1200@0.0.1920.1200" timestamp="1608797441045" />
-    <state width="1899" height="430" key="GridCell.Tab.0.right" timestamp="1608797441050">
+    <state width="1899" height="375" key="GridCell.Tab.0.left/0.0.1920.1200@0.0.1920.1200" timestamp="1608985105700" />
+    <state width="1899" height="375" key="GridCell.Tab.0.right" timestamp="1608985105703">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
-    <state width="1899" height="430" key="GridCell.Tab.0.right/0.0.1920.1200@0.0.1920.1200" timestamp="1608797441050" />
+    <state width="1899" height="375" key="GridCell.Tab.0.right/0.0.1920.1200@0.0.1920.1200" timestamp="1608985105703" />
   </component>
 </project>

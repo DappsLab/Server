@@ -78,7 +78,7 @@ const resolvers = {
         }
     },
     Mutation: {
-        testCompiledContractVersion:async(_,{smartContractId},{user})=>{
+        testCompiledContractVersion:async(_,{smartContractId, version},{user})=>{
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
@@ -105,7 +105,7 @@ const resolvers = {
                         } catch (err) {
                             return new ApolloError("Reading File Failed", 500)
                         }
-                        let solCompiler = await solCompilerSync(smartContract.compilerVersion);
+                        let solCompiler = await solCompilerSync(version);
                         if (!solCompiler) {
                             return new ApolloError("Compiler Error", 500)
                         }
