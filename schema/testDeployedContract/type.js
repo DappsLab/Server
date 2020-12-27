@@ -24,9 +24,10 @@ const testDeployedContractTypeDefs = gql`
         deplopmentLabel:String!,
         fee:String!,
     }
-    input Argument{
-        dataType:String!,
+    input Argument{ 
+        dataType:String!,  
         data:[String],
+        
     }
     
 `;
