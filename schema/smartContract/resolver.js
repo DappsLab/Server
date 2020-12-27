@@ -141,7 +141,7 @@ const resolvers = {
             }
             try {
                 let smartContract  = await SmartContract.findOne({"_id":id})
-                if(user.id === smartContract.publisher){
+                if(user.id === smartContract.publisher||user.type === "ADMIN"){
                     if(!smartContract){
                         return new ApolloError("SmartContract Not Found", 404)
                     }
