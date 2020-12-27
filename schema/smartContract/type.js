@@ -34,7 +34,6 @@ const smartContractTypeDefs = gql`
     type SmartContract {
         id: ID!,
         contractName: String,
-#        kycStatus(status: Status): String!
         contractCategory(category:Category):[String],
         compilerVersion:String!,
         image: String,
