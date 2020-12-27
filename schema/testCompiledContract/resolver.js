@@ -126,7 +126,7 @@ const resolvers = {
                         compiledData = solCompiler.compile(JSON.stringify(input))
                         error = compiledData.errors;
                         compiledFile = `${filename}-${Date.now()}.json`
-                        fs.writeFile("./contracts/compiledContracts/" + compiledFile, compiledData, function (err) {
+                        fs.writeFileSync("./contracts/compiledContracts/" + compiledFile, compiledData, function (err) {
                             if (err) {
                                 return new ApolloError("WriteFile File Failed", 500)
                             }
@@ -148,8 +148,8 @@ const resolvers = {
                         return new ApolloError("Compiling Failed", 500)
                     }
                     return {
-                        error: error,
-                        abi:abi,
+                        error: JSON.stringify(error),
+                        abi:JSON.stringify(abi),
                     }
                 }
             } catch (err) {
