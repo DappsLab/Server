@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d36295d5-c2a8-4192-a241-917a31e3e9d6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contracts/Ballot.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/Ballot.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/test/!blockLogs!length" beforeDir="false" afterPath="$PROJECT_DIR$/database/test/!blockLogs!length" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/test/!blocks!length" beforeDir="false" afterPath="$PROJECT_DIR$/database/test/!blocks!length" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/.cache/@babel/register/.babel.7.11.6.development.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/@babel/register/.babel.7.11.6.development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema/testCompiledContract/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/testCompiledContract/resolver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/testDeployedContract/type.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/testDeployedContract/type.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,21 +100,21 @@
     <option name="version" value="3" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1899" height="375" key="GridCell.Tab.0.bottom" timestamp="1608985105704">
+    <state width="1899" height="572" key="GridCell.Tab.0.bottom" timestamp="1609065543162">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
-    <state width="1899" height="375" key="GridCell.Tab.0.bottom/0.0.1920.1200@0.0.1920.1200" timestamp="1608985105704" />
-    <state width="1899" height="375" key="GridCell.Tab.0.center" timestamp="1608985105702">
+    <state width="1899" height="572" key="GridCell.Tab.0.bottom/0.0.1920.1200@0.0.1920.1200" timestamp="1609065543162" />
+    <state width="1899" height="572" key="GridCell.Tab.0.center" timestamp="1609065543160">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
-    <state width="1899" height="375" key="GridCell.Tab.0.center/0.0.1920.1200@0.0.1920.1200" timestamp="1608985105702" />
-    <state width="1899" height="375" key="GridCell.Tab.0.left" timestamp="1608985105700">
+    <state width="1899" height="572" key="GridCell.Tab.0.center/0.0.1920.1200@0.0.1920.1200" timestamp="1609065543160" />
+    <state width="1899" height="572" key="GridCell.Tab.0.left" timestamp="1609065543151">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
-    <state width="1899" height="375" key="GridCell.Tab.0.left/0.0.1920.1200@0.0.1920.1200" timestamp="1608985105700" />
-    <state width="1899" height="375" key="GridCell.Tab.0.right" timestamp="1608985105703">
+    <state width="1899" height="572" key="GridCell.Tab.0.left/0.0.1920.1200@0.0.1920.1200" timestamp="1609065543151" />
+    <state width="1899" height="572" key="GridCell.Tab.0.right" timestamp="1609065543161">
       <screen x="0" y="0" width="1920" height="1200" />
     </state>
-    <state width="1899" height="375" key="GridCell.Tab.0.right/0.0.1920.1200@0.0.1920.1200" timestamp="1608985105703" />
+    <state width="1899" height="572" key="GridCell.Tab.0.right/0.0.1920.1200@0.0.1920.1200" timestamp="1609065543161" />
   </component>
 </project>
