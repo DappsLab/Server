@@ -187,14 +187,14 @@ const resolvers = {
             try {
 
                 let dApp;
-                let filename = newDApp.zip.substr(22, 99);
+                let filename = newDApp.zip.replace(`${BASE_URL}` + "\\", "");
                 filename = filename.slice(0, -4);
                 let newfilename = filename + `${Date.now()}`
                 const sourceFile = path.resolve('./', 'dapps', newfilename + '.zip');
                 const oldSourceFile = path.resolve('./', 'dapps', filename + '.zip');
                 try {
                     fs.renameSync(oldSourceFile, sourceFile);
-                    newDApp.zip = `${BASE_URL}${newfilename}.zip`;
+                    newDApp.zip = `${BASE_URL}/${newfilename}.zip`;
                 } catch (err) {
                     return new ApolloError("Reading File Failed", 500)
                 }
@@ -222,25 +222,25 @@ const resolvers = {
             }
             try {
                 if (!!newDApp.zip) {
-                    let filename = newDApp.zip.substr(22, 99);
+                    let filename = newDApp.zip.replace(`${BASE_URL}` + "/", "");
                     filename = filename.slice(0, -4);
                     let newfilename = filename + `${Date.now()}`
                     const sourceFile = path.resolve('./', 'dapps', newfilename + '.zip');
                     const oldSourceFile = path.resolve('./', 'dapps', filename + '.zip');
                     try {
                         fs.renameSync(oldSourceFile, sourceFile);
-                        newDApp.zip = `${BASE_URL}${newfilename}.zip`;
+                        newDApp.zip = `${BASE_URL}/${newfilename}.zip`;
                     } catch (err) {
                         return new ApolloError("Reading File Failed", 500)
                     }
                 } else {
                     delete newDApp.zip
                 }
-                let DApp = {
+                let updateDApp = {
                     ...newDApp,
                     verified:"PENDING"
                 }
-                let response = await DApp.findByIdAndUpdate(id, DApp, {new: true})
+                let response = await DApp.findByIdAndUpdate(id, updateDApp, {new: true})
                 if (!response) {
                     return new ApolloError("Update Failed", 500);
                 }
