@@ -7,7 +7,7 @@ let fetchData = () => {
 const resolvers = {
     License:{
         compilations:async(parent)=>{
-            return await CompiledContract.find({"id":parent.compilations})
+            return await CompiledContract.find({"_id":parent.compilations})
         },
         order:async(parent)=>{
             return Order.findOne({"_id": parent.order})

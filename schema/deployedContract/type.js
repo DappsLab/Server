@@ -17,6 +17,7 @@ const deployedContractTypeDefs = gql`
         updatedAt: String!,
     }
     
+    
 `;
 
 

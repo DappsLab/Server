@@ -3,6 +3,7 @@ const {gql} = require('apollo-server-express');
 
 const testDeployedContractTypeDefs = gql`
     
+    
     type TestDeployedContract {
         id: ID!,
         user:User!,
@@ -25,9 +26,9 @@ const testDeployedContractTypeDefs = gql`
         fee:String!,
     }
     input Argument{ 
-        dataType:String!,  
-        data:[String],
-        
+        index:Int,
+        dataType: String!,  
+        data: [String],
     }
     
 `;

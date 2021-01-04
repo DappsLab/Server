@@ -7,6 +7,7 @@ const testDeployedContractQuery = gql`
         testDeployedContractById(id:ID!):TestDeployedContract,
     }
     extend type Mutation {
+        augumentsValidator(newArguments:[Argument]): Boolean
         testDeployContract(newDeploy:TestDeployedContractInput):TestDeployedContract! @isAuth
     }
 

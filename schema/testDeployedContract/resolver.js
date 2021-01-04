@@ -2,6 +2,7 @@ import {test_deploy} from "../../helpers/TestWeb3Wrapper";
 import {AuthenticationError, ApolloError} from "apollo-server-express"
 import {User} from "../../models";
 import {find} from "lodash";
+import {argumentsValidator} from "../../helpers/ArgumentsValidator"
 
 const {SmartContract, TestCompiledContract, TestDeployedContract} = require('../../models');
 const path = require('path');
@@ -31,6 +32,9 @@ const resolvers = {
         },
     },
     Mutation: {
+        augumentsValidator:async (_, {newArguments})=>{
+            return argumentsValidator(newArguments.toString)
+        },
         testDeployContract:async (_,{newDeploy},{user})=>{
             if(!user){
                 return new AuthenticationError("Authentication Must Be Provided")

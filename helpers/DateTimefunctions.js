@@ -13,7 +13,7 @@ let dateTime=()=>{
 
 // prints date & time in YYYY-MM-DD format
 //     console.log(year + "-" + month + "-" + date+"-"+hour+"-"+min+"-"+sec);
-    const datetime2=year + "-" + month + "-" + date+"-"+hour+"-"+min+"-"+sec;
+    const datetime2 = year + "-" + month + "-" + date+"-"+hour+"-"+min+"-"+sec;
     return datetime2;
 }
 
