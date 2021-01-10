@@ -30,7 +30,7 @@ const resolvers = {
                 let writeStream = await createWriteStream(serverFile);
                 console.log("Stream:",writeStream);
                 await stream.pipe(writeStream);
-
+                console.log("BASE_URL:",BASE_URL,"serverFile:",serverFile.split('uploads')[1]);
                 serverFile = `${BASE_URL}${serverFile.split('uploads')[1]}`;
 
                 return serverFile;
