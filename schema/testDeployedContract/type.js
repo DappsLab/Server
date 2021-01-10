@@ -1,8 +1,7 @@
 const {gql} = require('apollo-server-express');
 
 
-const testDeployedContractTypeDefs = gql`
-    
+const testDeployedContractTypeDefs = gql`    
     
     type TestDeployedContract {
         id: ID!,

@@ -94,14 +94,16 @@ const resolvers = {
                     return new ApolloError("SmartContract Not Found", 404)
                 }
                 if (!smartContract.preCompiled) {
-                    let filename = smartContract.source.replace(`${BASE_URL}` + "\\", "");
+                    let filename = smartContract.source.replace(`${BASE_URL}` + "/", "");
                     let solFile = filename
+                    console.log("filename",filename)
                     filename = filename.slice(0, -4);
                     const sourceFile = path.resolve('./', 'contracts', filename + '.sol');
-
+                    console.log("sourceFile",sourceFile)
                     try {
                         try {
                             sourceCode = await fs.readFileSync(sourceFile, 'utf8');
+                            console.log("sourceCode",sourceCode)
                         } catch (err) {
                             return new ApolloError("Reading File Failed", 500)
                         }
@@ -180,11 +182,12 @@ const resolvers = {
                     }
                 }
                 if (!smartContract.preCompiled) {
-                    let filename = smartContract.source.replace(`${BASE_URL}` + "\\", "");
+                    let filename = smartContract.source.replace(`${BASE_URL}` + "/", "");
                     let solFile = filename
                     filename = filename.slice(0, -4);
+                    console.log("filename:",filename)
                     const sourceFile = path.resolve('./', 'contracts', filename + '.sol');
-
+                    console.log("source file:",sourceFile)
                     let sourceCode;
                     let compiledData
                     let compiledFile;
@@ -192,6 +195,7 @@ const resolvers = {
                     try {
                         try {
                             sourceCode = await fs.readFileSync(sourceFile, 'utf8');
+                            console.log("source code:",sourceCode)
                         } catch (err) {
                             return new ApolloError("Reading File Failed", 500)
                         }

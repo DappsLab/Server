@@ -3,14 +3,13 @@ import {TEST_NET_HTTP} from "../config";
 import {toWei} from "./Web3Wrapper";
 
 import {getKeys} from "./KeysGetter";
-let currentAccount={};
 
-(async()=>{
+let currentAccount = {};
+
+(async () => {
     let wallet = await getKeys('test.key')
-    // console.log("real Wallet:", wallet)
-    for(let account of wallet.accounts){
-        // console.log("Balance of loops:",await test_getBalance(account.address))
-        if(await test_getBalance(account.address)>= 5){
+    for (let account of wallet.accounts) {
+        if (await test_getBalance(account.address) >= 5) {
             currentAccount = account
         }
     }
@@ -19,92 +18,101 @@ let currentAccount={};
 export const web3 = new Web3(TEST_NET_HTTP);
 
 
-
-
-export const test_isSyncing = async()=>{
+export const test_isSyncing = async () => {
     return await web3.eth.isSyncing()
 }
 
 
-export const test_getBlockNumber = async()=>{
+export const test_getBlockNumber = async () => {
     return await web3.eth.getBlockNumber();
 }
-export const test_getAccounts = async()=>{
+export const test_getAccounts = async () => {
     return await web3.eth.getAccounts();
 }
-export const test_getBalance = async(address) => {
+export const test_getBalance = async (address) => {
     return await web3.eth.getBalance(address)
 }
 
-export const test_getTransactionCount = async(address)=>{
+export const test_getTransactionCount = async (address) => {
     return await web3.eth.getTransactionCount(address)
 
 }
 
-export const test_getTransaction = async(transactionHash)=>{
+export const test_getTransaction = async (transactionHash) => {
     return await web3.eth.getTransaction(transactionHash)
 
 }
 
-export const test_toEth= (wei)=>{
-    return wei/1000000000000000000;
+export const test_toEth = (wei) => {
+    return wei / 1000000000000000000;
 }
-export const test_toWei=  (eth)=>{
-    return eth*1000000000000000000;
+export const test_toWei = (eth) => {
+    return eth * 1000000000000000000;
 }
-export const test_signAndSendTransaction= async (to,amount,gas,privateKey)=>{
-   const Signed = await test_signTransaction(to,amount,gas,privateKey);
-   const receipt = await test_sendSignedTransaction(Signed.rawTransaction);
-   const transaction = await test_getTransaction(receipt.transactionHash);
-   return {signed:Signed,receipt:receipt,transaction:transaction}
+export const test_signAndSendTransaction = async (to, amount, gas, privateKey) => {
+    const Signed = await test_signTransaction(to, amount, gas, privateKey);
+    const receipt = await test_sendSignedTransaction(Signed.rawTransaction);
+    const transaction = await test_getTransaction(receipt.transactionHash);
+    return {signed: Signed, receipt: receipt, transaction: transaction}
 }
 
-export const test_signTransaction = async (to,amount,gas,privateKey)=>{
+export const test_signTransaction = async (to, amount, gas, privateKey) => {
     // return await web3.eth.sendTransaction({from: fromAccount, to: toAmount, value:amount});
     return await web3.eth.accounts.signTransaction({
         to: to,
-        value:amount,
+        value: amount,
         gas: gas
     }, privateKey);
 }
 
-export const test_sendSignedTransaction= async (rawTx)=>{
+export const test_sendSignedTransaction = async (rawTx) => {
     return await web3.eth.sendSignedTransaction(rawTx);
 }
 
-export const test_getTransactionReceipt= async (transactionHash)=>{
+export const test_getTransactionReceipt = async (transactionHash) => {
     return await web3.eth.getTransactionReceipt(transactionHash);
 }
 
-export const test_deploy = async (abi, bytecode, address, argumentsArray, gas)=>{
-    if(!argumentsArray){
+export const test_deploy = async (abi, bytecode, address, privateKey, argumentsArray) => {
 
-        let contract = await new web3.eth.Contract(JSON.parse(abi))
-            .deploy({data:'0x'+bytecode})
-            .send({from:address, gas:gas})
-            .estimateGas(function(err, gas){
-                console.log(gas);
-            });
-        return contract;
-    }else{
-        let contract = await new web3.eth.Contract(JSON.parse(abi))
-            .deploy({data:'0x'+bytecode,arguments:argumentsArray})
-            .send({from:address, gas:gas})
-            .estimateGas(function(err, gas){
-                console.log(gas);
-            });
-        return contract;
+    let contract = await new web3.eth.Contract(abi);
+    let contractTx;
+    if (!argumentsArray) {
+        contractTx = contract.deploy({data: '0x' + bytecode})
+    } else {
+        try{
+            contractTx = contract.deploy({
+                data: '0x' + bytecode,
+                arguments:argumentsArray
+            })
+        }catch (err) {
+            console.log(err)
+        }
     }
+    const createTransaction = await web3.eth.accounts.signTransaction(
+        {
+            from: address,
+            data: contractTx.encodeABI(),
+            gas: await contractTx.estimateGas(),
+        },
+        privateKey
+    );
+    const createReceipt = await web3.eth.sendSignedTransaction(
+        createTransaction.rawTransaction
+    );
+    console.log(`Contract deployed at address ${createReceipt.contractAddress}`);
+    return createReceipt;
+
 };
 
- export const test_Request5DAppCoin = async(address)=>{
-     // console.log("Test main Balance", await test_getBalance(currentAccount.address))
+export const test_Request5DAppCoin = async (address) => {
+    // console.log("Test main Balance", await test_getBalance(currentAccount.address))
     return await test_signAndSendTransaction(address, toWei(5).toString(), "21000", currentAccount.privateKey)
 }
 // export const getAccounts = async ()=>{
 //     return await web3.eth.personal.getAccounts().then(console.log);
 // }
-(async()=>{
+(async () => {
     // console.log("Syncing:",await isSyncing())
     // console.log("latest",await web3.eth.getBlock('latest'))
     // console.log(await getTransactionCount("0x1036970AD593e3033425153e5B3270829068946b"))
