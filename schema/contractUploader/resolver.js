@@ -22,7 +22,15 @@ const resolvers = {
                 serverFile = serverFile.replace(' ', '_');
                 let writeStream = await createWriteStream(serverFile);
                 await stream.pipe(writeStream);
-                serverFile = `${BASE_URL}${serverFile.split('contracts')[1]}`;
+                let correctedPath=""
+                if(!(serverFile.split('contracts')[1][0]==='/')){
+                    let wrongPath=serverFile.split('contracts')[1];
+                    correctedPath = wrongPath.replace("\\","/")
+                    serverFile = `${BASE_URL}${correctedPath}`;
+
+                }else{
+                    serverFile = `${BASE_URL}${serverFile.split('contracts')[1]}`;
+                }
                 return serverFile;
             } catch (err) {
                 throw new ApolloError("Internal Server Error", 500);

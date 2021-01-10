@@ -28,14 +28,16 @@ const resolvers = {
                 serverFile = serverFile.replace(' ', '_');
 
                 let writeStream = await createWriteStream(serverFile);
-                console.log("Stream:",writeStream);
                 await stream.pipe(writeStream);
-                console.log("BASE_URL:",BASE_URL,"serverFile:",serverFile.split('uploads')[1]);
+                let correctedPath=""
                 if(!(serverFile.split('uploads')[1][0]==='/')){
-                    console.log("not found")
-                    serverFile.split('uploads')[1]=serverFile.split('uploads')[1].repeat("\\\\","/")
+                    let wrongPath=serverFile.split('uploads')[1];
+                    correctedPath = wrongPath.replace("\\","/")
+                    serverFile = `${BASE_URL}${correctedPath}`;
+
+                }else{
+                    serverFile = `${BASE_URL}${serverFile.split('uploads')[1]}`;
                 }
-                serverFile = `${BASE_URL}${serverFile.split('uploads')[1]}`;
 
                 return serverFile;
             } catch (err) {

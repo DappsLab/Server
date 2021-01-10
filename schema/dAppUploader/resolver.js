@@ -36,7 +36,15 @@ const resolvers = {
 
                 await stream.pipe(writeStream);
 
-                serverFile = `${BASE_URL}${serverFile.split('dapps')[1]}`;
+                let correctedPath=""
+                if(!(serverFile.split('dapps')[1][0]==='/')){
+                    let wrongPath=serverFile.split('dapps')[1];
+                    correctedPath = wrongPath.replace("\\","/")
+                    serverFile = `${BASE_URL}${correctedPath}`;
+
+                }else{
+                    serverFile = `${BASE_URL}${serverFile.split('dapps')[1]}`;
+                }
 
                 return serverFile;
             } catch (err) {
