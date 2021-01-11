@@ -32,9 +32,6 @@ const resolvers = {
         },
     },
     Mutation: {
-        augumentsValidator:async (_, {newArguments})=>{
-            return argumentsValidator(newArguments.toString)
-        },
         testDeployContract:async (_,{newDeploy},{user})=>{
             if(!user){
                 return new AuthenticationError("Authentication Must Be Provided")
@@ -83,11 +80,15 @@ const resolvers = {
                         let deployedContract = TestDeployedContract({
                             ...newDeploy,
                             user:user,
+                            ownerAddress:testAddress.address,
                             smartContract:compiledContract.smartContract,
                             contractAddress:deployData.contractAddress,
                             transactionAddress:deployData.transactionHash,
                         });
                         await TestCompiledContract.findByIdAndUpdate(compiledContract.id, {$push: {testDeployments: deployedContract.id}},{new:true});
+                        if(newDeploy.unlimitedCustomization===false){
+                            await TestCompiledContract.findByIdAndUpdate(compiledContract.id, {used: true},{new:true});
+                        }
                         return deployedContract.save();
                     }catch (err) {
                         return new ApolloError("Deploying Failed", 500)

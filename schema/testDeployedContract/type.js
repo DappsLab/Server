@@ -9,6 +9,7 @@ const testDeployedContractTypeDefs = gql`
         deplopmentLabel:String!,
         testCompiledContract:CompiledContract!,
         smartContract:SmartContract!,
+        ownerAddress:String!,
         contractAddress:String!,
         transactionAddress:String!,
         balance:String,
@@ -21,8 +22,8 @@ const testDeployedContractTypeDefs = gql`
         testCompiledContractId:ID!,
         testAddressId:ID!,
         argumentsArray:[Argument],
+        unlimitedCustomization:Boolean!,
         deplopmentLabel:String!,
-        fee:String!,
     }
     input Argument{ 
         index:Int,

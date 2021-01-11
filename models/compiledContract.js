@@ -23,6 +23,10 @@ const compiledContractSchema = new Schema({
         type:String,
         default:"",
     },
+    used:{
+        type:Boolean,
+        default:false,
+    },
     deployments:[{
         ref: 'deployedcontracts',
         type: Schema.Types.ObjectId

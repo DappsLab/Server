@@ -23,6 +23,10 @@ const testCompiledContractSchema = new Schema({
         type:String,
         default:"",
     },
+    used:{
+        type:Boolean,
+        default:false,
+    },
     testDeployments:[{
         ref: 'testdeployedcontracts',
         type: Schema.Types.ObjectId

@@ -12,12 +12,16 @@ const deployedContractSchema = new Schema({
         type: Schema.Types.ObjectId
     },
     compiledContract: {
-        ref: 'compiledcontracts',
+        ref: 'testcompiledcontracts',
         type: Schema.Types.ObjectId
     },
     contractAddress: String,
     transactionAddress:String,
     balance: {
+        type:String,
+        default:"",
+    },
+    ownerAddress:{
         type:String,
         default:"",
     },
@@ -27,6 +31,5 @@ const deployedContractSchema = new Schema({
     },
     deploymentFee: String,
 });
-
 const DeployedContract = mongoose.model('deployedcontracts', deployedContractSchema);
 export default DeployedContract;
