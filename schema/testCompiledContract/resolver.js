@@ -26,7 +26,7 @@ const resolvers = {
         testDeployments:async (parent) => {
             return TestDeployedContract.findOne({"_id": parent.testDeployments})
         }
-        // hello tahseen
+        // hello tahseen Mashaidi
     },
     Query: {
         testCompiledContracts: async (_) => {
