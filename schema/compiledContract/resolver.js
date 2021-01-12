@@ -1,6 +1,6 @@
 import {BASE_URL} from "../../config";
 
-const {SmartContract, User, CompiledContract, PurchasedContract, License} = require('../../models');
+const {SmartContract, User, CompiledContract, PurchasedContract, License, DeployedContract} = require('../../models');
 const path = require('path');
 const fs = require('fs');
 import {ApolloError, AuthenticationError} from 'apollo-server-express'
@@ -24,6 +24,9 @@ const resolvers = {
         license: async () => {
             return License.findOne({"_id": parent.license})
         },
+        deployments: async (parent) => {
+            return DeployedContract.findOne({"_id": parent.deployments})
+        }
     },
     Query: {
         compiledContracts: async (_) => {

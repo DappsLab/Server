@@ -25,11 +25,6 @@ const testDeployedContractTypeDefs = gql`
         unlimitedCustomization:Boolean!,
         deplopmentLabel:String!,
     }
-    input Argument{ 
-        index:Int,
-        dataType: String!,  
-        data: [String],
-    }
     
 `;
 

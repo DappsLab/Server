@@ -11,7 +11,7 @@ const testCompiledContractTypeDefs = gql`
         compiledFile:String!,
         testPurchasedContract:TestPurchasedContract,
         testLicense:TestLicense,
-        testDeplopments:[TestDeployedContract],
+        testDeployments:[TestDeployedContract],
         used:Boolean!,
         createdAt: String!,
         updatedAt: String!,

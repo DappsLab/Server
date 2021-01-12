@@ -1,4 +1,4 @@
-const {SmartContract, User, TestCompiledContract, TestPurchasedContract, TestLicense} = require('../../models');
+const {SmartContract, User, TestCompiledContract, TestPurchasedContract, TestLicense, TestDeployedContract} = require('../../models');
 const path = require('path');
 const fs = require('fs');
 import {solCompilerSync} from "../../utils/solcCompiler";
@@ -17,12 +17,15 @@ const resolvers = {
         smartContract: async (parent) => {
             return SmartContract.findOne({"_id": parent.smartContract})
         },
-        testPurchasedContract: async () => {
+        testPurchasedContract: async (parent) => {
             return TestPurchasedContract.findOne({"_id": parent.testPurchasedContract})
         },
-        testLicense: async () => {
+        testLicense: async (parent) => {
             return TestLicense.findOne({"_id": parent.testLicense})
         },
+        testDeployments:async (parent) => {
+            return TestDeployedContract.findOne({"_id": parent.testDeployments})
+        }
     },
     Query: {
         testCompiledContracts: async (_) => {
