@@ -13,7 +13,7 @@ const testDeployedContractSchema = new Schema({
     },
     testCompiledContract: {
         ref: 'testcompiledcontracts',
-        type: Schema.Types.ObjectId
+        type: Schema.Types.ObjectId,
     },
     contractAddress: String,
     transactionAddress:String,

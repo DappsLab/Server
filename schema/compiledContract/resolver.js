@@ -25,7 +25,7 @@ const resolvers = {
             return License.findOne({"_id": parent.license})
         },
         deployments: async (parent) => {
-            return DeployedContract.findOne({"_id": parent.deployments})
+            return DeployedContract.find({"_id": parent.deployments})
         }
     },
     Query: {

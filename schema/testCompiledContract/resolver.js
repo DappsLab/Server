@@ -24,7 +24,7 @@ const resolvers = {
             return TestLicense.findOne({"_id": parent.testLicense})
         },
         testDeployments:async (parent) => {
-            return TestDeployedContract.findOne({"_id": parent.testDeployments})
+            return TestDeployedContract.find({"_id": parent.testDeployments})
         }
         // hello tahseen Mashaidi
     },
