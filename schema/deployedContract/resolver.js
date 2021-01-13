@@ -50,10 +50,6 @@ const resolvers = {
                 if(!response){
                     return new ApolloError("User Not Found", '404')
                 }
-                let testAddress = find(response.testAddress, {'id': newDeploy.testAddressId});
-                if(!compiledContract){
-                    return new ApolloError("Test Compiled Contract Not Found",404)
-                }
                 if(compiledContract.user.equals(user.id.toString())){
                     let abi, bytecode;
                     try {
@@ -75,18 +71,19 @@ const resolvers = {
                         return new ApolloError("Reading File Failed", 500)
                     }
                     try{
-                        let deployData = await test_deploy(abi, bytecode, testAddress.address ,testAddress.wallet.privateKey, returnedArguments);
-                        let deployedContract = TestDeployedContract({
+                        let deployData = await deploy(abi, bytecode, user.address ,user.wallet.privateKey, returnedArguments);
+                        let deployedContract = DeployedContract({
                             ...newDeploy,
                             user:user,
-                            ownerAddress:testAddress.address,
+                            ownerAddress:user.address,
+                            ownerPrivateKey:user.wallet.privateKey,
                             smartContract:compiledContract.smartContract,
                             contractAddress:deployData.contractAddress,
                             transactionAddress:deployData.transactionHash,
                         });
-                        await TestCompiledContract.findByIdAndUpdate(compiledContract.id, {$push: {testDeployments: deployedContract.id}},{new:true});
+                        await CompiledContract.findByIdAndUpdate(compiledContract.id, {$push: {deployments: deployedContract.id}},{new:true});
                         if(newDeploy.unlimitedCustomization===false){
-                            await TestCompiledContract.findByIdAndUpdate(compiledContract.id, {used: true},{new:true});
+                            await CompiledContract.findByIdAndUpdate(compiledContract.id, {used: true},{new:true});
                         }
                         return deployedContract.save();
                     }catch (err) {

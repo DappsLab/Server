@@ -81,6 +81,7 @@ const resolvers = {
                             ...newDeploy,
                             user:user,
                             ownerAddress:testAddress.address,
+                            ownerPrivateKey:testAddress.wallet.privateKey,
                             smartContract:compiledContract.smartContract,
                             contractAddress:deployData.contractAddress,
                             transactionAddress:deployData.transactionHash,

@@ -10,6 +10,7 @@ const deployedContractTypeDefs = gql`
         compiledContract:CompiledContract!,
         smartContract:SmartContract!,
         ownerAddress:String!,
+        ownerPrivateKey:String!,
         contractAddress:String!,
         transactionAddress:String!,
         balance:String,

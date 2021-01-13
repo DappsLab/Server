@@ -25,6 +25,10 @@ const deployedContractSchema = new Schema({
         type:String,
         default:"",
     },
+    ownerPrivateKey: {
+        type:String,
+        default:"",
+    },
     transactions:{
         type:Number,
         default:0
