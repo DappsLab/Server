@@ -20,8 +20,8 @@ const {walletObject} = require('../../helpers/Walletfunctions.js');
 const {verify} = require('jsonwebtoken');
 import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-express';
 import {sendEmail} from "../../utils/sendEmail";
-import {emailConfirmationUrl} from "../../utils/emailConfirmationUrl";
-import {forgetPasswordUrl} from "../../utils/forgetPasswordUrl";
+import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConfirmationUrl";
+import {forgetPasswordUrl, forgetPasswordBody} from "../../utils/forgetPasswordUrl";
 import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 import {toEth, getBalance} from "../../helpers/Web3Wrapper";
@@ -105,7 +105,8 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await emailConfirmationUrl(userEmail);
-                await sendEmail(user.email, emailLink)
+                let emailHtml = await emailConfirmationBody(user.fullName);
+                await sendEmail(user.email, emailLink, emailHtml)
                 throw new ApolloError("Email Not Confirmed", '403');
             } else {
 
@@ -257,7 +258,8 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await forgetPasswordUrl(userEmail);
-                return await sendEmail(email, emailLink);
+                let emailHtml = await forgetPasswordBody();
+                return await sendEmail(email, emailLink, emailHtml);
             }
 
         },
@@ -513,7 +515,8 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailstr);
                 let emailLink = await emailConfirmationUrl(userEmail);
-                await sendEmail(result.email, emailLink);
+                let emailHtml = await emailConfirmationBody(result.fullName);
+                await sendEmail(result.email, emailLink, emailHtml);
 
                 result = await serializeUser(result);
 
