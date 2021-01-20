@@ -106,7 +106,7 @@ const resolvers = {
                     }
                 }
                 if(!smartContract.preCompiled){
-                    let filename = smartContract.source.replace(`${BASE_URL}` + "\\", "");
+                    let filename = smartContract.source.replace(`${BASE_URL}` + "/", "");
                     let solFile = filename
                     filename = filename.slice(0, -4);
                     const sourceFile = path.resolve('./', 'contracts', filename + '.sol');

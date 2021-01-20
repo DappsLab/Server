@@ -187,7 +187,7 @@ const resolvers = {
             try {
 
                 let dApp;
-                let filename = newDApp.zip.replace(`${BASE_URL}` + "\\", "");
+                let filename = newDApp.zip.replace(`${BASE_URL}` + "/", "");
                 filename = filename.slice(0, -4);
                 let newfilename = filename + `${Date.now()}`
                 const sourceFile = path.resolve('./', 'dapps', newfilename + '.zip');

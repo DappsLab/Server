@@ -60,11 +60,36 @@ export const getTransactionReceipt= async (transactionHash)=>{
     return await web3.eth.getTransactionReceipt(transactionHash);
 }
 
-export const deploy = async (abi, bytecode, argumentsArray, address)=>{
-    let contract = await new web3.eth.Contract(JSON.parse(abi))
-        .deploy({data:'0x'+bytecode,arguments:argumentsArray})
-        .send({from:address});
-    return contract;
+export const deploy = async (abi, bytecode, address, privateKey, argumentsArray) => {
+
+    let contract = await new web3.eth.Contract(abi);
+    let contractTx;
+    if (!argumentsArray) {
+        contractTx = contract.deploy({data: '0x' + bytecode})
+    } else {
+        try{
+            contractTx = contract.deploy({
+                data: '0x' + bytecode,
+                arguments:argumentsArray
+            })
+        }catch (err) {
+            console.log(err)
+        }
+    }
+    const createTransaction = await web3.eth.accounts.signTransaction(
+        {
+            from: address,
+            data: contractTx.encodeABI(),
+            gas: await contractTx.estimateGas(),
+        },
+        privateKey
+    );
+    const createReceipt = await web3.eth.sendSignedTransaction(
+        createTransaction.rawTransaction
+    );
+    console.log(`Contract deployed at address ${createReceipt.contractAddress}`);
+    return createReceipt;
+
 };
 
 
@@ -81,6 +106,5 @@ export const deploy = async (abi, bytecode, argumentsArray, address)=>{
     // const  data = await signAndSendTransaction("0x144eb72270820c35c3e4c400beb4a94acbaa9fbe", toWei(5).toString(), "21000", "469e3bf658daf03f5f661db7ae7ecee8f50b9966d588a1c784b602fabea8659d")
     // console.log("transaction:",data)
     // console.log("recovered",await web3.eth.getTransactionReceipt(data.receipt.transactionHash));
-
     // console.log("test results:",await sendTransaction("0xb19484680E1b8B0A85Ce713A85161e514Ef5fC7C","0x32d31e8060f7a1255226988b1f522da0112ac59f","1000"))
 })();
