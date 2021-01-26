@@ -1,12 +1,13 @@
 import {issueConfirmEmailToken} from "../serializers";
+import {FRONTEND_URL} from "../config";
 const {User} = require('../models');
 
 const forgetPasswordUrl=async(user)=>{
     const token = await issueConfirmEmailToken(user);
     await User.findByIdAndUpdate(user.id,{$set:{resetPasswordToken:token}},{new: true});
-    return `http://localhost:3000/user/reset-password/${token}`;
+    return `${FRONTEND_URL}/user/reset-password/${token}`;
 }
-const forgetPasswordBody = async()=>{
+const forgetPasswordBody = async(link)=>{
     return `<div style=" width: 509px;
     margin: 0 auto;
     padding: 30px;
@@ -26,14 +27,14 @@ const forgetPasswordBody = async()=>{
 \t <h6 style=" word-spacing: 1px;
     font-size: 12px;
     font-weight: 700;">Need to reset your password? No problem! Just click the button<br>below and you'll be on your way. If you didnot make this request, please ignore this email</h6>
-\t <button style="\tpadding: 11px;
+\t <a  href="${link}"style="\tpadding: 11px;
     border: none;
     width: 410px;
     height: 41px;
     margin-top: 18px;
     border-radius:20px;
 \tbackground: #5754AB;color: white;
-    font-size: 14px;  font-weight: 700;">Reset your password</button>
+    font-size: 14px;  font-weight: 700;">Reset your password</a>
 \t </div>
      <div style="  text-align: center;
     margin-top: 29px;">

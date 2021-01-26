@@ -20,7 +20,7 @@ const userQuery = gql`
         confirmEmail(token: String!): Boolean!,
         forgetPassword(email: String!): Boolean!,
         resetPassword(token: String!, password:String!): Boolean!,
-        changePassword(token: String!):User,
+        changePassword(Password:String!, newPassword:String!):Boolean!,
         enable2FA:User @isAuth,
         disable2FA:Boolean! @isAuth,
         addUser(

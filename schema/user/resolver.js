@@ -105,7 +105,7 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await emailConfirmationUrl(userEmail);
-                let emailHtml = await emailConfirmationBody(user.fullName);
+                let emailHtml = await emailConfirmationBody(user.fullName, emailLink);
                 await sendEmail(user.email, emailLink, emailHtml)
                 throw new ApolloError("Email Not Confirmed", '403');
             } else {
@@ -258,7 +258,7 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await forgetPasswordUrl(userEmail);
-                let emailHtml = await forgetPasswordBody();
+                let emailHtml = await forgetPasswordBody(emailLink);
                 return await sendEmail(email, emailLink, emailHtml);
             }
 
@@ -464,6 +464,36 @@ const resolvers = {
             }
         },
 
+        changePassword:async (_, {password,newPassword},{user,User}) => {
+            try{
+                if(!user){
+                    return new AuthenticationError("Authentication Must Be Provided")
+                }
+                await PasswordRules.validate({password}, {abortEarly: false});
+                await PasswordRules.validate({newPassword}, {abortEarly: false});
+                const passwordHash = await hash(password, 10);
+
+                if (passwordHash === user.password) {
+                    try {
+                        const passwordHash = await hash(newPassword, 10);
+                        user = await User.findByIdAndUpdate(authUser.id, {
+                            $set: {
+                                password: passwordHash}
+                        }, {new: true});
+                        if (!user) {
+                            return new ApolloError("User Not Found", '404')
+                        }
+                        return true
+                    } catch (err) {
+                        return new ApolloError("Internal Server Error", '500')
+                    }
+                }
+
+            }catch(e){
+                throw new ApolloError("Internal Server Error", '500')
+            }
+        },
+
         registerUser: async (_, {newUser}, {User}) => {
             try {
                 let {
@@ -515,7 +545,7 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailstr);
                 let emailLink = await emailConfirmationUrl(userEmail);
-                let emailHtml = await emailConfirmationBody(result.fullName);
+                let emailHtml = await emailConfirmationBody(result.fullName,emailLink);
                 await sendEmail(result.email, emailLink, emailHtml);
 
                 result = await serializeUser(result);
