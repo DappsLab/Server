@@ -464,19 +464,22 @@ const resolvers = {
             }
         },
 
-        changePassword:async (_, {password,newPassword},{user,User}) => {
+        changePassword:async (_, {password, newPassword},{user,User}) => {
+            await PasswordRules.validate({password}, {abortEarly: false})
+            let backup = password;
+            password = newPassword;
+            await PasswordRules.validate({password}, {abortEarly: false});
+            password = backup;
             try{
                 if(!user){
                     return new AuthenticationError("Authentication Must Be Provided")
                 }
-                await PasswordRules.validate({password}, {abortEarly: false});
-                await PasswordRules.validate({newPassword}, {abortEarly: false});
-                const passwordHash = await hash(password, 10);
-
-                if (passwordHash === user.password) {
+                console.log("hi2")
+                if (await compare(password,user.password)) {
+                    console.log("hi3")
                     try {
                         const passwordHash = await hash(newPassword, 10);
-                        user = await User.findByIdAndUpdate(authUser.id, {
+                        user = await User.findByIdAndUpdate(user.id, {
                             $set: {
                                 password: passwordHash}
                         }, {new: true});
@@ -487,6 +490,8 @@ const resolvers = {
                     } catch (err) {
                         return new ApolloError("Internal Server Error", '500')
                     }
+                }else{
+                    return new ApolloError("Invalid Password", 403)
                 }
 
             }catch(e){

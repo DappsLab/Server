@@ -79,6 +79,9 @@ const server = new ApolloServer({
             return new Error('Authentication Must Be Provided');
         }else if (err.message.startsWith("Database Error")) {
             return new Error('Database Error');
+        }else if (err.extensions.exception.name === 'ValidationError') {
+            console.log("validation Error",err.extensions.exception.errors)
+            return new Error(err.extensions.exception.errors);
         }else if (err.originalError instanceof ApolloError) {
             return err;
         } else{
