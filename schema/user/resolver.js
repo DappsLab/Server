@@ -30,7 +30,7 @@ import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConf
 import {forgetPasswordUrl, forgetPasswordBody} from "../../utils/forgetPasswordUrl";
 import speakeasy from "speakeasy";
 import qrcode from "qrcode";
-import {toEth, getBalance, airDrop} from "../../helpers/Web3Wrapper";
+import {toEth, getBalance, airDrop, toWei, signAndSendTransaction} from "../../helpers/Web3Wrapper";
 import {test_Request5DAppCoin, test_getBalance} from "../../helpers/TestWeb3Wrapper";
 
 
@@ -40,6 +40,7 @@ let fetchData = () => {
 let fetchBalance = async (id) => {
     let user = await User.findOne({"_id": id})
     user.balance = toEth(await getBalance(user.address))
+    console.log("user balance:",user.balance)
     let x;
     for (x of user.testAddress) {
         x.balance = toEth(await test_getBalance(x.address))
@@ -521,15 +522,29 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500')
             }
         },
-
-        registerUser: async (_, {newUser}, {User}) => {
+        transferBalance:async(_,{account, amount},{user, User})=>{
+            if(!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
             try {
-                let {
-                    email,
-                    userName,
-                } = newUser;
+                if(await getBalance(user.address)>= toWei(amount))
+                console.log(await signAndSendTransaction(account, toWei(amount).toString(),'21000',user.wallet.privateKey));
+                return true
+            }catch(e){
+                throw new ApolloError("Internal Server Error", 500)
+            }
+        },
+        registerUser: async (_, {newUser}, {User}) => {
+            let {
+                email,
+                userName,
+            } = newUser;
+
+            await UserRegisterationRules.validate(newUser, {abortEarly: false});
+
+            try {
+
                 // Validate Incoming New User Arguments
-                await UserRegisterationRules.validate(newUser, {abortEarly: false});
                 // Check if the Username is taken
                 let user = await User.findOne({
                     userName
@@ -563,8 +578,8 @@ const resolvers = {
 
                 //airDrop
                 if (master.airDropUsersCount < 100) {
-                    console.log("inside airDrop")
-                    await airDrop(user.address, "100")
+                    console.log("inside")
+                    await airDrop(user.address,toWei(100).toString())
                     master.airDropUsersCount = master.airDropUsersCount + 1;
                     console.log("counts:",master.airDropUsersCount)
                 }

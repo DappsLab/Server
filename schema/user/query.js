@@ -22,6 +22,7 @@ const userQuery = gql`
         resetPassword(token: String!, password:String!): Boolean!,
         changePassword(password:String!, newPassword:String!):Boolean!,
         enable2FA:User @isAuth,
+        transferBalance(account: String!, amount:String!):Boolean!,
         disable2FA:Boolean! @isAuth,
         blockUser(id:ID!):Boolean!
         addUser(
