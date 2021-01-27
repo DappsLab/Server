@@ -41,7 +41,7 @@ build/Release
 
 # Dependency directories
 .idea/
-.idea
+.idea/workspace.xml
 
 node_modules/
 #uploads/

@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f8aa19a-76c2-43cf-a5be-edc7b0ab8382" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Server.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/mainNetwork.js" beforeDir="false" afterPath="$PROJECT_DIR$/network/mainNetwork.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/testNetwork.js" beforeDir="false" afterPath="$PROJECT_DIR$/network/testNetwork.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +110,7 @@
       <workItem from="1611681454843" duration="243000" />
       <workItem from="1611688722258" duration="1775000" />
       <workItem from="1611740472424" duration="6811000" />
-      <workItem from="1611757156313" duration="184000" />
+      <workItem from="1611757156313" duration="515000" />
     </task>
     <servers />
   </component>
