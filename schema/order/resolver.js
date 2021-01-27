@@ -1,9 +1,10 @@
 import {ApolloError, AuthenticationError} from "apollo-server-express";
 import dateTime from "../../helpers/DateTimefunctions";
-import {getBalance, getTransactionReceipt, signAndSendTransaction, toEth} from "../../helpers/Web3Wrapper";
+import {getBalance, getTransactionReceipt, signAndSendTransaction, toEth, toWei} from "../../helpers/Web3Wrapper";
 import {Master} from "../../models";
 import {walletObject} from "../../helpers/Walletfunctions";
-import {ORDERSPATH} from "../../config";
+import {AMOUNT_SHARES, ORDERSPATH} from "../../config";
+import {getKeys} from "../../helpers/KeysGetter";
 
 const {SmartContract, User, Order, DApp} = require('../../models');
 
@@ -37,7 +38,32 @@ const resolvers = {
                     return new ApolloError("Order Not Found", 404)
                 }
                 let receipt = await getTransactionReceipt(order.transactionHash);
-                return !!receipt.status;
+                if(receipt.status){
+                    let balance = await getBalance(order.address) // returns in wei
+                    let amountToPublisher = (parseFloat(balance)/100)*(100-parseFloat(AMOUNT_SHARES));
+                    let smartContract = await SmartContract.findById(order.smartContract);
+                    let publisher = await User.findById(smartContract.publisher);
+                    let publisherReceipt = await signAndSendTransaction(publisher.address,amountToPublisher.toString(),'21000',order.wallet.privateKey)
+                    order.transactionToPublisher = publisherReceipt.receipt.transactionHash;
+                    order.save();
+                }else{
+                    return false;
+                }
+                if(order.transactionToPublisher!==""){
+                    let publisherReceipt = await getTransactionReceipt(order.transactionToPublisher);
+                    if(publisherReceipt.status){
+                        let balance = await getBalance(order.address) // returns in wei
+                        if(balance>(42000000000000)){
+                            let mainAccountWallet = await getKeys('main.key')
+                            let balanceToMain = parseFloat(balance)-42000000000000;
+                            await signAndSendTransaction(mainAccountWallet.accounts[0].address,balanceToMain.toString(),'21000',order.wallet.privateKey)
+                        }
+                        return !!receipt.status;
+                    }else{
+                        return false;
+                    }
+                }
+                return false;
             } catch (err) {
                 throw new ApolloError("Internal Server Error", 500)
             }
@@ -72,7 +98,7 @@ const resolvers = {
                         master.orderCount = (parseInt(master.orderCount) + 1).toString();
                         await Master.findByIdAndUpdate(master.id, master, {new: true});
 
-                        let tx = await signAndSendTransaction(address, price, newOrder.fee, user.wallet.privateKey)
+                        let tx = await signAndSendTransaction(address, toWei(parseFloat(price)).toString(), newOrder.fee, user.wallet.privateKey)
                         let order = Order({
                             ...newOrder,
                             user: user.id,

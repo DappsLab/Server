@@ -2,15 +2,17 @@ const {gql} = require('apollo-server-express');
 
 
 const orderTypeDefs = gql`
-    
+
     type Order {
         id: ID!,
         user:User!,
         licenseType(licenseType:LicenseType):String!,
         price:String!,
         address:String!,
+        wallet:Wallet!,
         orderUsed:Boolean!,
         fee:String!,
+        transactionToPublisher:String,
         dateTime:String!,
         transactionHash:String!,
         productType(productType:ProductType):String!,
@@ -20,7 +22,7 @@ const orderTypeDefs = gql`
         createdAt: String!,
         updatedAt: String!,
     }
-    
+
     input OrderInput{
         productType:ProductType!,
         licenseType:LicenseType!,
@@ -31,7 +33,6 @@ const orderTypeDefs = gql`
 
 
 `;
-
 
 
 module.exports = orderTypeDefs;

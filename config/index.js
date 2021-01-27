@@ -13,6 +13,7 @@ export const {
     PORT,
     IN_PROD = PROD === 'prod',
     MNEMONIC,
+    AMOUNT_SHARES,
     USERSPATH,
     ORDERSPATH,
     TESTSPATH,

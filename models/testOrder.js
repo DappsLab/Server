@@ -18,6 +18,10 @@ const testOrderSchema = new Schema({
         type:Boolean,
         default:false
     },
+    transactionToPublisher:{
+        type:String,
+        default:""
+    },
     smartContract:{
         ref: 'smartcontracts',
         type: Schema.Types.ObjectId,

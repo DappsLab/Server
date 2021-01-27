@@ -15,7 +15,7 @@ const enumsTypeDefs = gql`
         USER
         DEVELOPER
     }
-
+    
     enum Category {
         DOCUMENTS
         ESCROW
@@ -50,6 +50,11 @@ const enumsTypeDefs = gql`
     type MessageResponse {
         message: String!
         success: Boolean
+    },
+
+    type Wallet{
+        privateKey:String,
+        publicKey:String,
     },
     
 `;

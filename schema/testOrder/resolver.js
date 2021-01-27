@@ -11,6 +11,8 @@ import {Master} from "../../models";
 import {walletObject} from "../../helpers/Walletfunctions";
 import {TESTORDERSPATH} from "../../config";
 import {find} from "lodash";
+import {toWei} from "../../helpers/Web3Wrapper";
+import {getKeys} from "../../helpers/KeysGetter";
 
 const {SmartContract, User, TestOrder} = require('../../models');
 
@@ -28,7 +30,7 @@ const resolvers = {
             return SmartContract.findOne({"_id": parent.smartContract})
         },
         testAddress: async (parent) => {
-            let response = await User.findById( parent.user)
+            let response = await User.findById(parent.user)
             let testAddress = find(response.testAddress, {'_id': parent.testAddress});
             return testAddress;
         },
@@ -46,13 +48,27 @@ const resolvers = {
             }
             try {
                 let order = await TestOrder.findById(id);
-                if(!order) {
-                    return new ApolloError("TestOrder Not Found", '404')
+                if (!order) {
+                    return new ApolloError("Order Not Found", 404)
                 }
+
                 let receipt = await test_getTransactionReceipt(order.transactionHash);
-                return !!receipt.status;
-            }catch (err) {
-                return new ApolloError("Internal Server Error",'500')
+                if (receipt.status) {
+                    console.log("inside:",receipt.status)
+                    let balance = await test_getBalance(order.address) // returns in wei
+                    if (balance > (42000000000000)) {
+                        let mainAccountWallet = await getKeys('test.key')
+                        let balanceToMain = parseFloat(balance) - 42000000000000;
+                        let publisherReceipt = await test_signAndSendTransaction(mainAccountWallet.accounts[0].address, balanceToMain.toString(), '21000', order.wallet.privateKey)
+                        order.transactionToPublisher = publisherReceipt.receipt.transactionHash;
+                        order.save();
+                    }
+                    return !!receipt.status;
+                } else {
+                    return false;
+                }
+            } catch (err) {
+                throw new ApolloError("Internal Server Error", 500)
             }
         },
 
@@ -64,7 +80,7 @@ const resolvers = {
             }
             if (newOrder.productType === "SMARTCONTRACT") {
                 let smartContract = await SmartContract.findById(newOrder.smartContract);
-                if(!smartContract){
+                if (!smartContract) {
                     return new ApolloError("SmartContract Not Found", 404)
                 }
                 let price;
@@ -76,14 +92,14 @@ const resolvers = {
 
                 }
                 let testAddress = find(user.testAddress, {'id': newOrder.testAddress});
-                if(!testAddress){
+                if (!testAddress) {
                     return new ApolloError("Test Address Not Found", 404)
                 }
                 // console.log("testAddress:", testAddress)
                 let balance = await test_getBalance(testAddress.address)
                 if (test_toEth(balance) >= (parseFloat(price) + parseFloat(test_toEth(newOrder.fee)))) {
                     let master = await Master.findOne({})
-                    if(!master){
+                    if (!master) {
                         return new ApolloError("Master Not Found", 404)
                     }
                     let wallet = walletObject.hdwallet.derivePath(TESTORDERSPATH + master.testOrderCount).getWallet();
@@ -93,8 +109,7 @@ const resolvers = {
                     await Master.findByIdAndUpdate(master.id, master, {new: true});
 
                     try {
-                        let tx
-                        tx = await test_signAndSendTransaction(address, price, newOrder.fee, testAddress.wallet.privateKey)
+                        let tx = await test_signAndSendTransaction(address, toWei(parseFloat(price)).toString(), newOrder.fee, testAddress.wallet.privateKey)
 
                         let order = TestOrder({
                             ...newOrder,

@@ -26,6 +26,10 @@ const orderSchema = new Schema({
         privateKey: String,
         publicKey: String,
     },
+    transactionToPublisher:{
+        type:String,
+        default:""
+    },
     dApp:{
         type: Schema.Types.ObjectId,
         ref: 'dApps'

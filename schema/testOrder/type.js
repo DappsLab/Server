@@ -12,6 +12,7 @@ const testOrderTypeDefs = gql`
         price:String!,
         orderUsed:Boolean!,
         fee:String!,
+        transactionToPublisher:String,
         dateTime:String!,
         transactionHash:String!,
         productType(productType:ProductType):String!,

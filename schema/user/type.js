@@ -49,11 +49,7 @@ const userTypeDefs = gql`
         testPurchasedContracts:[TestPurchasedContract],
         purchasedDApps:[PurchasedDApp],
     }
-
-    type Wallet{
-        privateKey:String,
-        publicKey:String,
-    },
+    
     
     type Kyc {
         mobile: String,
