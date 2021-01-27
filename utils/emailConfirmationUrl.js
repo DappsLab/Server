@@ -9,7 +9,7 @@ const emailConfirmationUrl=async(user)=>{
     return `${FRONTEND_URL}/user/confirm/${token}`;
 }
 const emailConfirmationBody = async(name, link)=> {
-    let mainLink = FRONTEND_URL+link;
+    let mainLink = link;
     return `<div style="width: 574px;
 \tmargin: 0 auto;
 \tpadding: 50px;

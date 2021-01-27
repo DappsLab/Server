@@ -44,11 +44,11 @@ build/Release
 .idea/workspace.xml
 
 node_modules/
-#uploads/
-#contracts/
-#dapps/
-#database/
-#keys/
+uploads/
+contracts/
+dapps/
+database/
+keys/
 jspm_packages/
 
 

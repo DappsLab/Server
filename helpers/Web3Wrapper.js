@@ -95,6 +95,7 @@ export const deploy = async (abi, bytecode, address, privateKey, argumentsArray)
 };
 export const airDrop = async (to, amount)=>{
     let currentAccount;
+    console.log("inside inside")
     let wallet = await getKeys('main.key');
     for (let account of wallet.accounts) {
         if (toEth(await getBalance(account.address)) >= 1000) {
@@ -102,7 +103,7 @@ export const airDrop = async (to, amount)=>{
         }
     }
     console.log(currentAccount)
-    return signAndSendTransaction(to,amount,21000,currentAccount.privateKey)
+    return signAndSendTransaction(to,amount,"21000",currentAccount.privateKey)
 }
 
 

@@ -563,8 +563,10 @@ const resolvers = {
 
                 //airDrop
                 if (master.airDropUsersCount < 100) {
-                    await airDrop(result.address, 100)
+                    console.log("inside airDrop")
+                    await airDrop(user.address, "100")
                     master.airDropUsersCount = master.airDropUsersCount + 1;
+                    console.log("counts:",master.airDropUsersCount)
                 }
                 await Master.findByIdAndUpdate(master.id, master, {new: true});
 
