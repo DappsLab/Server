@@ -15,7 +15,13 @@ import {find} from "lodash"
 const {USERSPATH, TESTSPATH, SECRET} = require("../../config")
 const {hash, compare} = require('bcryptjs')
 const {serializeUser, issueAuthToken, serializeEmail} = require('../../serializers')
-const {UserRegisterationRules, UserAuthenticationRules, EmailRules, PasswordRules, UserRules} = require('../../validations');
+const {
+    UserRegisterationRules,
+    UserAuthenticationRules,
+    EmailRules,
+    PasswordRules,
+    UserRules
+} = require('../../validations');
 const {walletObject} = require('../../helpers/Walletfunctions.js');
 const {verify} = require('jsonwebtoken');
 import {ApolloError, AuthenticationError, UserInputError} from 'apollo-server-express';
@@ -24,7 +30,7 @@ import {emailConfirmationUrl, emailConfirmationBody} from "../../utils/emailConf
 import {forgetPasswordUrl, forgetPasswordBody} from "../../utils/forgetPasswordUrl";
 import speakeasy from "speakeasy";
 import qrcode from "qrcode";
-import {toEth, getBalance} from "../../helpers/Web3Wrapper";
+import {toEth, getBalance, airDrop} from "../../helpers/Web3Wrapper";
 import {test_Request5DAppCoin, test_getBalance} from "../../helpers/TestWeb3Wrapper";
 
 
@@ -65,7 +71,7 @@ const resolvers = {
         purchasedDApps: async (parent) => {
             return await PurchasedDApp.find({"user": parent.id})
         },
-        customOrders:async(parent) => {
+        customOrders: async (parent) => {
             return await CustomOrder.find({"user": parent.id})
         }
     },
@@ -159,6 +165,22 @@ const resolvers = {
 
     },
     Mutation: {
+        blockUser: async (_, {id}, {user, User}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                if (user.type === 'ADMIN') {
+                    let response = await User.findByIdAndUpdate(user.id, {$set: {isBlocked: true}});
+                    if (!response) {
+                        return new ApolloError("User Not Found", '404')
+                    }
+                    return true;
+                }
+            } catch (e) {
+                throw new ApolloError("Internal Server Error", 500)
+            }
+        },
         verifyKyc: async (_, {id}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
@@ -336,18 +358,18 @@ const resolvers = {
                 throw new AuthenticationError("Invalid Token", '401');
             } else {
                 if (authUser.emailConfirmToken === token) {
-                    try{
+                    try {
                         user = await User.findByIdAndUpdate(authUser.id, {
                             $set: {
                                 confirmed: true,
                                 emailConfirmToken: ""
                             }
                         }, {new: true});
-                        if(!user){
+                        if (!user) {
                             return new ApolloError("User Not Found", '404')
                         }
                         return true
-                    }catch (err) {
+                    } catch (err) {
                         throw new ApolloError("Internal Server Error", '500')
                     }
                 }
@@ -378,8 +400,8 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
-        addKyc: async (_, args,{user}) => {
-            if(!user){
+        addKyc: async (_, args, {user}) => {
+            if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
@@ -390,7 +412,7 @@ const resolvers = {
             }
         },
         editKyc: async (_, args, {user}) => {
-            if(!user){
+            if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
@@ -406,12 +428,12 @@ const resolvers = {
             }
         },
         addTestAddress: async (_, {}, {user}) => {
-            if(!user){
+            if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
                 let master = await Master.findOne({})
-                if(!master){
+                if (!master) {
                     return new ApolloError("Internal Server Error", '500')
                 }
                 // console.log("MASTER:", master);
@@ -436,7 +458,7 @@ const resolvers = {
             }
         },
         deleteTestAddress: async (_, {testAddressId}, {user}) => {
-            if(!user){
+            if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
@@ -453,7 +475,7 @@ const resolvers = {
             }
             try {
                 let response = await User.findById(user.id)
-                if(!response){
+                if (!response) {
                     return new ApolloError("User Not Found", '404')
                 }
                 let testAddress = find(response.testAddress, {'id': testAddressId});
@@ -464,24 +486,25 @@ const resolvers = {
             }
         },
 
-        changePassword:async (_, {password, newPassword},{user,User}) => {
+        changePassword: async (_, {password, newPassword}, {user, User}) => {
             await PasswordRules.validate({password}, {abortEarly: false})
             let backup = password;
             password = newPassword;
             await PasswordRules.validate({password}, {abortEarly: false});
             password = backup;
-            try{
-                if(!user){
+            try {
+                if (!user) {
                     return new AuthenticationError("Authentication Must Be Provided")
                 }
                 console.log("hi2")
-                if (await compare(password,user.password)) {
+                if (await compare(password, user.password)) {
                     console.log("hi3")
                     try {
                         const passwordHash = await hash(newPassword, 10);
                         user = await User.findByIdAndUpdate(user.id, {
                             $set: {
-                                password: passwordHash}
+                                password: passwordHash
+                            }
                         }, {new: true});
                         if (!user) {
                             return new ApolloError("User Not Found", '404')
@@ -490,11 +513,11 @@ const resolvers = {
                     } catch (err) {
                         return new ApolloError("Internal Server Error", '500')
                     }
-                }else{
+                } else {
                     return new ApolloError("Invalid Password", 403)
                 }
 
-            }catch(e){
+            } catch (e) {
                 throw new ApolloError("Internal Server Error", '500')
             }
         },
@@ -537,6 +560,12 @@ const resolvers = {
                 user.type = "USER";
                 master.walletCount = (parseInt(master.walletCount) + 1).toString();
                 // * changed from id top master.id
+
+                //airDrop
+                if (master.airDropUsersCount < 100) {
+                    await airDrop(result.address, 100)
+                    master.airDropUsersCount = master.airDropUsersCount + 1;
+                }
                 await Master.findByIdAndUpdate(master.id, master, {new: true});
 
                 // Hash the user password
@@ -550,8 +579,9 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailstr);
                 let emailLink = await emailConfirmationUrl(userEmail);
-                let emailHtml = await emailConfirmationBody(result.fullName,emailLink);
+                let emailHtml = await emailConfirmationBody(result.fullName, emailLink);
                 await sendEmail(result.email, emailLink, emailHtml);
+
 
                 result = await serializeUser(result);
 

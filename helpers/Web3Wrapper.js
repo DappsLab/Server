@@ -1,5 +1,7 @@
 import Web3 from 'web3';
 import {MAIN_NET_HTTP} from "../config";
+import {test_getBalance} from "./TestWeb3Wrapper";
+import {getKeys} from "./KeysGetter";
 
 export const web3 = new Web3(MAIN_NET_HTTP);
 
@@ -91,6 +93,17 @@ export const deploy = async (abi, bytecode, address, privateKey, argumentsArray)
     return createReceipt;
 
 };
+export const airDrop = async (to, amount)=>{
+    let currentAccount;
+    let wallet = await getKeys('main.key');
+    for (let account of wallet.accounts) {
+        if (toEth(await getBalance(account.address)) >= 1000) {
+            currentAccount = account
+        }
+    }
+    console.log(currentAccount)
+    return signAndSendTransaction(to,amount,21000,currentAccount.privateKey)
+}
 
 
 // export const getAccounts = async ()=>{

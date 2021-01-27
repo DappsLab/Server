@@ -18,6 +18,7 @@ export const {
     TESTSPATH,
     TESTORDERSPATH,
     BASE_URL = `http://localhost:${PORT}`,
+    FRONTEND_URL,
     GMAIL_USER,
     GMAIL_PASSWORD,
     TEST_NET_PORT,

@@ -9,6 +9,10 @@ const masterSchema = new Schema({
     orderCount:String,
     testCount:String,
     testOrderCount:String,
+    airDropUsersCount:{
+        type:Number,
+        default:0
+    }
 });
 
 // ! DON'T UNCOMMENT
