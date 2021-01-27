@@ -30,6 +30,16 @@ const resolvers = {
                 throw new ApolloError("UnAuthorized User", 403)
             }
         },
+        searchVerifiedCustomOrders: async (_, {}, {user})=> {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            if (user.type === "DEVELOPER") {
+                return await CustomOrder.find({status: "VERIFIED"})
+            } else {
+                throw new ApolloError("UnAuthorized User", 403)
+            }
+        },
     },
     Mutation: {
         createCustomOrder: async (_, {newCustomOrder}, {CustomOrder, user}) => {
@@ -50,6 +60,22 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
+        verifyCustomOrder: async (_, {id}, {user, CustomOrder}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                if (user.type === 'ADMIN') {
+                    let customOrder = CustomOrder.findById(id);
+                    customOrder.status = 'VERIFIED'
+                    customOrder.save();
+                    return true
+                }
+                return false;
+            } catch (e) {
+                throw new ApolloError("Internal Server Error", 500)
+            }
+        }
     }
 }
 

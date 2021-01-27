@@ -6,6 +6,7 @@ const customOrderQuery = gql`
         customOrders:[CustomOrder]!,
         customOrderById(id:ID!):CustomOrder,
         searchPendingCustomOrders:[CustomOrder] @isAuth
+        searchVerifiedCustomOrders:[CustomOrder] @isAuth
     }
     extend type Mutation {
         createCustomOrder(newCustomOrder:CustomOrderInput!):CustomOrder! @isAuth,
