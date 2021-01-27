@@ -40,13 +40,17 @@ bower_components
 build/Release
 
 # Dependency directories
+.idea/
+.idea
+
 node_modules/
-uploads/
-contracts/
-dapps/
+#uploads/
+#contracts/
+#dapps/
+#database/
+#keys/
 jspm_packages/
-database/
-keys/
+
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
@@ -101,7 +105,6 @@ dist
 
 # Serverless directories
 .serverless/
-.idea/
 # FuseBox cache
 .fusebox/
 
