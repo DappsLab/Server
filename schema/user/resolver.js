@@ -182,11 +182,15 @@ const resolvers = {
             }
             try {
                 if (user.type === 'ADMIN') {
-                    let response = await User.findByIdAndUpdate(id, {isBlocked: true});
-                    if (!response) {
-                        return new ApolloError("User Not Found", '404')
+                    let blockingUser = User.findById(id);
+                    if(blockingUser.type !== 'ADMIN') {
+                        let response = await User.findByIdAndUpdate(id, {isBlocked: true});
+                        if (!response) {
+                            return new ApolloError("User Not Found", '404')
+                        }
+                        return true;
                     }
-                    return true;
+                    return new ApolloError("Admin Cannot be Blocked", 403)
                 }
             } catch (e) {
                 throw new ApolloError("Internal Server Error", 500)

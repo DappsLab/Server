@@ -4,19 +4,19 @@ const {UnBlockRequest, User} = require('../../models');
 
 
 let fetchData = async() => {
-    return  UnBlockRequest.find();
+    return await UnBlockRequest.find();
 }
 
 const resolvers = {
     UnBlockRequest:{
         user:async (parent)=>{
-            return User.findOne({"_id":parent.user})
+            return await User.findOne({"_id":parent.user})
         },
     },
 
     Query: {
         unBlockRequests:async(_)=>{
-            return fetchData();
+            return await fetchData();
         },
 
     },
