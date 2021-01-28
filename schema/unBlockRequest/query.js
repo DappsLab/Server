@@ -8,7 +8,7 @@ const unBlockRequestQuery = gql`
     }
     extend type Mutation {
         createUnBlockRequest(description:String!):UnBlockRequest! @isAuth,
-        cancelUnBlockRequest(id:ID!):Boolean! @isAuth,
+        unBlockUser(id:ID!):Boolean! @isAuth,
     }
 
 `;
