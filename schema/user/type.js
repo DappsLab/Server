@@ -20,6 +20,7 @@ const userTypeDefs = gql`
     
     type User {
         id: ID!,
+        isBlocked:Boolean!,
         fullName: String!,
         userName: String!,
         email: String!,
