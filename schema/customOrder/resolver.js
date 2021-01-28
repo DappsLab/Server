@@ -35,7 +35,7 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             if (user.type === "DEVELOPER") {
-                return await CustomOrder.find({status: "VERIFIED"})
+                return await CustomOrder.find({status: "VERIFIED","user":{$ne:user.id}})
             } else {
                 throw new ApolloError("UnAuthorized User", 403)
             }
