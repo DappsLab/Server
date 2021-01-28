@@ -182,7 +182,7 @@ const resolvers = {
             }
             try {
                 if (user.type === 'ADMIN') {
-                    let response = await User.findByIdAndUpdate(user.id, {$set: {isBlocked: true}});
+                    let response = await User.findByIdAndUpdate(id, {isBlocked: true});
                     if (!response) {
                         return new ApolloError("User Not Found", '404')
                     }
