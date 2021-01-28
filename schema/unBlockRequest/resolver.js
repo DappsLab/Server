@@ -26,12 +26,8 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             if(user.type==='ADMIN'){
-                let unBlockRequest = UnBlockRequest.findById(id);
-                unBlockRequest.unBlocked=true;
-                let blockedUser = User.findById(unBlockRequest.user);
-                blockedUser.isBlocked=false;
-                blockedUser.save();
-                unBlockRequest.save();
+                let unBlockRequest = await UnBlockRequest.findByIdAndUpdate(id,{'unBlocked':true},{new: true})
+                await User.findByIdAndUpdate(unBlockRequest.user,{'isBlocked':false});
                 return true
             }
             return false
