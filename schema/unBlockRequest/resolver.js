@@ -10,7 +10,7 @@ let fetchData = async() => {
 const resolvers = {
     UnBlockRequest:{
         user:async (parent)=>{
-            return UnBlockRequest.findOne({"_id":parent.user})
+            return User.findOne({"_id":parent.user})
         },
     },
 
