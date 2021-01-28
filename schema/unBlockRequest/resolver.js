@@ -3,8 +3,8 @@ import {AuthenticationError, ApolloError} from "apollo-server-express"
 const {UnBlockRequest, User} = require('../../models');
 
 
-let fetchData = () => {
-    return UnBlockRequest.find();
+let fetchData = async() => {
+    return  UnBlockRequest.find();
 }
 
 const resolvers = {
