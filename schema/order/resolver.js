@@ -32,38 +32,65 @@ const resolvers = {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
+
             try {
                 let order = await Order.findById(id);
                 if (!order) {
                     return new ApolloError("Order Not Found", 404)
                 }
-                let receipt = await getTransactionReceipt(order.transactionHash);
-                if(receipt.status){
-                    let balance = await getBalance(order.address) // returns in wei
-                    let amountToPublisher = (parseFloat(balance)/100)*(100-parseFloat(AMOUNT_SHARES));
-                    let smartContract = await SmartContract.findById(order.smartContract);
-                    let publisher = await User.findById(smartContract.publisher);
-                    let publisherReceipt = await signAndSendTransaction(publisher.address,amountToPublisher.toString(),'21000',order.wallet.privateKey)
-                    order.transactionToPublisher = publisherReceipt.receipt.transactionHash;
-                    order.save();
+                if(order.productType==="SMARTCONTRACT"){
+                    let receipt = await getTransactionReceipt(order.transactionHash);
+                    if(receipt.status&&order.transactionToPublisher===""){
+                        let balance = await getBalance(order.address) // returns in wei
+                        let amountToPublisher = (parseFloat(balance)/100)*(100-parseFloat(AMOUNT_SHARES));
+                        let smartContract = await SmartContract.findById(order.smartContract);
+                        let publisher = await User.findById(smartContract.publisher);
+                        let publisherReceipt = await signAndSendTransaction(publisher.address,amountToPublisher.toString(),'21000',order.wallet.privateKey)
+                        order.transactionToPublisher = publisherReceipt.receipt.transactionHash;
+                        order.save();
+                    }
+                    if(order.transactionToPublisher!==""){
+                        let publisherReceipt = await getTransactionReceipt(order.transactionToPublisher);
+                        if(publisherReceipt.status){
+                            let balance = await getBalance(order.address) // returns in wei
+                            if(balance>(42000000000000)){
+                                let mainAccountWallet = await getKeys('main.key')
+                                let balanceToMain = parseFloat(balance)-42000000000000;
+                                await signAndSendTransaction(mainAccountWallet.accounts[0].address,balanceToMain.toString(),'21000',order.wallet.privateKey)
+                            }
+                            return !!receipt.status;
+                        }else{
+                            return false;
+                        }
+                    }
+                    return false;
                 }else{
+                    let receipt = await getTransactionReceipt(order.transactionHash);
+                    if(receipt.status&&order.transactionToPublisher===""){
+                        let balance = await getBalance(order.address) // returns in wei
+                        let amountToPublisher = (parseFloat(balance)/100)*(100-parseFloat(AMOUNT_SHARES));
+                        let dApp = await DApp.findById(order.dApp);
+                        let publisher = await User.findById(dApp.publisher);
+                        let publisherReceipt = await signAndSendTransaction(publisher.address,amountToPublisher.toString(),'21000',order.wallet.privateKey)
+                        order.transactionToPublisher = publisherReceipt.receipt.transactionHash;
+                        order.save();
+                    }
+                    if(order.transactionToPublisher!==""){
+                        let publisherReceipt = await getTransactionReceipt(order.transactionToPublisher);
+                        if(publisherReceipt.status){
+                            let balance = await getBalance(order.address) // returns in wei
+                            if(balance>(42000000000000)){
+                                let mainAccountWallet = await getKeys('main.key')
+                                let balanceToMain = parseFloat(balance)-42000000000000;
+                                await signAndSendTransaction(mainAccountWallet.accounts[0].address,balanceToMain.toString(),'21000',order.wallet.privateKey)
+                            }
+                            return !!receipt.status;
+                        }else{
+                            return false;
+                        }
+                    }
                     return false;
                 }
-                if(order.transactionToPublisher!==""){
-                    let publisherReceipt = await getTransactionReceipt(order.transactionToPublisher);
-                    if(publisherReceipt.status){
-                        let balance = await getBalance(order.address) // returns in wei
-                        if(balance>(42000000000000)){
-                            let mainAccountWallet = await getKeys('main.key')
-                            let balanceToMain = parseFloat(balance)-42000000000000;
-                            await signAndSendTransaction(mainAccountWallet.accounts[0].address,balanceToMain.toString(),'21000',order.wallet.privateKey)
-                        }
-                        return !!receipt.status;
-                    }else{
-                        return false;
-                    }
-                }
-                return false;
             } catch (err) {
                 throw new ApolloError("Internal Server Error", 500)
             }
@@ -134,7 +161,7 @@ const resolvers = {
                         let address = wallet.getAddressString();
                         master.orderCount = (parseInt(master.orderCount) + 1).toString();
                         await Master.findByIdAndUpdate(master.id, master, {new: true});
-                        let tx = await signAndSendTransaction(address, price, newOrder.fee, user.wallet.privateKey)
+                        let tx = await signAndSendTransaction(address, toWei(price).toString(), newOrder.fee, user.wallet.privateKey)
                         let order = Order({
                             ...newOrder,
                             user: user.id,
