@@ -157,6 +157,16 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
+        searchUnBlockedUsers:async (_, {},{user,User})=>{
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            if (user.type === "ADMIN") {
+                return await User.find({"isBlocked": false, "confirmed":true});
+            } else {
+                throw new AuthenticationError("Unauthorised User", '401');
+            }
+        },
         authUser: async (_, __, {
             req: {
                 user

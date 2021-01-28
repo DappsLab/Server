@@ -10,6 +10,7 @@ const userQuery = gql`
 #        getBalance:User! @isAuth,
         userById(id:ID!):User,
         searchPendingKyc:[User] @isAuth,
+        searchUnBlockedUsers: [User] @isAuth
     },
     
     extend type Mutation {
