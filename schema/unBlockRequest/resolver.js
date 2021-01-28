@@ -27,7 +27,9 @@ const resolvers = {
             }
             if(user.type==='ADMIN'){
                 let unBlockRequest = await UnBlockRequest.findByIdAndUpdate(id,{'unBlocked':true},{new: true})
-                await User.findByIdAndUpdate(unBlockRequest.user,{'isBlocked':false});
+                console.log("unBlockRequest",unBlockRequest)
+                let data = await User.findByIdAndUpdate(unBlockRequest.user,{'isBlocked':false});
+                console.log("data",data)
                 return true
             }
             return false
