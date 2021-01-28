@@ -1,17 +1,18 @@
 const {gql} = require('apollo-server-express');
 
 
-const testPurchasedContractQuery = gql`
+const unBlockRequestQuery = gql`
     extend type Query {
-        testPurchasedContracts:[TestPurchasedContract],
-        testPurchasedContractById(id:ID!):TestPurchasedContract,
+        unBlockRequests:[UnBlockRequest],
+        unBlockRequestById(id:ID!):UnBlockRequest,
     }
     extend type Mutation {
-        testPurchaseContract(newPurchase:TestPurchasedContractInput):TestPurchasedContract! @isAuth,
+        createUnBlockRequest(description:String!):UnBlockRequest! @isAuth,
+        cancelUnBlockRequest(id:ID!):Boolean! @isAuth,
     }
 
 `;
 
 
 
-module.exports = testPurchasedContractQuery;
+module.exports = unBlockRequestQuery;
