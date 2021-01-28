@@ -35,6 +35,8 @@ const purchasedDAppQuery = require('./purchasedDApp/query.js')
 const dAppTypeDefs = require('./dApp/type.js')
 const dAppQueryDefs = require('./dApp/query.js')
 const dAppUploaderQuery = require('./dAppUploader/query.js')
+const unBlockRequestTypeDefs = require('./unBlockRequest/type.js')
+const unBlockRequestQuery = require('./unBlockRequest/query.js')
 const enumsTypeDefs = require('./constants/enums.js')
 
 const typeDefs = [
@@ -73,6 +75,8 @@ const typeDefs = [
     dAppQueryDefs,
     purchasedDAppTypeDefs,
     purchasedDAppQuery,
+    unBlockRequestTypeDefs,
+    unBlockRequestQuery,
     dAppUploaderQuery,
 
 ];

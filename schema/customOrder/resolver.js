@@ -30,18 +30,32 @@ const resolvers = {
                 throw new ApolloError("UnAuthorized User", 403)
             }
         },
-        searchVerifiedCustomOrders: async (_, {}, {user})=> {
+        searchVerifiedCustomOrders: async (_, {}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             if (user.type === "DEVELOPER") {
-                return await CustomOrder.find({status: "VERIFIED","user":{$ne:user.id}})
+                return await CustomOrder.find({status: "VERIFIED", "user": {$ne: user.id}})
             } else {
                 throw new ApolloError("UnAuthorized User", 403)
             }
         },
     },
     Mutation: {
+        cancelCustomOrder: async (_, {id}, {user, CustomOrder}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                if (user.type === 'ADMIN') {
+                    await CustomOrder.findByIdAndUpdate(id,{$set:{'status':'REJECTED'}});
+                    return true
+                }
+                return false;
+            } catch (e) {
+                throw new ApolloError("Internal Server Error", 500)
+            }
+        },
         createCustomOrder: async (_, {newCustomOrder}, {CustomOrder, user}) => {
 
             let email = newCustomOrder.businessEmail
@@ -66,9 +80,7 @@ const resolvers = {
             }
             try {
                 if (user.type === 'ADMIN') {
-                    let customOrder = CustomOrder.findById(id);
-                    customOrder.status = 'VERIFIED'
-                    customOrder.save();
+                    await CustomOrder.findByIdAndUpdate(id,{$set:{'status':'VERIFIED'}});
                     return true
                 }
                 return false;
