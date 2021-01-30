@@ -12,14 +12,12 @@ const smartContractSchema = new Schema({
     unlimitedLicensePrice: String,
     source: String,
     sourceContractName: String,
-    // publisher: mongoose.ObjectId,
     publishingDateTime:String,
     compilerVersion: String,
     verified: {
         type: String,
         default:"PENDING"
     },
-    // verifiedBy: mongoose.ObjectId,
     verifiedDateTime:String,
     purchasedCounts: String,
     compiledCounts: String,

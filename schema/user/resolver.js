@@ -485,6 +485,19 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
+        createAdmin:async(_,{email},{User, user})=>{
+            await EmailRules.validate({email}, {abortEarly: false});
+
+            if(!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                await User.findOneAndUpdate({email: email},{$set: {type:"ADMIN"}});
+                return true;
+            }catch (e) {
+                return new ApolloError("Internal Server Error", 500)
+            }
+        },
         request5DAppsCoin: async (_, {testAddressId}, {user}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")

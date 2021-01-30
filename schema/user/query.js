@@ -60,6 +60,8 @@ const userQuery = gql`
             kycStatus:Status #hello
         ):User @isAuth,
         addTestAddress:User! @isAuth,
+        createAdmin(email:String!):Boolean! @isAuth,
+        addTestAddress:User! @isAuth,
         deleteTestAddress(testAddressId:ID!):User! @isAuth,
         request5DAppsCoin(testAddressId:ID!):User! @isAuth,
     }
