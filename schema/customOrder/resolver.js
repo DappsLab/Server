@@ -48,7 +48,7 @@ const resolvers = {
             }
             try {
                 if (user.type === 'ADMIN') {
-                    await CustomOrder.findByIdAndUpdate(id,{$set:{'status':'REJECTED'}});
+                    await CustomOrder.findByIdAndUpdate(id, {$set: {'status': 'REJECTED'}});
                     return true
                 }
                 return false;
@@ -61,8 +61,9 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                    await CustomOrder.findByIdAndDelete(id);
-                    return true
+                await User.findOneAndUpdate({"_id": user.id,}, {'$pull': {'customOrders': id}}, {new: true});
+                await CustomOrder.findByIdAndDelete(id);
+                return true
             } catch (e) {
                 throw new ApolloError("Internal Server Error", 500)
             }
@@ -91,7 +92,7 @@ const resolvers = {
             }
             try {
                 if (user.type === 'ADMIN') {
-                    await CustomOrder.findByIdAndUpdate(id,{$set:{'status':'VERIFIED'}});
+                    await CustomOrder.findByIdAndUpdate(id, {$set: {'status': 'VERIFIED'}});
                     return true
                 }
                 return false;
