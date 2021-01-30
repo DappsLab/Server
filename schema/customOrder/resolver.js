@@ -56,6 +56,17 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
+        deleteCustomOrder: async (_, {id}, {user, CustomOrder}) => {
+            if (!user) {
+                return new AuthenticationError("Authentication Must Be Provided")
+            }
+            try {
+                    await CustomOrder.findByIdAndDelete(id);
+                    return true
+            } catch (e) {
+                throw new ApolloError("Internal Server Error", 500)
+            }
+        },
         createCustomOrder: async (_, {newCustomOrder}, {CustomOrder, user}) => {
 
             let email = newCustomOrder.businessEmail

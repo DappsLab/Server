@@ -12,6 +12,7 @@ const customOrderQuery = gql`
         createCustomOrder(newCustomOrder:CustomOrderInput!):CustomOrder! @isAuth,
         verifyCustomOrder(id:ID!):Boolean! @isAuth
         cancelCustomOrder(id:ID!):Boolean! @isAuth
+        deleteCustomOrder(id:ID!):Boolean! @isAuth
     }
 
 `;

@@ -32,6 +32,7 @@ import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 import {toEth, getBalance, airDrop, toWei, signAndSendTransaction} from "../../helpers/Web3Wrapper";
 import {test_Request5DAppCoin, test_getBalance} from "../../helpers/TestWeb3Wrapper";
+import {isAddress} from "../../helpers/ArgumentsValidator";
 
 
 let fetchData = () => {
@@ -182,7 +183,7 @@ const resolvers = {
             }
             try {
                 if (user.type === 'ADMIN') {
-                    let blockingUser = User.findById(id);
+                    let blockingUser = await User.findById(id);
                     if(blockingUser.type !== 'ADMIN') {
                         let response = await User.findByIdAndUpdate(id, {isBlocked: true});
                         if (!response) {
@@ -541,9 +542,14 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                if(await getBalance(user.address)>= toWei(amount))
-                console.log(await signAndSendTransaction(account, toWei(amount).toString(),'21000',user.wallet.privateKey));
-                return true
+                if(await isAddress(account)){
+                    if(await getBalance(user.address)>= toWei(amount))
+                        console.log(await signAndSendTransaction(account, toWei(amount).toString(),'21000',user.wallet.privateKey));
+                    return true
+                }else{
+                    return new ApolloError("Invalid Address",403)
+                }
+
             }catch(e){
                 throw new ApolloError("Internal Server Error", 500)
             }
