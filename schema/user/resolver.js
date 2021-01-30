@@ -492,7 +492,10 @@ const resolvers = {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                await User.findOneAndUpdate({email: email},{$set: {type:"ADMIN"}});
+                let newUser = await User.findOneAndUpdate({email: email},{$set: {type:"ADMIN"}});
+                if(!newUser){
+                    return new ApolloError("User Not Found. User Must Be Registered")
+                }
                 return true;
             }catch (e) {
                 return new ApolloError("Internal Server Error", 500)
