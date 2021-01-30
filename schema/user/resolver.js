@@ -41,7 +41,7 @@ let fetchData = () => {
 let fetchBalance = async (id) => {
     let user = await User.findOne({"_id": id})
     user.balance = toEth(await getBalance(user.address))
-    console.log("user balance:",user.balance)
+    console.log("user balance:", user.balance)
     let x;
     for (x of user.testAddress) {
         x.balance = toEth(await test_getBalance(x.address))
@@ -92,6 +92,21 @@ const resolvers = {
                 throw new ApolloError(err)
             }
         },
+        getPrivateKey: async (_, {password},{user,User}) => {
+            await PasswordRules.validate({password}, {abortEarly: false})
+            try {
+                if (!user) {
+                    return new AuthenticationError("Authentication Must Be Provided")
+                }
+                let response = await User.findById(user.id)
+                if (await compare(password, response.password)) {
+                    return response;
+                }
+            }catch (e) {
+                return new ApolloError("Internal Server Error",500)
+            }
+        },
+
         userById: async (_, args) => {
             return await User.findById(args.id);
         },
@@ -158,12 +173,12 @@ const resolvers = {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
         },
-        searchUnBlockedUsers:async (_, {},{user,User})=>{
+        searchUnBlockedUsers: async (_, {}, {user, User}) => {
             if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             if (user.type === "ADMIN") {
-                return await User.find({"isBlocked": false, "confirmed":true});
+                return await User.find({"isBlocked": false, "confirmed": true});
             } else {
                 throw new AuthenticationError("Unauthorised User", '401');
             }
@@ -184,7 +199,7 @@ const resolvers = {
             try {
                 if (user.type === 'ADMIN') {
                     let blockingUser = await User.findById(id);
-                    if(blockingUser.type !== 'ADMIN') {
+                    if (blockingUser.type !== 'ADMIN') {
                         let response = await User.findByIdAndUpdate(id, {isBlocked: true});
                         if (!response) {
                             return new ApolloError("User Not Found", '404')
@@ -485,19 +500,19 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500');
             }
         },
-        createAdmin:async(_,{email},{User, user})=>{
+        createAdmin: async (_, {email}, {User, user}) => {
             await EmailRules.validate({email}, {abortEarly: false});
 
-            if(!user) {
+            if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                let newUser = await User.findOneAndUpdate({email: email},{$set: {type:"ADMIN"}});
-                if(!newUser){
+                let newUser = await User.findOneAndUpdate({email: email}, {$set: {type: "ADMIN"}});
+                if (!newUser) {
                     return new ApolloError("User Not Found. User Must Be Registered")
                 }
                 return true;
-            }catch (e) {
+            } catch (e) {
                 return new ApolloError("Internal Server Error", 500)
             }
         },
@@ -553,20 +568,20 @@ const resolvers = {
                 throw new ApolloError("Internal Server Error", '500')
             }
         },
-        transferBalance:async(_,{account, amount},{user, User})=>{
-            if(!user) {
+        transferBalance: async (_, {account, amount}, {user, User}) => {
+            if (!user) {
                 return new AuthenticationError("Authentication Must Be Provided")
             }
             try {
-                if(await isAddress(account)){
-                    if(await getBalance(user.address)>= toWei(amount))
-                        console.log(await signAndSendTransaction(account, toWei(amount).toString(),'21000',user.wallet.privateKey));
+                if (await isAddress(account)) {
+                    if (await getBalance(user.address) >= toWei(amount))
+                        console.log(await signAndSendTransaction(account, toWei(amount).toString(), '21000', user.wallet.privateKey));
                     return true
-                }else{
-                    return new ApolloError("Invalid Address",403)
+                } else {
+                    return new ApolloError("Invalid Address", 403)
                 }
 
-            }catch(e){
+            } catch (e) {
                 throw new ApolloError("Internal Server Error", 500)
             }
         },
@@ -615,9 +630,9 @@ const resolvers = {
                 //airDrop
                 if (master.airDropUsersCount < 100) {
                     console.log("inside")
-                    await airDrop(user.address,toWei(100).toString())
+                    await airDrop(user.address, toWei(100).toString())
                     master.airDropUsersCount = master.airDropUsersCount + 1;
-                    console.log("counts:",master.airDropUsersCount)
+                    console.log("counts:", master.airDropUsersCount)
                 }
                 await Master.findByIdAndUpdate(master.id, master, {new: true});
 
