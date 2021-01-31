@@ -7,7 +7,7 @@ const forgetPasswordUrl=async(user)=>{
     await User.findByIdAndUpdate(user.id,{$set:{resetPasswordToken:token}},{new: true});
     return `${FRONTEND_URL}/user/reset-password/${token}`;
 }
-const forgetPasswordBody = async(link)=>{
+const forgetPasswordBody = async(name, link)=>{
     return `<div style=" width: 509px;
     margin: 0 auto;
     padding: 30px;
@@ -26,7 +26,7 @@ const forgetPasswordBody = async(link)=>{
     opacity: 0.1;">
 \t <h6 style=" word-spacing: 1px;
     font-size: 12px;
-    font-weight: 700;">Need to reset your password? No problem! Just click the button<br>below and you'll be on your way. If you didnot make this request, please ignore this email</h6>
+    font-weight: 700;">Hi ${name} <br> Need to reset your password? No problem! Just click the button<br>below and you'll be on your way. If you didnot make this request, please ignore this email</h6>
 \t <a  href="${link}"style="\tpadding: 11px;
     border: none;
     width: 410px;

@@ -101,6 +101,8 @@ const resolvers = {
                 let response = await User.findById(user.id)
                 if (await compare(password, response.password)) {
                     return response;
+                }else{
+                    return new ApolloError("Incorrect Password", 400)
                 }
             }catch (e) {
                 return new ApolloError("Internal Server Error",500)
@@ -112,11 +114,11 @@ const resolvers = {
         },
         loginUser: async (_, {userName, password}, {User}) => {
             // Validate Incoming User Credentials
-            await UserAuthenticationRules.validate({userName, password}, {abortEarly: false});
+            await PasswordRules.validate({password}, {abortEarly: false});
             // Find the user from the database
-            let user = await User.findOne({
-                userName
-            });
+            let user = await User.findOne(
+            { $or: [ {"userName":userName}, { "email":userName} ] }
+            );
             // If User is not found
             if (!user) {
                 throw new ApolloError("User Not Found", '404');
@@ -311,7 +313,7 @@ const resolvers = {
                 }
                 let userEmail = await serializeEmail(emailData);
                 let emailLink = await forgetPasswordUrl(userEmail);
-                let emailHtml = await forgetPasswordBody(emailLink);
+                let emailHtml = await forgetPasswordBody(user.userName ,emailLink);
                 return await sendEmail(email, emailLink, emailHtml);
             }
 
