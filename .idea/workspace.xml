@@ -5,13 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f8aa19a-76c2-43cf-a5be-edc7b0ab8382" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/network/mainNetwork.js" beforeDir="false" afterPath="$PROJECT_DIR$/network/mainNetwork.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/testNetwork.js" beforeDir="false" afterPath="$PROJECT_DIR$/network/testNetwork.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/customorder.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/customOrder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/resolver.js" beforeDir="false" afterPath="$PROJECT_DIR$/schema/resolver.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -28,22 +38,31 @@
     <option name="projectConfigVersion" value="2" />
   </component>
   <component name="ProjectId" id="1mnU86yJu0kH094KBj4umeJ1ao6" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_MARK_IGNORED_FILES_AS_EXCLUDED" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/contracts/readme.md" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/schema/unBlockRequest" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/schema/unBlockRequest" />
+    </key>
   </component>
   <component name="RunManager" selected="npm.nodemon">
     <configuration name="main-net" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
@@ -110,7 +129,13 @@
       <workItem from="1611681454843" duration="243000" />
       <workItem from="1611688722258" duration="1775000" />
       <workItem from="1611740472424" duration="6811000" />
-      <workItem from="1611757156313" duration="515000" />
+      <workItem from="1611757156313" duration="17017000" />
+      <workItem from="1611780443992" duration="318000" />
+      <workItem from="1611781163501" duration="1205000" />
+      <workItem from="1611782392808" duration="503000" />
+      <workItem from="1611820469591" duration="8555000" />
+      <workItem from="1611845073525" duration="6058000" />
+      <workItem from="1611942663709" duration="15486000" />
     </task>
     <servers />
   </component>

@@ -22,7 +22,7 @@ let cors=require('cors');
 
 var app = express();
 
-const uri = "mongodb+srv://qasim:qasim1234@abdulla.eftvp.mongodb.net/dappsLabDB?retryWrites=true&w=majority";
+const uri = "mongodb+srv://qasim:qasim1234@abdulla.eftvp.mongodb.net/dappslablocally?retryWrites=true&w=majority";
 mongoose.connect(uri);
 mongoose.Promise = global.Promise;
 mongoose.connection.once('open', () => {
